@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Maccha Example Page</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <script src="/maccha.min.js"></script>
+    <style>
+        * {
+            font-family: "游ゴシック", sans-serif !important;
+            font-weight: 600;
+        }
+
+        .post {
+            max-width: 100%;
+            width: 780px;
+            padding: 20px;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 400;
+        }
+
+        h2 {
+            position: relative;
+            position: relative;
+            padding: 3% 1em;
+            border-top: solid 2px black;
+            border-bottom: solid 2px black;
+            font-size: 25px;
+            line-height: 30px;
+            margin-bottom: 38px;
+            padding-top: 10px;
+            padding-right: 20px;
+            padding-bottom: 10px;
+            padding-left: 20px;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        body {
+            display: flex;
+            margin: 0;
+            height: 100vh;
+        }
+
+        nav {
+            height: 100vh;
+            width: 252px;
+            overflow: auto;
+            background: rgb(246, 246, 246);
+        }
+
+        #nav{
+           padding: 8px 16px;
+        }
+
+        main {
+            height: 100vh;
+            overflow: auto;
+            flex: 1 1 auto;
+            display: flex;
+            justify-content: center;
+        }
+        a{
+            color:rgb(182, 189, 49);
+            cursor: pointer;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <h1 style="margin-left:12px;">Top 10 Blogs</h1>
+        <article id="nav">
+
+        </article>
+    </nav>
+    <main>
+        <div class="post" id="post"> </div>
+    </main>
+
+    <script>
+        var maccha = new Maccha({
+            url: "http://localhost:8081",
+            identifier: "sample_site"
+        });
+
+        maccha.search("blogs", {
+            fetch: 10,
+            offset: 0
+        }).then(data => {
+            const element = document.getElementById("nav");
+            if (!element) {
+                return;
+            }
+
+            console.log("Search blogs ", data);
+
+            element.innerHTML = data.collection.map(c => `
+                <a onclick="fetchContent('blogs','${c.contentId}')">
+                    <h3> ${c.title||"No TITLE"} </h3>
+                </a>
+            `).join("");
+
+            const [first] = data.collection;
+            // Fetch content
+            fetchContent("blogs", first.contentId);
+        });
+
+        function fetchContent(taxonomy, contentId) {
+            maccha.fetch(taxonomy, contentId)
+                .then(data => {
+                    const element = document.getElementById("post");
+                    if (!element || !data) {
+                        return;
+                    }
+
+                    console.log("Fetch content ", data);
+                    element.innerHTML = data.fields.content;
+                });
+        }
+    </script>
+</body>
+
+</html>

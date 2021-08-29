@@ -1,0 +1,33 @@
+import { CreateCSSProperties, CSSProperties } from "@material-ui/styles";
+import * as React from "react";
+interface Props {
+    centerContent?: React.ReactNode;
+    children?: React.ReactNode;
+    open?: boolean;
+    onClick?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+    mass?: number;
+    tension?: number;
+    friction?: number;
+    orbitStyle?: (defaultStyle: CSSProperties | CreateCSSProperties<{}>) => CSSProperties | CreateCSSProperties<{}>;
+    orbitRadius?: number;
+    radius?: number;
+    rotation?: number;
+    color?: string;
+    angle?: number;
+    hideOrbit?: boolean;
+    autoClose?: boolean;
+    onClose?: (e: React.MouseEvent<Document | HTMLDivElement, MouseEvent>) => void;
+    dragablePlanet?: boolean;
+    dragRadiusPlanet?: number;
+    elevation?: number;
+    dragableSatellites?: boolean;
+    dragRadiusSatellites?: number;
+    bounceRadius?: number;
+    bounce?: boolean;
+    bounceOnOpen?: boolean;
+    bounceOnClose?: boolean;
+    bounceDirection?: "TOP" | "BOTTOM" | "LEFT" | "RIGHT";
+    satelliteOrientation?: "DEFAULT" | "INSIDE" | "OUTSIDE" | "READABLE";
+}
+export declare function Planet(props: Props): JSX.Element;
+export {};

@@ -1,0 +1,20 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;400;500;700;900&display=swap");
+
+body {
+    overflow: hidden;
+}
+
+/*スクロールバーの幅*/
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+/*スクロールバーのレール*/
+::-webkit-scrollbar-track {
+    background: rgba(127, 127, 127, 0.12);
+}
+
+/*スクロールバーのつまみ*/
+::-webkit-scrollbar-thumb {
+    background: #1e1e1e;
+}

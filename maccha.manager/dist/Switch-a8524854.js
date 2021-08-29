@@ -1,0 +1,312 @@
+function ___$insertStyle(css) {
+  if (!css) {
+    return;
+  }
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  var style = document.createElement('style');
+
+  style.setAttribute('type', 'text/css');
+  style.innerHTML = css;
+  document.head.appendChild(style);
+  return css;
+}
+
+import { w as withStyles, N as fade, _ as _objectWithoutProperties, c as clsx, e as capitalize, a as _extends, p as propTypes, x as refType } from './index.lib-751d07a4.js';
+import { forwardRef, createElement } from 'react';
+import { S as SwitchBase } from './showDialog-4459d515.js';
+
+var styles = function styles(theme) {
+  return {
+    /* Styles applied to the root element. */
+    root: {
+      display: 'inline-flex',
+      width: 34 + 12 * 2,
+      height: 14 + 12 * 2,
+      overflow: 'hidden',
+      padding: 12,
+      boxSizing: 'border-box',
+      position: 'relative',
+      flexShrink: 0,
+      zIndex: 0,
+      // Reset the stacking context.
+      verticalAlign: 'middle',
+      // For correct alignment with the text.
+      '@media print': {
+        colorAdjust: 'exact'
+      }
+    },
+
+    /* Styles applied to the root element if `edge="start"`. */
+    edgeStart: {
+      marginLeft: -8
+    },
+
+    /* Styles applied to the root element if `edge="end"`. */
+    edgeEnd: {
+      marginRight: -8
+    },
+
+    /* Styles applied to the internal `SwitchBase` component's `root` class. */
+    switchBase: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      zIndex: 1,
+      // Render above the focus ripple.
+      color: theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[400],
+      transition: theme.transitions.create(['left', 'transform'], {
+        duration: theme.transitions.duration.shortest
+      }),
+      '&$checked': {
+        transform: 'translateX(20px)'
+      },
+      '&$disabled': {
+        color: theme.palette.type === 'light' ? theme.palette.grey[400] : theme.palette.grey[800]
+      },
+      '&$checked + $track': {
+        opacity: 0.5
+      },
+      '&$disabled + $track': {
+        opacity: theme.palette.type === 'light' ? 0.12 : 0.1
+      }
+    },
+
+    /* Styles applied to the internal SwitchBase component's root element if `color="primary"`. */
+    colorPrimary: {
+      '&$checked': {
+        color: theme.palette.primary.main,
+        '&:hover': {
+          backgroundColor: fade(theme.palette.primary.main, theme.palette.action.hoverOpacity),
+          '@media (hover: none)': {
+            backgroundColor: 'transparent'
+          }
+        }
+      },
+      '&$disabled': {
+        color: theme.palette.type === 'light' ? theme.palette.grey[400] : theme.palette.grey[800]
+      },
+      '&$checked + $track': {
+        backgroundColor: theme.palette.primary.main
+      },
+      '&$disabled + $track': {
+        backgroundColor: theme.palette.type === 'light' ? theme.palette.common.black : theme.palette.common.white
+      }
+    },
+
+    /* Styles applied to the internal SwitchBase component's root element if `color="secondary"`. */
+    colorSecondary: {
+      '&$checked': {
+        color: theme.palette.secondary.main,
+        '&:hover': {
+          backgroundColor: fade(theme.palette.secondary.main, theme.palette.action.hoverOpacity),
+          '@media (hover: none)': {
+            backgroundColor: 'transparent'
+          }
+        }
+      },
+      '&$disabled': {
+        color: theme.palette.type === 'light' ? theme.palette.grey[400] : theme.palette.grey[800]
+      },
+      '&$checked + $track': {
+        backgroundColor: theme.palette.secondary.main
+      },
+      '&$disabled + $track': {
+        backgroundColor: theme.palette.type === 'light' ? theme.palette.common.black : theme.palette.common.white
+      }
+    },
+
+    /* Styles applied to the root element if `size="small"`. */
+    sizeSmall: {
+      width: 40,
+      height: 24,
+      padding: 7,
+      '& $thumb': {
+        width: 16,
+        height: 16
+      },
+      '& $switchBase': {
+        padding: 4,
+        '&$checked': {
+          transform: 'translateX(16px)'
+        }
+      }
+    },
+
+    /* Pseudo-class applied to the internal `SwitchBase` component's `checked` class. */
+    checked: {},
+
+    /* Pseudo-class applied to the internal SwitchBase component's disabled class. */
+    disabled: {},
+
+    /* Styles applied to the internal SwitchBase component's input element. */
+    input: {
+      left: '-100%',
+      width: '300%'
+    },
+
+    /* Styles used to create the thumb passed to the internal `SwitchBase` component `icon` prop. */
+    thumb: {
+      boxShadow: theme.shadows[1],
+      backgroundColor: 'currentColor',
+      width: 20,
+      height: 20,
+      borderRadius: '50%'
+    },
+
+    /* Styles applied to the track element. */
+    track: {
+      height: '100%',
+      width: '100%',
+      borderRadius: 14 / 2,
+      zIndex: -1,
+      transition: theme.transitions.create(['opacity', 'background-color'], {
+        duration: theme.transitions.duration.shortest
+      }),
+      backgroundColor: theme.palette.type === 'light' ? theme.palette.common.black : theme.palette.common.white,
+      opacity: theme.palette.type === 'light' ? 0.38 : 0.3
+    }
+  };
+};
+var Switch = /*#__PURE__*/forwardRef(function Switch(props, ref) {
+  var classes = props.classes,
+      className = props.className,
+      _props$color = props.color,
+      color = _props$color === void 0 ? 'secondary' : _props$color,
+      _props$edge = props.edge,
+      edge = _props$edge === void 0 ? false : _props$edge,
+      _props$size = props.size,
+      size = _props$size === void 0 ? 'medium' : _props$size,
+      other = _objectWithoutProperties(props, ["classes", "className", "color", "edge", "size"]);
+
+  var icon = /*#__PURE__*/createElement("span", {
+    className: classes.thumb
+  });
+  return /*#__PURE__*/createElement("span", {
+    className: clsx(classes.root, className, {
+      'start': classes.edgeStart,
+      'end': classes.edgeEnd
+    }[edge], size === "small" && classes["size".concat(capitalize(size))])
+  }, /*#__PURE__*/createElement(SwitchBase, _extends({
+    type: "checkbox",
+    icon: icon,
+    checkedIcon: icon,
+    classes: {
+      root: clsx(classes.switchBase, classes["color".concat(capitalize(color))]),
+      input: classes.input,
+      checked: classes.checked,
+      disabled: classes.disabled
+    },
+    ref: ref
+  }, other)), /*#__PURE__*/createElement("span", {
+    className: classes.track
+  }));
+});
+process.env.NODE_ENV !== "production" ? Switch.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // |     To update them edit the d.ts file and run "yarn proptypes"     |
+  // ----------------------------------------------------------------------
+
+  /**
+   * If `true`, the component is checked.
+   */
+  checked: propTypes.bool,
+
+  /**
+   * The icon to display when the component is checked.
+   */
+  checkedIcon: propTypes.node,
+
+  /**
+   * Override or extend the styles applied to the component.
+   * See [CSS API](#css) below for more details.
+   */
+  classes: propTypes.object,
+
+  /**
+   * @ignore
+   */
+  className: propTypes.string,
+
+  /**
+   * The color of the component. It supports those theme colors that make sense for this component.
+   */
+  color: propTypes.oneOf(['default', 'primary', 'secondary']),
+
+  /**
+   * @ignore
+   */
+  defaultChecked: propTypes.bool,
+
+  /**
+   * If `true`, the switch will be disabled.
+   */
+  disabled: propTypes.bool,
+
+  /**
+   * If `true`, the ripple effect will be disabled.
+   */
+  disableRipple: propTypes.bool,
+
+  /**
+   * If given, uses a negative margin to counteract the padding on one
+   * side (this is often helpful for aligning the left or right
+   * side of the icon with content above or below, without ruining the border
+   * size and shape).
+   */
+  edge: propTypes.oneOf(['end', 'start', false]),
+
+  /**
+   * The icon to display when the component is unchecked.
+   */
+  icon: propTypes.node,
+
+  /**
+   * The id of the `input` element.
+   */
+  id: propTypes.string,
+
+  /**
+   * [Attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#Attributes) applied to the `input` element.
+   */
+  inputProps: propTypes.object,
+
+  /**
+   * Pass a ref to the `input` element.
+   */
+  inputRef: refType,
+
+  /**
+   * Callback fired when the state is changed.
+   *
+   * @param {object} event The event source of the callback.
+   * You can pull out the new value by accessing `event.target.value` (string).
+   * You can pull out the new checked state by accessing `event.target.checked` (boolean).
+   */
+  onChange: propTypes.func,
+
+  /**
+   * If `true`, the `input` element will be required.
+   */
+  required: propTypes.bool,
+
+  /**
+   * The size of the switch.
+   * `small` is equivalent to the dense switch styling.
+   */
+  size: propTypes.oneOf(['medium', 'small']),
+
+  /**
+   * The value of the component. The DOM API casts this to a string.
+   * The browser uses "on" as the default value.
+   */
+  value: propTypes.any
+} : void 0;
+var Switch$1 = withStyles(styles, {
+  name: 'MuiSwitch'
+})(Switch);
+
+export { Switch$1 as S };
