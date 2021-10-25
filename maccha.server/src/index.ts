@@ -176,8 +176,8 @@ export async function createMacchaApiServer(option: MacchaOption): Promise<INest
 
     // build documents
     const options = new DocumentBuilder()
-        .setTitle("espresso.js cms")
-        .setDescription("espresso.js cms API description")
+        .setTitle("maccha cms")
+        .setDescription("maccha cms API description")
         .setVersion("1.0.0")
         .build();
     const document = SwaggerModule.createDocument(app, options);
