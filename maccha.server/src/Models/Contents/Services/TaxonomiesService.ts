@@ -38,7 +38,7 @@ export class TaxonomiesService {
         try {
             return this.taxonomiesRepository.findAllAsync(taxomonyIds, identifier);
         }
-        catch (ex) {
+        catch (ex: any) {
             throw new Error(ex.message);
         }
     }
@@ -68,7 +68,7 @@ export class TaxonomiesService {
             this.taxonomiesRepository.deleteAsync(taxonomyId);
             return true;
         }
-        catch (ex) {
+        catch (ex: any) {
             return false;
         }
     }

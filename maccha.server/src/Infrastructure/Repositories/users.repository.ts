@@ -104,7 +104,7 @@ export class UsersRepository implements IUsersRepository {
                 }
             }
         }
-        catch (ex) {
+        catch (ex: any) {
             console.error("error traced in users repository", ex);
         }
         // throw new InternalServerErrorException("unhandle error in users repository.");
@@ -138,7 +138,7 @@ export class UsersRepository implements IUsersRepository {
             }
             return undefined;
         }
-        catch (ex) {
+        catch (ex: any) {
             console.error("error traced in users repository", ex.message);
         }
         throw new UnprocessableEntityException("unhandle error in users repository.");
@@ -175,7 +175,7 @@ export class UsersRepository implements IUsersRepository {
             }
             return undefined;
         }
-        catch (ex) {
+        catch (ex: any) {
             console.error("error traced in users repository", ex.message);
             throw new UnprocessableEntityException("error traced in users repository");
         }
@@ -212,7 +212,7 @@ export class UsersRepository implements IUsersRepository {
                 userId,
             }));
         }
-        catch (ex) {
+        catch (ex: any) {
             console.error("error traced in users repository", ex.message);
             throw new UnprocessableEntityException(ex.message);
         }
@@ -262,7 +262,7 @@ export class UsersRepository implements IUsersRepository {
                 created.avatar
             );
         }
-        catch (ex) {
+        catch (ex: any) {
             console.error("error traced in users repository", ex.message);
             throw new UnprocessableEntityException(ex.message);
         }
@@ -308,7 +308,7 @@ export class UsersRepository implements IUsersRepository {
                 );
             }
         }
-        catch (ex) {
+        catch (ex: any) {
             console.error("Error traced in users repository", ex.message);
             throw new Error(ex.message);
         }
@@ -343,7 +343,7 @@ export class UsersRepository implements IUsersRepository {
                 );
             }
         }
-        catch (ex) {
+        catch (ex: any) {
             console.error("Error traced in users repository", ex.message);
             throw new Error(ex.message);
         }

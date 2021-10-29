@@ -133,18 +133,15 @@ export class ContentsAppService {
         loginUser: LoginUser,
         taxonomyName: string,
         contentId: string
-    ): Promise<Content> {
+    ): Promise<void> {
         const taxonomyId = await this.taxonomiesService.getIdByNameAsync(taxonomyName);
         if (!taxonomyId) {
             throw new BadRequestException("Taxonomy is not found.");
         }
 
         const taxonomy = await this.taxonomiesService.getByIdAsync(taxonomyId);
-
         if (taxonomy) {
             await this.contentsService.delete(contentId);
         }
-
-        throw new InternalServerErrorException("Unhandled error occured.");
     }
 }

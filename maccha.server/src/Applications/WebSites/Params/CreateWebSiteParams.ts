@@ -7,20 +7,20 @@ export class CreteWebSiteParams implements ICreateWebSiteParams {
     @IsString()
     @MinLength(1)
     @Matches(/^[a-z0-9]*$/, { message: "only lower case alphabet or number" })
-    name!: string;
+        name!: string;
 
     @ApiProperty({ description: "サイト名" })
     @IsString()
     @MinLength(1)
-    displayName!: string;
+        displayName!: string;
 
     @ApiProperty({ description: "サイトのURL" })
     @IsString()
     @MinLength(1)
     @Matches(/(http[s]?):\/\/[^\/\.]+?\..+\w$/i, { message: "invalid url" })
-    host!: string;
+        host!: string;
 
     @ApiProperty({ description: "サイト説明" })
     @IsString()
-    description!: string;
+        description!: string;
 }

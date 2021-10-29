@@ -6,12 +6,12 @@ export class UpdateWebSiteParams implements IUpdateWebSiteParams {
     @ApiProperty({ description: "WEBサイトID" })
     @IsString()
     @MinLength(1)
-    webSiteId!: string;
+        webSiteId!: string;
 
     @ApiProperty({ description: "WEBサイト識別名" })
     @IsString()
     @MinLength(1)
-    name!: string;
+        name!: string;
 
     @ApiProperty({ description: "WEBサイト名" })
     @IsString()

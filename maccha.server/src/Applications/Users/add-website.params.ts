@@ -5,8 +5,8 @@ import { IsNumber } from "class-validator";
  */
 export class AddWebSiteParams {
     @IsNumber()
-    identifier!: string;
+        identifier!: string;
 
     @IsNumber()
-    userId!: string;
+        userId!: string;
 }

@@ -12,9 +12,9 @@ import { MediaService } from "@/Models/Media/Services/MediaService";
     providers: [
         MediaService,
         {
-            provide: MediaRepository,
+            provide: "MediaRepository",
             useClass: MediaRepository
-        },
+        }
     ],
     exports: [
         MediaService

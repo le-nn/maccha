@@ -47,5 +47,5 @@ export class CreateSchemeParams implements ICreateSchemeParams {
         })
     })
     @IsString()
-    metadata!: string;
+        metadata!: string;
 }

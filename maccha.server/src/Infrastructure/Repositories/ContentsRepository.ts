@@ -5,7 +5,7 @@ import { ISaveContentParams } from "@/Models/Contents/Params/ISaveContentParams"
 import { ISearchContentParams } from "@/Models/Contents/Params/ISearchContentParams";
 import { IContentsRepository } from "@/Models/Contents/Repositories";
 import { InjectRepository } from "@nestjs/typeorm";
-import { from, of } from "rxjs";
+import { from, lastValueFrom, of } from "rxjs";
 import { map, mergeMap, toArray } from "rxjs/operators";
 import { Repository, In } from "typeorm";
 import { ContentEntity, FieldEntity } from "../Database/Entities";
@@ -63,104 +63,38 @@ export class ContentsRepository implements IContentsRepository {
 
     async searchAsync(taxonomyId: string, params: ISearchContentParams): Promise<[Content[], number]> {
         try {
-            interface QueryNode {
-                name: string;
-                value: string;
-                type: "!" | "-!" | ":" | "-:" | "";
-                statement: "+" | "|";
-                children: QueryNode[];
-            }
-
-            function parseFilterQuery(): QueryNode {
-                return {
-                    name: "language",
-                    value: "C#",
-                    type: "-!",
-                    statement: "+",
-                    children: [
-                        {
-                            name: "content",
-                            value: "yyyy",
-                            type: ":",
-                            statement: "|",
-                            children: []
-                        },
-                        {
-                            name: "content",
-                            value: "CMS始めました",
-                            type: ":",
-                            statement: "|",
-                            children: []
-                        }
-                    ]
-                };
-            }
-
-            function buildFilterNameSql(x: QueryNode) {
-                if (x.name) {
-                    return `(\`name\`='${x.name}' AND ${buildFilterTypeSql(x)})`;
-                }
-
-                return `1=1`;
-            }
-
-            function buildStatementSql(x: QueryNode) {
-                return x.statement === "+" ? "AND" : "OR";
-            }
-
-            function buildFilterTypeSql(x: QueryNode) {
-                if (x.type === "!") {
-                    return `\`value\`='${x.value}`;
-                }
-                else if (x.type === "-!") {
-                    return `\`value\`!='${x.value}'`;
-                }
-                else if (x.type === ":") {
-                    return `\`value\` LIKE '%${x.value}%'`;
-                }
-                else if (x.type === "-:") {
-                    return `\`value\` NOT LIKE '%${x.value}%'`;
-                }
-            }
-
-            function buildFilterSql(node: QueryNode): string {
-                return `${buildStatementSql(node)} (${buildFilterNameSql(node)} AND (1=1 ${node.children.map(x => buildFilterSql(x)).join("")})) `;
-            }
-
             const [rows, count] = await this.contents.manager.transaction(async connection => {
-
                 const filterSql = "";// buildFilterSql(parseFilterQuery());
-
                 const fieldSql = `
 SELECT DISTINCT \`contentId\` FROM \`field_entity\`
 WHERE \`taxonomyId\`='${taxonomyId}' ${filterSql}
                 `;
 
+                const userSql = `
+INNER JOIN (SELECT \`userId\`,\`name\`,\`avatar\` FROM maccha.\`user_entity\`) 
+AS B ON B.\`userId\`=\`content_entity\`.\`createdBy\`
+                `;
+
                 const sql = `
 SELECT SQL_CALC_FOUND_ROWS * FROM \`content_entity\` 
 INNER JOIN(${fieldSql}) AS A ON A.\`contentId\`=\`content_entity\`.\`contentId\`
+${userSql}
 WHERE \`taxonomyId\`='${taxonomyId}' 
 ORDER BY \`createdAt\` DESC 
 LIMIT ${params.fetch} OFFSET ${params.offset}
-;
-                `;
+;`;
 
-                const rawData = await connection.query(sql) as ContentEntity[];
+                console.log(sql);
+
+                const rawData = await connection.query(sql) as (ContentEntity & any)[];
                 const count = (await connection.query("SELECT FOUND_ROWS() as count;"))[0].count as number;
                 return [rawData, count];
             });
 
 
             // fetch fields
-            const fields = await from(rows).pipe(
+            const fields = await lastValueFrom(from(rows).pipe(
                 mergeMap(
-                    // c => from(
-                    //     this.fields.find({
-                    //         where: {
-                    //             contentId: c.contentId,
-                    //             name: In([])
-                    //         }
-                    //     })
                     c => of([] as FieldEntity[]).pipe(
                         map(
                             fs => new Content({
@@ -184,22 +118,22 @@ LIMIT ${params.fetch} OFFSET ${params.offset}
                                     })
                                 ),
                                 createdBy: {
-                                    name: "fsefsefs",
-                                    thumbnail: "test"
+                                    name: c.name,
+                                    thumbnail: c.avatar,
                                 }
                             })
                         ),
                     )
                 ),
                 toArray()
-            ).toPromise();
+            ));
 
             return [
                 fields,
                 count
             ];
         }
-        catch (ex) {
+        catch (ex: any) {
             throw new Error("Cannot to search contents.");
         }
     }
@@ -238,7 +172,7 @@ LIMIT ${params.fetch} OFFSET ${params.offset}
             }
 
         }
-        catch (ex) {
+        catch (ex: any) {
             console.error(ex);
             throw new Error("Cannot to save content in repository.");
         }

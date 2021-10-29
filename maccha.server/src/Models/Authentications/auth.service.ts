@@ -27,6 +27,8 @@ export class AuthService implements IAuthService {
         try {
             const user = await this.usersService.validateUser(email, password);
 
+            console.log(user);
+
             const identifier = await (async () => {
                 if (user.role === RoleType.Admin) {
                     const [webSite] = await this.webSitesService.getAllAsync();
@@ -65,7 +67,7 @@ export class AuthService implements IAuthService {
                 throw new InternalServerErrorException();
             }
         }
-        catch (ex) {
+        catch (ex: any) {
             throw new BadRequestException(ex.message);
         }
     }
@@ -130,7 +132,7 @@ export class AuthService implements IAuthService {
                 }
             }
         }
-        catch (ex) {
+        catch (ex: any) {
             console.error(ex);
             throw new Error("Failed to refresh token.");
         }
@@ -148,7 +150,7 @@ export class AuthService implements IAuthService {
             const result = this.jwtService.verify(token);
             return result;
         }
-        catch (ex) {
+        catch (ex: any) {
             return undefined;
         }
     }

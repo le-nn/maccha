@@ -6,27 +6,27 @@ import { RoleType } from "@/Models/Users/role.enum";
 @Unique(["email"])
 export class UserEntity {
     @PrimaryGeneratedColumn("uuid")
-    userId?: string;
+        userId?: string;
 
     @Column({ length: 128 })
     @Index()
-    name!: string;
+        name!: string;
 
     @Column({ length: 256 })
-    email!: string;
+        email!: string;
 
     @Column({ length: 256 })
-    password?: string;
+        password?: string;
 
     @Column({ unsigned: true, type: "bigint" })
     @Index()
-    role!: RoleType;
+        role!: RoleType;
 
     @Column()
-    isActive!: boolean;
+        isActive!: boolean;
 
     @Column()
-    avatar!: string;
+        avatar!: string;
 
     @UpdateDateColumn({
         readonly: true,

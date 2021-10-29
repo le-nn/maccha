@@ -17,7 +17,7 @@ export class SaveTaxonomyParams implements ISaveTaxonomyParams {
     })
     @IsString()
     @MinLength(1)
-    taxonomyId!: string;
+        taxonomyId!: string;
 
     @ApiProperty({
         name: i18n({
@@ -27,7 +27,7 @@ export class SaveTaxonomyParams implements ISaveTaxonomyParams {
     })
     @IsString()
     @MinLength(1)
-    name!: string;
+        name!: string;
 
     @ApiProperty({
         name: i18n({
@@ -36,7 +36,7 @@ export class SaveTaxonomyParams implements ISaveTaxonomyParams {
         })
     })
     @IsString()
-    description!: string;
+        description!: string;
 
     @ApiProperty({
         name: i18n({
@@ -46,7 +46,7 @@ export class SaveTaxonomyParams implements ISaveTaxonomyParams {
     })
     @IsString()
     @MinLength(1)
-    displayName!: string;
+        displayName!: string;
 
     @ApiProperty({
         name: i18n({
@@ -56,5 +56,5 @@ export class SaveTaxonomyParams implements ISaveTaxonomyParams {
         type: () => [CreateSchemeParams]
     })
     @ValidateNested({ each: true })
-    schemes!: SaveSchemeParams[];
+        schemes!: SaveSchemeParams[];
 }

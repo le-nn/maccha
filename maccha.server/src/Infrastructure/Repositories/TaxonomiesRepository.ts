@@ -28,7 +28,7 @@ export class TaxonomiesRepository implements ITaxonomiesRepository {
 
             return taxonomy.taxonomyId!;
         }
-        catch (ex) {
+        catch (ex: any) {
             console.error("Error occured when getting taxonomy from id.", ex.message);
             throw new Error("Error occured when getting taxonomy from id. ");
         }
@@ -61,7 +61,7 @@ export class TaxonomiesRepository implements ITaxonomiesRepository {
                 ) ?? []
             });
         }
-        catch (ex) {
+        catch (ex: any) {
             console.error("Error occured when getting taxonomy from id.", ex.message);
             throw new Error("Error occured when getting taxonomy from id. ");
         }
@@ -84,7 +84,7 @@ export class TaxonomiesRepository implements ITaxonomiesRepository {
                 identifier: taxonomy.identifier
             }));
         }
-        catch (ex) {
+        catch (ex: any) {
             console.error("Failed to data access.", ex.message);
         }
         throw new Error("Error occured when getting taxonomies.");
@@ -120,7 +120,7 @@ export class TaxonomiesRepository implements ITaxonomiesRepository {
                 ) ?? []
             });
         }
-        catch (ex) {
+        catch (ex: any) {
             console.error("Failed to data access.", ex.message);
             throw new Error(ex.message);
         }
@@ -137,7 +137,7 @@ export class TaxonomiesRepository implements ITaxonomiesRepository {
                 }
             );
         }
-        catch (ex) {
+        catch (ex: any) {
             console.error("Failed to data access.", ex.message);
             throw new Error(ex.message);
         }
@@ -167,7 +167,7 @@ export class TaxonomiesRepository implements ITaxonomiesRepository {
                 identifier: taxonomy.raw.identifier,
             });
         }
-        catch (ex) {
+        catch (ex: any) {
             console.error("Failed to data access.", ex.message);
             throw new Error(ex.message);
         }

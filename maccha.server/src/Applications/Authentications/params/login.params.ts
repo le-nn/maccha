@@ -9,9 +9,9 @@ export class LoginParams {
     @IsString()
     @MinLength(1)
     @Matches(/^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$/, { message: "invalid email adress" })
-    email!: string;
+        email!: string;
 
     @ApiProperty({ description: "パスワード" })
     @IsString()
-    password!: string;
+        password!: string;
 }

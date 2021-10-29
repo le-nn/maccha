@@ -1,0 +1,32 @@
+{
+    "compilerOptions": {
+        "experimentalDecorators": true,
+        "outDir": "./dist/",
+        "sourceMap": true,
+        "noImplicitAny": true,
+        "module": "ESNext",
+        "target": "esnext",
+        "jsx": "react",
+        "moduleResolution": "node",
+        "noResolve": false,
+        "esModuleInterop": true,
+        "strict": true,
+        "strictNullChecks": true,
+        "baseUrl": "./src",
+        "lib": [
+            "dom",
+            "es2015",
+            "es2017"
+        ],
+        "paths": {
+            "*": [
+                "types/*",
+                "*"
+            ]
+        },
+        "jsxImportSource": "@emotion/react"
+    },
+    "include": [
+        "./src/**/*"
+    ]
+}

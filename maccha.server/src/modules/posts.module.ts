@@ -18,7 +18,7 @@ import { SchemeEntity, TaxonomyEntity } from "@/Infrastructure/Database/Entities
     providers: [
         PostTypesService,
         {
-            provide: PostTypesRepository,
+            provide: "PostTypesRepository",
             useClass: PostTypesRepository
         },
     ],

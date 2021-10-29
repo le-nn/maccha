@@ -12,7 +12,13 @@ import { UsersModule } from "./users.module";
         UsersModule
     ],
     controllers: [WebSitesController],
-    providers: [WebSitesService, { provide: WebSitesRepository, useClass: WebSitesRepository }],
-    exports:[WebSitesService]
+    providers: [
+        WebSitesService,
+        {
+            provide: "WebSitesRepository",
+            useClass: WebSitesRepository
+        }
+    ],
+    exports: [WebSitesService]
 })
 export class WebSitesModule { }

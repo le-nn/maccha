@@ -16,6 +16,7 @@ import * as Entities from "@/Infrastructure/Database/Entities";
 import { Migration as MacchaMigration } from "./Infrastructure/Database/Migrations";
 import { AuthenticationsController } from "./Applications/Authentications/AuthenticationsController";
 import * as bodyParser from "body-parser";
+import { MediaModule } from "./modules/media.module";
 
 export interface Logger {
     /**
@@ -80,7 +81,7 @@ interface MacchaOption {
     pulugins: MacchaPlugin[];
 }
 
-function buildDbConfig(option: MacchaOption) {
+const buildDbConfig = (option: MacchaOption) => {
     return {
         name: "main",
         type: "mysql",
@@ -100,7 +101,7 @@ function buildDbConfig(option: MacchaOption) {
             ...option.pulugins.map(p => p.migrations).reduce((x, y) => [...x, ...y], [])
         ]
     } as ConnectionOptions;
-}
+};
 
 @Global()
 @Module({})
@@ -116,9 +117,17 @@ class AuthModule {
                     signOptions: { expiresIn: option.authorization.expiresIn },
                 }),
             ],
-            controllers: [AuthenticationsController],
-            providers: [AuthService, AuthGuard],
-            exports: [AuthService, AuthGuard],
+            controllers: [
+                AuthenticationsController
+            ],
+            providers: [
+                AuthService,
+                AuthGuard
+            ],
+            exports: [
+                AuthService,
+                AuthGuard
+            ],
         };
     }
 }
@@ -135,7 +144,6 @@ class MainModule {
                 }),
                 ServeStaticModule.forRoot({
                     rootPath: option.assetsDir,
-
                 }),
                 AuthModule.register(option),
                 MacchaModule,
@@ -162,17 +170,15 @@ export async function createMacchaApiServer(option: MacchaOption): Promise<INest
 
     // run db migration
     await migration(option);
-
     const app = await NestFactory.create(MainModule.register(option));
-
     // for auto validation in model mapping
     app.useGlobalPipes(new ValidationPipe());
 
     // cors
     app.enableCors({ origin: "*", allowedHeaders: "Origin, Authentication, *" });
 
-    app.use(bodyParser.json({limit: "50mb"}));
-    app.use(bodyParser.urlencoded({limit: "50mb", extended: true}));
+    app.use(bodyParser.json({ limit: "50mb" }));
+    app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
     // build documents
     const options = new DocumentBuilder()

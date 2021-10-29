@@ -58,7 +58,7 @@ export class PostTypesService {
 
             throw new Error(`Role is Unauthorized. Your role is "${user.role}". Failed to save postTypeId: "${postTypeId}" . `);
         }
-        catch (ex) {
+        catch (ex: any) {
             throw new Error(`Failed to save post type postTypeId: "${postTypeId}". Any error occured in repository. raw message "${ex.message}"`);
         }
     }
@@ -88,7 +88,7 @@ export class PostTypesService {
 
             throw new Error(`Role is Unauthorized. Your role is "${user.role}". Failed to remove postTypeId: "${postTypeId}" . `);
         }
-        catch (ex) {
+        catch (ex: any) {
             throw new Error(`Failed to remove post type postTypeId: "${postTypeId}". Any error occured in repository. raw message "${ex.message}"`);
         }
     }

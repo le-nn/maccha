@@ -4,16 +4,16 @@ import { WebSiteResponse } from "../WebSites/Responses/WebSiteResponse";
 
 export class UserResponse {
     @ApiProperty({ description: "ユーザー識別ID" })
-    userId!: string;
+        userId!: string;
 
     @ApiProperty({ description: "ユーザー名" })
-    name!: string;
+        name!: string;
 
     @ApiProperty({ description: "メールアドレス" })
-    email!: string;
+        email!: string;
 
     @ApiProperty({ description: "権限" })
-    role!: RoleType;
+        role!: RoleType;
 
     @ApiProperty({
         description: "サイト一覧",

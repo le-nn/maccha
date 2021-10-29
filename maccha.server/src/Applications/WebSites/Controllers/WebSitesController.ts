@@ -33,7 +33,8 @@ export class WebSitesController {
     @SetMetadata("role", RoleType.Subscribe)
     @UseGuards(AuthGuard)
     @Get(":identifier")
-    public async getWebSite(@Param("identifier") identifier: string): Promise<WebSiteResponse | FailedResponse> {
+    public async getWebSite(
+        @Param("identifier") identifier: string): Promise<WebSiteResponse | FailedResponse> {
         const site = await this.webSitesService.getAsync(identifier);
         if (site) {
             return new WebSiteResponse({

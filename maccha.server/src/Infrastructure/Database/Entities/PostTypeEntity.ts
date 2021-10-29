@@ -11,23 +11,23 @@ export class PostTypeEntity {
     readonly postTypeId?: string;
 
     @Column({ length: 128 })
-    taxonomyId!: string;
+        taxonomyId!: string;
 
     @OneToOne(() => TaxonomyEntity)
     @JoinColumn({
         name: "taxonomyId",
     })
-    taxonomy!: TaxonomyEntity;
+        taxonomy!: TaxonomyEntity;
 
     @Column()
-    displayFormat!: string;
+        displayFormat!: string;
 
     @Column()
     @Index()
-    identifier!: string;
+        identifier!: string;
 
     @Column()
-    isDeleted!: boolean;
+        isDeleted!: boolean;
 
     /**
      * constructor

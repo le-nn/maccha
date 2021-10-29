@@ -16,7 +16,7 @@ import { RefreshParams } from "./params/RefreshParams";
 @ApiTags("Authentications")
 @Controller({ path: "api/auth" })
 export class AuthenticationsController {
-    constructor(@Inject("AuthService") private readonly authService: AuthService) { }
+    constructor(private readonly authService: AuthService) { }
 
     /**
      * login

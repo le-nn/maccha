@@ -12,7 +12,12 @@ import { WebSiteEntity } from "@/Infrastructure/Database/Entities/web-site.entit
         TypeOrmModule.forFeature([UserEntity, UserWebSiteEntity, WebSiteEntity])
     ],
     controllers: [UsersController],
-    providers: [UsersService, { provide: UsersRepository, useClass: UsersRepository }],
+    providers: [
+        UsersService, {
+            provide: "UsersRepository",
+            useClass: UsersRepository
+        }
+    ],
     exports: [UsersService]
 })
 export class UsersModule { }

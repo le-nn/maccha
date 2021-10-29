@@ -7,29 +7,29 @@ export class SchemeEntity {
     readonly schemeId?: string;
 
     @Column()
-    taxonomyId!: string;
+        taxonomyId!: string;
 
     @ManyToOne(type => TaxonomyEntity, t => t.schemes)
     @JoinColumn({ name: "taxonomyId" })
-    taxonomy?: TaxonomyEntity;
+        taxonomy?: TaxonomyEntity;
 
     @Column({ length: 64 })
-    type!: string;
+        type!: string;
 
     @Column({ length: 64 })
-    name!: string;
+        name!: string;
 
     @Column({ length: 64 })
-    displayName!: string;
+        displayName!: string;
 
     @Column({ length: 512 })
-    description!: string;
+        description!: string;
 
     @Column({ length: 2048 })
-    metadata!: string;
+        metadata!: string;
 
     @Column()
-    sort!: number;
+        sort!: number;
 
     /**
      * constructor

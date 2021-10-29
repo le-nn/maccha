@@ -32,11 +32,11 @@ import { TaxonomiesController } from "@/Applications/Contents/Controllers/Taxono
         TaxonomiesService,
         // Repositories
         {
-            provide: ContentsRepository,
+            provide: "ContentsRepository",
             useClass: ContentsRepository
         },
         {
-            provide: TaxonomiesRepository,
+            provide: "TaxonomiesRepository",
             useClass: TaxonomiesRepository
         },
     ],

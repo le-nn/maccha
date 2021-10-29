@@ -33,7 +33,7 @@ export class WebSitesRepository implements IWebSitesRepository {
                 ));
             }
         }
-        catch (ex) {
+        catch (ex: any) {
             console.error("error traced in websites repository", ex.message);
         }
         throw new Error();
@@ -57,7 +57,7 @@ export class WebSitesRepository implements IWebSitesRepository {
                 );
             }
         }
-        catch (ex) {
+        catch (ex: any) {
             console.error("error traced in websites repository", ex.message);
         }
         throw new Error(`web site identifier [${identifier}] is not exists.`);
@@ -89,7 +89,7 @@ export class WebSitesRepository implements IWebSitesRepository {
                 );
             }
         }
-        catch (ex) {
+        catch (ex: any) {
             console.error("error traced in websites repository", ex.message);
             throw new Error(ex.message);
         }
@@ -121,7 +121,7 @@ export class WebSitesRepository implements IWebSitesRepository {
                 );
             }
         }
-        catch (ex) {
+        catch (ex: any) {
             console.error("error traced in websites repository", ex.message);
         }
 
@@ -141,7 +141,7 @@ export class WebSitesRepository implements IWebSitesRepository {
             await this.webSites.delete({ webSiteId: identifier });
             return;
         }
-        catch (ex) {
+        catch (ex: any) {
             console.error("error traced in websites repository", ex.message);
         }
         throw new Error();

@@ -7,26 +7,26 @@ import { SchemeEntity } from ".";
 @Entity()
 export class TaxonomyEntity {
     @PrimaryGeneratedColumn("uuid")
-    taxonomyId!: string;
+        taxonomyId!: string;
 
     @OneToMany(() => SchemeEntity, scheme => scheme.schemeId)
-    schemes?: SchemeEntity[];
+        schemes?: SchemeEntity[];
 
     @Column()
-    name!: string;
+        name!: string;
 
     @Column()
-    description!: string;
+        description!: string;
 
     @Column()
-    displayName!: string;
+        displayName!: string;
 
     @Column()
-    isDeleted!: boolean;
+        isDeleted!: boolean;
 
     @Column()
     @Index()
-    identifier!: string;
+        identifier!: string;
 
     constructor(params: TaxonomyEntity) {
         Object.assign(this, params);

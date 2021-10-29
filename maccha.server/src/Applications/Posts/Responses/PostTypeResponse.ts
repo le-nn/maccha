@@ -35,7 +35,7 @@ export class PostTypeResponse implements IPostType {
             ja: "表示形式."
         })
     })
-   readonly displayFormat = "table";
+    readonly displayFormat = "table";
 
     constructor(value: IPostType) {
         Object.assign(this, value);

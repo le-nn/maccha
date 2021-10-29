@@ -17,7 +17,7 @@ export class SaveContentParams {
     })
     @IsString()
     @MinLength(1)
-    contentId!: string;
+        contentId!: string;
 
     @ApiProperty({
         name: i18n({
@@ -26,7 +26,7 @@ export class SaveContentParams {
         })
     })
     @IsString()
-    title!: string;
+        title!: string;
 
     @ApiProperty({
         name: i18n({
@@ -35,7 +35,7 @@ export class SaveContentParams {
         })
     })
     @IsString()
-    description!: string;
+        description!: string;
 
     @ApiProperty({
         name: i18n({
@@ -44,7 +44,7 @@ export class SaveContentParams {
         })
     })
     @IsEnum(StatusType)
-    status!: StatusType;
+        status!: StatusType;
 
     @ApiProperty({
         name: i18n({
@@ -53,7 +53,7 @@ export class SaveContentParams {
         })
     })
     @IsString()
-    thumbnail!: string;
+        thumbnail!: string;
 
     @ApiProperty({
         name: i18n({
@@ -62,7 +62,7 @@ export class SaveContentParams {
         })
     })
     @IsString()
-    metadata!: string;
+        metadata!: string;
 
     @ApiProperty({
         name: i18n({
@@ -70,7 +70,7 @@ export class SaveContentParams {
             ja: "公開日."
         })
     })
-    publishIn!: string;
+        publishIn!: string;
 
     @ApiProperty({
         name: i18n({
@@ -79,5 +79,5 @@ export class SaveContentParams {
         })
     })
     @IsArray()
-    fields!: CreateFieldParams[];
+        fields!: CreateFieldParams[];
 }

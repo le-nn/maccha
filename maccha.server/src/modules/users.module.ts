@@ -14,7 +14,12 @@ import { MediaModule } from "./media.module";
         MediaModule
     ],
     controllers: [UsersController],
-    providers: [UsersService, { provide: UsersRepository, useClass: UsersRepository }],
+    providers: [
+        UsersService,
+        {
+            provide: "UsersRepository",
+            useClass: UsersRepository
+        }],
     exports: [UsersService]
 })
 export class UsersModule { }

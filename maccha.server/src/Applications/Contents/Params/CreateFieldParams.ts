@@ -11,7 +11,7 @@ export class CreateFieldParams implements ICreateFieldParams {
         })
     })
     @IsString()
-    fieldId!: string;
+        fieldId!: string;
 
     @ApiProperty({
         name: i18n({
@@ -20,7 +20,7 @@ export class CreateFieldParams implements ICreateFieldParams {
         })
     })
     @IsString()
-    name!: string;
+        name!: string;
 
     @ApiProperty({
         name: i18n({
@@ -29,7 +29,7 @@ export class CreateFieldParams implements ICreateFieldParams {
         })
     })
     @IsString()
-    schemeId!: string;
+        schemeId!: string;
 
     @ApiProperty({
         name: i18n({
@@ -38,5 +38,5 @@ export class CreateFieldParams implements ICreateFieldParams {
         })
     })
     @IsString()
-    value!: string;
+        value!: string;
 }

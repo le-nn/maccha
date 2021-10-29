@@ -8,7 +8,7 @@ import { InternalServerErrorException } from "@nestjs/common";
 import { ISavePostTypeParams } from "@/Models/Posts/Params/ISavePostTypeParams";
 import { SchemeEntity, TaxonomyEntity } from "../Database/Entities";
 import { Taxonomy } from "@/Models/Contents/Entities/Taxonomy";
-import { from } from "rxjs";
+import { from, lastValueFrom } from "rxjs";
 import { concatMap, filter, map, mergeMap, toArray } from "rxjs/operators";
 import { Scheme } from "@/Models/Contents/Entities/Scheme";
 
@@ -23,7 +23,7 @@ export class PostTypesRepository implements IPostTypesRepository {
 
     public async getAllAsync(identifier: string): Promise<PostType[]> {
         try {
-            const postTypes = await from(
+            const postTypes = await lastValueFrom(from(
                 await this.postTypes.find({
                     where: {
                         identifier,
@@ -58,11 +58,11 @@ export class PostTypesRepository implements IPostTypesRepository {
                 )),
                 filter(s => !!s),
                 toArray()
-            ).toPromise();
+            ));
 
             return postTypes.sort((a, b) => a.taxonomy.name < b.taxonomy.name ? -1 : 1);
         }
-        catch (ex) {
+        catch (ex: any) {
             console.error("Failed to data access.", ex.message);
             throw new Error("Failed to get posttype.");
         }
@@ -117,7 +117,7 @@ export class PostTypesRepository implements IPostTypesRepository {
 
             throw new Error("Cannot to create PostType");
         }
-        catch (ex) {
+        catch (ex: any) {
             console.error("Failed to data access.", ex.message);
             throw new Error(ex.message);
         }
@@ -134,7 +134,7 @@ export class PostTypesRepository implements IPostTypesRepository {
                 }
             );
         }
-        catch (ex) {
+        catch (ex: any) {
             console.error("Failed to data access.", ex.message);
             throw new Error(ex.message);
         }
@@ -142,7 +142,7 @@ export class PostTypesRepository implements IPostTypesRepository {
 
     async findAsync(postTypeId: string): Promise<PostType | null> {
         try {
-            const [postType] = await from(
+            const [postType] = await lastValueFrom(from(
                 await this.postTypes.find({
                     where: {
                         postTypeId,
@@ -177,11 +177,11 @@ export class PostTypesRepository implements IPostTypesRepository {
                 )),
                 filter(s => !!s),
                 toArray()
-            ).toPromise();
+            ));
 
             return postType ?? null;
         }
-        catch (ex) {
+        catch (ex: any) {
             console.error("Failed to data access.", ex.message);
             throw new Error("Failed to get posttype.");
         }
@@ -218,7 +218,7 @@ export class PostTypesRepository implements IPostTypesRepository {
             //     taxonomyId: params.taxonomy.taxonomyId
             // });
 
-            const _ = await from(params.taxonomy.schemes.map((s, i) => ({ ...s, sort: i }))).pipe(
+            await lastValueFrom(from(params.taxonomy.schemes.map((s, i) => ({ ...s, sort: i }))).pipe(
                 concatMap(
                     s => from(
                         this.schemes.save(
@@ -235,7 +235,7 @@ export class PostTypesRepository implements IPostTypesRepository {
                         )
                     )
                 ),
-            ).toPromise();
+            ));
 
             return new PostType({
                 taxonomy: new Taxonomy({
@@ -251,7 +251,7 @@ export class PostTypesRepository implements IPostTypesRepository {
                 displayFormat: params.displayFormat
             });
         }
-        catch (ex) {
+        catch (ex: any) {
             console.error("Failed to data access.", ex.message);
             throw new Error(ex.message);
         }

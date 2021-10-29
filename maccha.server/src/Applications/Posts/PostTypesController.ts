@@ -116,9 +116,9 @@ export class PostTypesController {
     }
 
     /**
- * save post
- * @param identifieridentifier
- */
+     * save post
+     * @param identifieridentifier
+     */
     @ApiOperation({ summary: "投稿タイプを削除します.", description: "auth" })
     @ApiParam({ name: "postTypeId", description: "投稿タイプID", required: true })
     @ApiNoContentResponse({})

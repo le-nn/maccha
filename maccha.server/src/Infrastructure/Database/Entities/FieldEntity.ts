@@ -11,21 +11,21 @@ export class FieldEntity {
     readonly fieldId!: string;
 
     @Column({ length: 128 })
-    name!: string;
+        name!: string;
 
     @Column({ length: 128 })
-    schemeId!: string;
+        schemeId!: string;
 
     @Column({ type: "longtext" })
-    value!: string;
+        value!: string;
 
     @Column()
     @Index()
-    contentId!: string;
+        contentId!: string;
 
     @Column()
     @Index()
-    taxonomyId!: string;
+        taxonomyId!: string;
 
     /**
      * constructor

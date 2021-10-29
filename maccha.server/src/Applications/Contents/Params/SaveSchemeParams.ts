@@ -56,5 +56,5 @@ export class SaveSchemeParams implements ISaveSchemeParams {
         })
     })
     @IsString()
-    metadata!: string;
+        metadata!: string;
 }

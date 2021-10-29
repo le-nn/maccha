@@ -4,8 +4,8 @@ import { CreateTaxonomyParams } from "@/Applications/Contents/Params/CreateTaxon
 
 export class CreatePostTypeParams implements ICreatePostTypeParams {
     @IsString()
-    displayFormat = "table";
+        displayFormat = "table";
 
     @ValidateNested()
-    taxonomy!: CreateTaxonomyParams;
+        taxonomy!: CreateTaxonomyParams;
 }
