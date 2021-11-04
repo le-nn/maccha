@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
-import { PostType } from "../../Models/posts/entities/PostType";
-import { PostStatusType } from "../../Models/posts/entities/PostStatusType";
-import { ICreatedUser } from "../../Models/posts/entities/ICreatedUser";
+import { PostType } from "../../Models/Domain/posts/entities/PostType";
+import { PostStatusType } from "../../Models/Domain/posts/entities/PostStatusType";
+import { ICreatedUser } from "../../Models/Domain/posts/entities/ICreatedUser";
 
 /**
  * express post.

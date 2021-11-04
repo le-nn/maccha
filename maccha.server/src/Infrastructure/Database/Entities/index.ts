@@ -13,3 +13,9 @@ export * from "./SchemeEntity";
 export * from "./TaxonomyEntity";
 export * from "./ContentEntity";
 export * from "./FieldEntity";
+
+// Contacts
+export * from "./ContactEmailSettingEntity";
+export * from "./ContactContentEntity";
+export * from "./ContactContentFieldEntity";
+export * from "./ContactSettingEntity";

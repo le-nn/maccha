@@ -1,4 +1,4 @@
-import { Scheme } from "../../../Models/Contents/Entities/Scheme";
+import { Scheme } from "../../../Models/Domain/Contents/Entities/Scheme";
 
 export interface SchemeEditorProps {
     scheme: Scheme;

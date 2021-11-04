@@ -16,8 +16,8 @@ import {
     Chip
 } from "@mui/material";
 
-import { WebSite } from "../../../Models/sites/web-site";
-import { IWebSite } from "../../../Models/sites/web-site.interface";
+import { WebSite } from "../../../Models/Domain/sites/web-site";
+import { IWebSite } from "../../../Models/Domain/sites/web-site.interface";
 
 function WebSiteDetailDialog(props: DialogContentProp<IWebSite, IWebSite | undefined>) {
     const [webSite, setWebSite] = useState(props.context);

@@ -11,9 +11,9 @@ import { PostCardMenu } from "../Molecles";
 import { WrappedTextBlock, DateTimeText, FlexSpacer } from "../../commons";
 import { services } from "../../../Services";
 import { RoleType } from "../../../Models";
-import { Content } from "../../../Models/Contents/Entities/Content";
+import { Content } from "../../../Models/Domain/Contents/Entities/Content";
 import { axios } from "../../../Repositories/config";
-import { postStatusTypeDisplay } from "Apps/Models/posts/entities/PostStatusType";
+import { postStatusTypeDisplay } from "Apps/Models/Domain/posts/entities/PostStatusType";
 import { css } from "@mui/styled-engine";
 
 interface PostCardProps {

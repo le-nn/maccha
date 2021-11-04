@@ -1,4 +1,4 @@
-import { SchemeType } from "../../../../Models/Contents/Entities/Scheme";
+import { SchemeType } from "../../../../Models/Domain/Contents/Entities/Scheme";
 import { FieldEditorProps } from "../FieldEditorProps";
 import { SchemeEditorProps } from "../SchemeEditorProps";
 

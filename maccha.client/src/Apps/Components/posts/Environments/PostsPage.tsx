@@ -24,14 +24,14 @@ import {
 } from "@mui/icons-material";
 import { PostTypeSettingPanel } from "../Ecosystems/PostTypeSettingDisplayPanel";
 import ProfileImage from "../../commons/ProfileImage";
-import { RoleType } from "../../../Models";
 import { lightTheme } from "Apps/theme";
-import { PostType } from "../../../Models/posts/entities/PostType";
+import { PostType } from "../../../Models/Domain/posts/entities/PostType";
 import PostListPanel from "../Ecosystems/PostListPanel";
 import { confirmDeletePostTypeAsync } from "../Ecosystems/confirmRemovePostTypeDialog";
 import { useAppLocation, useAppNavigate } from "Libs/Routing/RouterConfig";
 import { useParams } from "@reach/router";
 import { css } from "@mui/styled-engine";
+import { RoleType } from "Apps/Models";
 
 export default () => {
     const history = useAppNavigate();
@@ -229,9 +229,11 @@ const postTypeBar = css({
     width: "100%",
     flex: "1 1 auto",
 });
+
 const container = css({
     height: "100%"
 });
+
 const activeItem = css({
     background: lightTheme.palette.primary.main + "!important",
 });

@@ -3,8 +3,8 @@ import {
     Box, Typography, List, ListItem, Paper, IconButton, Divider, Fab, Button
 } from "@mui/material";
 import { Edit as EditIcon, FileCopy } from "@mui/icons-material";
-import { PostType } from "../../../Models/posts/entities/PostType";
-import { schemeTypeDisplayNames } from "../../../Models/Contents/Entities/Scheme";
+import { PostType } from "../../../Models/Domain/posts/entities/PostType";
+import { schemeTypeDisplayNames } from "../../../Models/Domain/Contents/Entities/Scheme";
 import { axios } from "Apps/Repositories/config";
 import { FlexSpacer } from "../../commons";
 import { useAppNavigate } from "Libs/Routing/RouterConfig";

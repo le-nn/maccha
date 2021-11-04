@@ -1,10 +1,10 @@
 import { observable, computed, action, makeAutoObservable } from "mobx";
 import { AuthRepository } from "../Repositories/AuthRepository";
-import { LoginInfo } from "../Models/auth/login-info";
+import { LoginInfo } from "../Models/Domain/auth/login-info";
 import { UsersRepository } from "../Repositories/UsersRepository";
-import { User } from "../Models/users/user";
-import { IUser } from "../Models/users/user.interface";
-import { ICreateUserParams } from "../Models/users/ICreateUserParams";
+import { User } from "../Models/Domain/users/user";
+import { IUser } from "../Models/Domain/users/user.interface";
+import { ICreateUserParams } from "../Models/Domain/users/ICreateUserParams";
 
 /**
  * Users serive.

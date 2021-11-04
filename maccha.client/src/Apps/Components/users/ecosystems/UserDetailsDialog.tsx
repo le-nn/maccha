@@ -14,9 +14,9 @@ import {
     Checkbox,
     Chip
 } from "@mui/material";
-import { IUser } from "../../../Models/users/user.interface";
-import { displayRoles, RoleType } from "../../../Models/auth/role";
-import { WebSite } from "../../../Models/sites/web-site";
+import { IUser } from "../../../Models/Domain/users/user.interface";
+import { displayRoles, RoleType } from "../../../Models/Domain/auth/role";
+import { WebSite } from "../../../Models/Domain/sites/web-site";
 
 type DialogUser = IUser & { password?: string; };
 

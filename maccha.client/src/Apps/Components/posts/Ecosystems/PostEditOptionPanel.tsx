@@ -8,9 +8,9 @@ import { services } from "../../../Services";
 import { confirmAsync } from "../../commons/confirmAsync";
 import { DateTime } from "luxon";
 import { showMediaSelectionDialog } from "./MediaSelectionDialog";
-import { postStatusTypes } from "../../../Models/posts/entities/PostStatusType";
-import { Content } from "../../../Models/Contents/Entities/Content";
-import { StatusType } from "../../../Models/Contents/Enumes/StatusType";
+import { postStatusTypes } from "../../../Models/Domain/posts/entities/PostStatusType";
+import { Content } from "../../../Models/Domain/Contents/Entities/Content";
+import { StatusType } from "../../../Models/Domain/Contents/Enumes/StatusType";
 // import {
 //     MuiPickersUtilsProvider,
 //     KeyboardTimePicker,

@@ -7,10 +7,10 @@ import {
 } from "@mui/material";
 import { observer } from "mobx-react";
 import { services } from "../../../Services";
-import { WebSite } from "../../../Models/sites/web-site";
-import { displayRoles } from "../../../Models/auth/role";
+import { WebSite } from "../../../Models/Domain/sites/web-site";
+import { displayRoles } from "../../../Models/Domain/auth/role";
 import { ColorPalette } from "../../commons";
-import { User } from "../../../Models/users/user";
+import { User } from "../../../Models/Domain/users/user";
 
 interface UserSettingPanelProps {
     onChange: (key: keyof User, value: any) => void;

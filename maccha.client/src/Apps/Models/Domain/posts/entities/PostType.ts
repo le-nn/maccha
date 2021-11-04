@@ -7,7 +7,7 @@ import { IPostType } from "./IPostType";
 export class PostType implements IPostType {
     readonly postTypeId: string = "";
     readonly taxonomy: Taxonomy = new Taxonomy();
-    readonly displayFormat: string = "table";
+    readonly displayFormat: string = "card";
 
     constructor(value?: Partial<PostType>) {
         Object.assign(this, value);

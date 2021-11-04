@@ -4,7 +4,7 @@ import { SchemeEditorProps } from "./SchemeEditorProps";
 
 import { SelectScheme } from "./Editors/Select";
 import { Box, TextField, Typography } from "@mui/material";
-import { Scheme } from "../../../Models/Contents/Entities/Scheme";
+import { Scheme } from "../../../Models/Domain/Contents/Entities/Scheme";
 import { editors } from "./Editors";
 
 export function SchemeEditor(props: SchemeEditorProps) {

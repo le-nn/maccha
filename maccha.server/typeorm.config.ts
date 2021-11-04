@@ -1,5 +1,5 @@
 import { ConnectionOptions } from "typeorm";
-import * as Migrations from "./src/Infrastructure/Database/Migrations";
+import {Migrations} from "./src/Infrastructure/Database/Migrations";
 import * as Entities from "./src/Infrastructure/Database/Entities";
 
 const config: ConnectionOptions = {
@@ -17,7 +17,7 @@ const config: ConnectionOptions = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     entities: Object.keys(Entities).map(key => (Entities as any)[key]),
     migrations: [
-        ...Object.keys(Migrations).map(key => (Migrations as any)[key])
+        ...Migrations
     ],
     subscribers: ["dist/subscribers/**/*.js"],
     cli: {

@@ -1,4 +1,4 @@
-import { Field } from "../../../Models/Contents/Entities/Field";
+import { Field } from "../../../Models/Domain/Contents/Entities/Field";
 import { FieldContext } from "./FieldContext";
 
 export interface FieldEditorProps {

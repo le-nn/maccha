@@ -1,14 +1,14 @@
 import { axios, repositoryConfig } from "./config";
-import { WebSite } from "../Models/sites/web-site";
-import { IPost } from "../Models/posts/entities/IPost";
-import { Post } from "../Models/posts/entities/Post";
-import { ISearchResultResponse } from "../Models/commons/ISearchResultResponse";
+import { WebSite } from "../Models/Domain/sites/web-site";
+import { IPost } from "../Models/Domain/posts/entities/IPost";
+import { Post } from "../Models/Domain/posts/entities/Post";
+import { ISearchResultResponse } from "../Models/Domain/commons/ISearchResultResponse";
 import { DateTime } from "luxon";
 import { IPostResponse } from "./Responses/IPostResponse";
-import { ISavePostParams } from "../Models/posts/params/ISavePostParams";
-import { Content } from "../Models/Contents/Entities/Content";
-import { Field } from "../Models/Contents/Entities/Field";
-import { ISearchContentParams } from "../Models/Contents/Params";
+import { ISavePostParams } from "../Models/Domain/posts/params/ISavePostParams";
+import { Content } from "../Models/Domain/Contents/Entities/Content";
+import { Field } from "../Models/Domain/Contents/Entities/Field";
+import { ISearchContentParams } from "../Models/Domain/Contents/Params";
 
 
 export class PostsRepository {

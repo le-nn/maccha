@@ -9,8 +9,8 @@ import {
     Paper,
     Typography,
 } from "@mui/material";
-import { Scheme, SchemeType, schemeTypeDisplayNames } from "../../../Models/Contents/Entities/Scheme";
-import { PostType } from "../../../Models/posts/entities/PostType";
+import { Scheme, SchemeType, schemeTypeDisplayNames } from "../../../Models/Domain/Contents/Entities/Scheme";
+import { PostType } from "../../../Models/Domain/posts/entities/PostType";
 import { Flipper, Flipped } from "react-flip-toolkit";
 import { v4 } from "uuid";
 import { showFieldTypeEditDialogAsync } from "./FieldTypeEditDialog";

@@ -1,9 +1,9 @@
 import { axios, repositoryConfig } from "./config";
-import { User } from "../Models/users/user";
-import { IUser } from "../Models/users/user.interface";
-import { IUpdateUserParams } from "../Models/users/update-user-params";
-import { WebSite } from "../Models/sites/web-site";
-import { ICreateUserParams } from "../Models/users/ICreateUserParams";
+import { User } from "../Models/Domain/users/user";
+import { IUser } from "../Models/Domain/users/user.interface";
+import { IUpdateUserParams } from "../Models/Domain/users/update-user-params";
+import { WebSite } from "../Models/Domain/sites/web-site";
+import { ICreateUserParams } from "../Models/Domain/users/ICreateUserParams";
 
 export class UsersRepository {
     public async fetchUserAsync(userId: string) {

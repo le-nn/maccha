@@ -1,6 +1,6 @@
 import { Box, Button } from "@mui/material";
 import React from "react";
-import { SchemeType } from "../../../../Models/Contents/Entities/Scheme";
+import { SchemeType } from "../../../../Models/Domain/Contents/Entities/Scheme";
 import { FieldEditorProps } from "./../FieldEditorProps";
 import { Editor } from "./Editor";
 import { showMediaSelectionDialog } from "../../Ecosystems/MediaSelectionDialog";

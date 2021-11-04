@@ -1,7 +1,7 @@
 import React from "react";
 import { FieldEditorProps } from "../FieldEditorProps";
 import { ValidationTextField } from "../../../commons";
-import { SchemeType } from "../../../../Models/Contents/Entities/Scheme";
+import { SchemeType } from "../../../../Models/Domain/Contents/Entities/Scheme";
 import { Editor } from "./Editor";
 
 export const TextFieldEditor: Editor = {

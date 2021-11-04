@@ -1,4 +1,4 @@
-import { RoleType } from "./auth/role";
+import { RoleType } from ".";
 
 export interface Route {
     path: string;

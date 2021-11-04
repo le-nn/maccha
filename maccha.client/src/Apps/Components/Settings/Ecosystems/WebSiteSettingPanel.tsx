@@ -11,8 +11,8 @@ import {
 } from "@mui/material";
 import { useObserver } from "mobx-react";
 import { services } from "../../../Services";
-import { WebSite } from "../../../Models/sites/web-site";
-import { displayRoles, RoleType } from "../../../Models/auth/role";
+import { WebSite } from "../../../Models/Domain/sites/web-site";
+import { displayRoles, RoleType } from "../../../Models/Domain/auth/role";
 import { ColorPalette } from "../../commons";
 
 interface WebSiteSettingPanelProps {

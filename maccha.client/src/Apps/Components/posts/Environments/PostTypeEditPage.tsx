@@ -10,8 +10,8 @@ import {
     PostTypeBasicSettingPanel,
     SchemeSettingPanel
 } from "../Ecosystems";
-import { PostType } from "../../../Models/posts/entities/PostType";
-import { Taxonomy } from "../../../Models/Contents/Entities/Taxonomy";
+import { PostType } from "../../../Models/Domain/posts/entities/PostType";
+import { Taxonomy } from "../../../Models/Domain/Contents/Entities/Taxonomy";
 import { useAppNavigate } from "Libs/Routing/RouterConfig";
 import { useParams } from "@reach/router";
 

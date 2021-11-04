@@ -1,2 +1,5 @@
-import { Init1613497016205 } from "./1613497016205-Init";
-export const Migration = Init1613497016205;
+import { Initialize1635530618037 } from "./1635530618037-Initialize";
+
+export const Migrations: Function[] = [
+    Initialize1635530618037
+];

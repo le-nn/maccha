@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { showDialogAsync, DialogContentProp } from "../../commons/showDialog";
 import { Box, Typography, Button, TextField, useTheme, Fade } from "@mui/material";
-import { Scheme, SchemeType, schemeTypeDisplayNames } from "../../../Models/Contents/Entities/Scheme";
+import { Scheme, SchemeType, schemeTypeDisplayNames } from "../../../Models/Domain/Contents/Entities/Scheme";
 import { SchemeEditor } from "../FieldEditors/SchemeEditor";
 
 export default function FieldTypeEditDialog(props: DialogContentProp<Scheme, Scheme | null>) {

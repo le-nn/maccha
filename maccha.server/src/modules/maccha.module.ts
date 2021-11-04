@@ -5,6 +5,7 @@ import { PostsModule } from "./posts.module";
 import { MediaModule } from "./media.module";
 import { ContentsModule} from "./ContentsModule";
 import { PublicModule } from "./public.module";
+import { ContactsModule } from "./ContactsModule";
 
 @Module({
     imports: [
@@ -13,7 +14,8 @@ import { PublicModule } from "./public.module";
         UsersModule,
         WebSitesModule,
         ContentsModule,
-        PublicModule
+        PublicModule,
+        ContactsModule,
     ]
 })
 export class MacchaModule {

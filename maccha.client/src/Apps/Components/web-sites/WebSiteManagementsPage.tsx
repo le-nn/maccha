@@ -24,7 +24,7 @@ import {
 } from "@mui/icons-material";
 
 import { showWebSiteDetailsDialogAsync } from "./ecosystems/WebSiteDetailDialog";
-import { WebSite } from "../../Models/sites/web-site";
+import { WebSite } from "../../Models/Domain/sites/web-site";
 import { makeStyles } from "@mui/styles";
 
 export default function WebSiteManagementsPage() {

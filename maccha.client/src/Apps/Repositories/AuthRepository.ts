@@ -1,5 +1,5 @@
 import { axios, repositoryConfig, setToken } from "./config";
-import { LoginInfo } from "../Models/auth/login-info";
+import { LoginInfo } from "../Models/Domain/auth/login-info";
 
 /**
  * repository for authenticatoin

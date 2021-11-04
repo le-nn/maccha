@@ -1,5 +1,5 @@
 import React from "react";
-import { SchemeType } from "../../../../Models/Contents/Entities/Scheme";
+import { SchemeType } from "../../../../Models/Domain/Contents/Entities/Scheme";
 import { ValidationTextField } from "../../../commons";
 import { FieldEditorProps } from "../FieldEditorProps";
 import { Editor } from "./Editor";

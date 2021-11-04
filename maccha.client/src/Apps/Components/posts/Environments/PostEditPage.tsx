@@ -8,7 +8,7 @@ import { Observer } from "mobx-react";
 import { PostEditOptionPanel } from "../Ecosystems/PostEditOptionPanel";
 import { FieldEditor } from "../FieldEditors/FieldEditor";
 import "./style.scss";
-import { Field } from "../../../Models/Contents/Entities/Field";
+import { Field } from "../../../Models/Domain/Contents/Entities/Field";
 import { useParams } from "@reach/router";
 
 export default function PostEditPage() {

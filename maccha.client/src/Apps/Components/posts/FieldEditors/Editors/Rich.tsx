@@ -1,5 +1,5 @@
 import React from "react";
-import { SchemeType } from "../../../../Models/Contents/Entities/Scheme";
+import { SchemeType } from "../../../../Models/Domain/Contents/Entities/Scheme";
 import { RitchEditor } from "../../../commons/Editor";
 import { FieldEditorProps } from "./../FieldEditorProps";
 import { Editor } from "./Editor";

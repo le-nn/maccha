@@ -1,6 +1,6 @@
 import { observable, computed, action, makeAutoObservable } from "mobx";
 // import { AuthRepository } from "../Repositories/AuthRepository";
-// import { LoginInfo } from "../Models/auth/login-info";
+// import { LoginInfo } from "../Models/Domain/auth/login-info";
 // import { RoleType } from "../Models";
 // import { PluginAdapter } from "../Plugins/PluginAdapter";
 // import { Route } from "../Models/route";

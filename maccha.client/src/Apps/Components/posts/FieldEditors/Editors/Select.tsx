@@ -3,7 +3,7 @@ import { FieldEditorProps } from "../FieldEditorProps";
 import { ValidationTextField } from "../../../commons";
 import { Select as MSelect, MenuItem, TextField, Typography } from "@mui/material";
 import { SchemeEditorProps } from "../SchemeEditorProps";
-import { SchemeType } from "../../../../Models/Contents/Entities/Scheme";
+import { SchemeType } from "../../../../Models/Domain/Contents/Entities/Scheme";
 import { Editor } from "./Editor";
 
 export const SelectEditor: Editor = {

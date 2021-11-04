@@ -1,12 +1,12 @@
 import { axios, repositoryConfig } from "./config";
-import { IPostType } from "../Models/posts/entities/IPostType";
-import { PostType } from "../Models/posts/entities/PostType";
-import { IPostCategory } from "../Models/posts/entities/IPostCategory copy";
-import { PostCategory } from "../Models/posts/entities/PostCategory";
-import { ICreatePostTypeParams } from "../Models/posts/params/ICreatePostTypeParams";
-import { ISavePostTypeParams } from "../Models/posts/params/ISavePostTypeParams";
-import { Taxonomy } from "../Models/Contents/Entities/Taxonomy";
-import { Scheme } from "../Models/Contents/Entities/Scheme";
+import { IPostType } from "../Models/Domain/posts/entities/IPostType";
+import { PostType } from "../Models/Domain/posts/entities/PostType";
+import { IPostCategory } from "../Models/Domain/posts/entities/IPostCategory copy";
+import { PostCategory } from "../Models/Domain/posts/entities/PostCategory";
+import { ICreatePostTypeParams } from "../Models/Domain/posts/params/ICreatePostTypeParams";
+import { ISavePostTypeParams } from "../Models/Domain/posts/params/ISavePostTypeParams";
+import { Taxonomy } from "../Models/Domain/Contents/Entities/Taxonomy";
+import { Scheme } from "../Models/Domain/Contents/Entities/Scheme";
 
 export class PostManagementsRepository {
     /**

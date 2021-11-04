@@ -22,8 +22,8 @@ import {
 } from "@mui/icons-material";
 import ProfileImage from "../commons/ProfileImage";
 import { showUserDetailsDialogAsync } from "./ecosystems/UserDetailsDialog";
-import { IUser } from "../../Models/users/user.interface";
-import { User } from "../../Models/users/user";
+import { IUser } from "../../Models/Domain/users/user.interface";
+import { User } from "../../Models/Domain/users/user";
 import { RoleType, displayRoles } from "../../Models";
 import { axios } from "../../Repositories/config";
 import { makeStyles } from "@mui/styles";

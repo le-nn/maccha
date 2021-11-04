@@ -13,7 +13,7 @@ import { MulterModule } from "@nestjs/platform-express";
 import { AuthGuard } from "./Applications/Commons/auth-guard";
 
 import * as Entities from "@/Infrastructure/Database/Entities";
-import { Migration as MacchaMigration } from "./Infrastructure/Database/Migrations";
+import { Migrations as MacchaMigrations } from "./Infrastructure/Database/Migrations";
 import { AuthenticationsController } from "./Applications/Authentications/AuthenticationsController";
 import * as bodyParser from "body-parser";
 import { MediaModule } from "./modules/media.module";
@@ -95,10 +95,13 @@ const buildDbConfig = (option: MacchaOption) => {
         synchronize: false,
         logging: option.database.logging,
         logger: option.database.logger,
-        entities: Object.keys(Entities).map(key => (Entities as any)[key]),
+        entities: Object.keys(Entities)
+            .map(key => (Entities as any)[key]),
         migrations: [
-            MacchaMigration,
-            ...option.pulugins.map(p => p.migrations).reduce((x, y) => [...x, ...y], [])
+            ...MacchaMigrations as any,
+            ...option.pulugins
+                .map(p => p.migrations)
+                .reduce((x, y) => [...x, ...y], [])
         ]
     } as ConnectionOptions;
 };

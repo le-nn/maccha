@@ -1,10 +1,10 @@
 import { observable, computed, action, makeAutoObservable } from "mobx";
 import { PostsRepository } from "../Repositories/PostsRepository";
-import { Post } from "../Models/posts/entities/Post";
+import { Post } from "../Models/Domain/posts/entities/Post";
 import { PostManagementsRepository } from "../Repositories/PostManagementsRepository";
-import { PostType } from "Apps/Models/posts/entities/PostType";
-import { ICreatePostTypeParams } from "Apps/Models/posts/params/ICreatePostTypeParams";
-import { ISavePostTypeParams } from "Apps/Models/posts/params/ISavePostTypeParams";
+import { PostType } from "Apps/Models/Domain/posts/entities/PostType";
+import { ICreatePostTypeParams } from "Apps/Models/Domain/posts/params/ICreatePostTypeParams";
+import { ISavePostTypeParams } from "Apps/Models/Domain/posts/params/ISavePostTypeParams";
 
 /**
  * Users serive.

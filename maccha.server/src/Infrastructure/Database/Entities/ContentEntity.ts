@@ -9,29 +9,29 @@ import { FieldEntity } from "./FieldEntity";
 @Entity()
 export class ContentEntity {
     @PrimaryGeneratedColumn("uuid")
-        contentId!: string;
+    contentId!: string;
 
     @Column()
     @Index()
-        identifier!: string;
+    identifier!: string;
 
     @Column()
-        description!: string;
+    description!: string;
 
     @Column()
-        taxonomyId!: string;
+    taxonomyId!: string;
 
     @Column()
-        title!: string;
+    title!: string;
 
     @Column()
-        thumbnail!: string;
+    thumbnail!: string;
 
     @Column()
-        status!: StatusType;
+    status!: StatusType;
 
     @Column({ type: "text" })
-        metadata!: string;
+    metadata!: string;
 
     @UpdateDateColumn({
         readonly: true,
@@ -41,7 +41,7 @@ export class ContentEntity {
             from: (value: Date) => DateTime.fromJSDate(value)
         }
     })
-        updatedAt!: DateTime;
+    updatedAt!: DateTime;
 
     @CreateDateColumn({
         readonly: true,
@@ -51,7 +51,7 @@ export class ContentEntity {
             from: (value: Date) => DateTime.fromJSDate(value)
         }
     })
-        createdAt!: DateTime;
+    createdAt!: DateTime;
 
     @Column({
         nullable: true,
@@ -61,10 +61,10 @@ export class ContentEntity {
             from: (value: Date) => DateTime.fromJSDate(value)
         }
     })
-        publishIn!: DateTime | null;
+    publishIn!: DateTime | null;
 
     @Column()
-        createdBy!: string;
+    createdBy!: string;
 
     constructor(params: Partial<ContentEntity>) {
         Object.assign(this, params);

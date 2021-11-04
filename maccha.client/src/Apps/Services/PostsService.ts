@@ -1,9 +1,9 @@
 import { observable, computed, action, makeAutoObservable } from "mobx";
 import { PostsRepository } from "../Repositories/PostsRepository";
-import { Post } from "Apps/Models/posts/entities/Post";
-import { PostType } from "Apps/Models/posts/entities/PostType";
-import { Content } from "Apps/Models/Contents/Entities/Content";
-import { ISearchContentParams } from "Apps/Models/Contents/Params";
+import { Post } from "Apps/Models/Domain/posts/entities/Post";
+import { PostType } from "Apps/Models/Domain/posts/entities/PostType";
+import { Content } from "Apps/Models/Domain/Contents/Entities/Content";
+import { ISearchContentParams } from "Apps/Models/Domain/Contents/Params";
 
 /**
  * Users serive.

@@ -3,4 +3,4 @@ export * from "./route";
 /**
  * Auth
  */
-export * from "./auth/role";
+export * from "./Domain/auth/role";

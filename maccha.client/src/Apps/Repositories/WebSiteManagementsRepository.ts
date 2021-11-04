@@ -1,9 +1,9 @@
 import { axios } from "./config";
 import { from } from "rxjs";
 import { concatMap } from "rxjs/operators";
-import { WebSite } from "../Models/sites/web-site";
-import { ICreateWebSiteParams } from "../Models/sites/create-werb-site.params";
-import { IUpdateWebSiteParams } from "../Models/sites/update-web-site.params";
+import { WebSite } from "../Models/Domain/sites/web-site";
+import { ICreateWebSiteParams } from "../Models/Domain/sites/create-werb-site.params";
+import { IUpdateWebSiteParams } from "../Models/Domain/sites/update-web-site.params";
 
 export class WebSiteManagementsRepository {
 

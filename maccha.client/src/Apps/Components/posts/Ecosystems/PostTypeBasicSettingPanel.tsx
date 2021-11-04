@@ -8,8 +8,8 @@ import {
     Typography
 } from "@mui/material";
 import { FlexSpacer, ValidationTextField } from "../../commons";
-import { PostType } from "../../../Models/posts/entities/PostType";
-import { Taxonomy } from "../../../Models/Contents/Entities/Taxonomy";
+import { PostType } from "../../../Models/Domain/posts/entities/PostType";
+import { Taxonomy } from "../../../Models/Domain/Contents/Entities/Taxonomy";
 import { axios } from "../../../Repositories/config";
 import { FileCopy } from "@mui/icons-material";
 import { makeStyles } from "@mui/styles";
@@ -134,11 +134,14 @@ export function PostTypeBasicSettingPanel(props: PostTypeBasicSettingPanelProps)
             >
                 <Typography variant="subtitle1" className={styles.itemTitle}>表示形式</Typography>
                 <Box width="100%">
-                    <Select value={props.postType.displayFormat} fullWidth onChange={e => props.onChange(
-                        props.postType.clone({ displayFormat: e.target.value as string })
-                    )}>
-                        <MenuItem value="table">テーブル</MenuItem>
+                    <Select
+                        value={props.postType.displayFormat}
+                        fullWidth onChange={e => props.onChange(
+                            props.postType.clone({ displayFormat: e.target.value as string })
+                        )}
+                    >
                         <MenuItem value="card">カード</MenuItem>
+                        <MenuItem value="table">テーブル</MenuItem>
                     </Select>
                     <Box mt={1} />
                     <Typography color="textSecondary" variant="caption">一覧表示の際の表示形式</Typography>

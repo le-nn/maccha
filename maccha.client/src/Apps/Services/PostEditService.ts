@@ -1,10 +1,8 @@
 import { observable, computed, action, makeAutoObservable } from "mobx";
 import { PostsRepository } from "../Repositories/PostsRepository";
-import { Post } from "Apps/Models/posts/entities/Post";
-import { PostType } from "Apps/Models/posts/entities/PostType";
-import { Content } from "Apps/Models/Contents/Entities/Content";
-import { Taxonomy } from "Apps/Models/Contents/Entities/Taxonomy";
-import { Field } from "Apps/Models/Contents/Entities/Field";
+import { Content } from "Apps/Models/Domain/Contents/Entities/Content";
+import { Taxonomy } from "Apps/Models/Domain/Contents/Entities/Taxonomy";
+import { Field } from "Apps/Models/Domain/Contents/Entities/Field";
 
 /**
  * Users serive.

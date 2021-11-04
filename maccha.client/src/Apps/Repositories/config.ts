@@ -1,5 +1,5 @@
 import Axios, { AxiosAdapter } from "axios";
-import { LoginInfo } from "../Models/auth/login-info";
+import { LoginInfo } from "../Models/Domain/auth/login-info";
 import { ServiceContext, services } from "../Services";
 
 export const repositoryConfig = {

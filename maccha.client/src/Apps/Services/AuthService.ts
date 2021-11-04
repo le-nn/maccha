@@ -1,6 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { AuthRepository } from "../Repositories/AuthRepository";
-import { LoginInfo } from "../Models/auth/login-info";
+import { LoginInfo } from "../Models/Domain/auth/login-info";
 import { RoleType } from "../Models";
 import { setToken } from "../Repositories/config";
 

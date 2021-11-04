@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { services } from "../../../Services";
 import { useObserver } from "mobx-react";
-import { WebSite } from "../../../Models/sites/web-site";
+import { WebSite } from "../../../Models/Domain/sites/web-site";
 import ProfileImage from "../../commons/ProfileImage";
 import { theme } from "../../../theme";
 import { axios } from "../../../Repositories/config";

@@ -5,15 +5,15 @@ import {
     Box,
     useTheme
 } from "@mui/material";
-import { Post } from "../../../Models/posts/entities/Post";
+import { Post } from "../../../Models/Domain/posts/entities/Post";
 import SwipeableViews from "react-swipeable-views";
 import { services } from "../../../Services";
 import { Observer, useObserver } from "mobx-react";
 import { PhotoGridView } from "../../commons";
 import { Flipped, Flipper } from "react-flip-toolkit";
 import "../Environments/style.scss";
-import { Field } from "../../../Models/Contents/Entities/Field";
-import { Scheme } from "../../../Models/Contents/Entities/Scheme";
+import { Field } from "../../../Models/Domain/Contents/Entities/Field";
+import { Scheme } from "../../../Models/Domain/Contents/Entities/Scheme";
 import { SchemeEditorProps } from "../FieldEditors/SchemeEditorProps";
 import { axios } from "../../../Repositories/config";
 import { makeStyles } from "@mui/styles";

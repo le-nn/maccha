@@ -5,7 +5,7 @@ import { confirmAsync } from "../../../commons/confirmAsync";
 import { showMultipleMediaSelectionDialogAsync } from "../../Ecosystems/MediaSelectionDialog";
 import { Box, IconButton } from "@mui/material";
 import { Add, Delete } from "@mui/icons-material";
-import { SchemeType } from "../../../../Models/Contents/Entities/Scheme";
+import { SchemeType } from "../../../../Models/Domain/Contents/Entities/Scheme";
 import { Editor } from "./Editor";
 import { axios } from "../../../../Repositories/config";
 
