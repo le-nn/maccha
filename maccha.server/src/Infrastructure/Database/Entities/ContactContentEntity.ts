@@ -21,7 +21,7 @@ export class ContactContentEntity {
         nullable: true,
         type: "datetime",
         transformer: {
-            to: (value: DateTime) => value?.toISO(),
+            to: (value: DateTime) => value?.toISO&&value?.toISO(),
             from: (value: Date) => DateTime.fromJSDate(value)
         }
     })

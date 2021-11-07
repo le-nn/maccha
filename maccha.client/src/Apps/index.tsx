@@ -11,6 +11,8 @@ import { Frame } from "Libs/Frame";
 import LoginPage from "Apps/Components/login/LoginPage";
 import { MacchaConfig, OptionProvider } from "./Hooks/useOption";
 import { DialogProvider } from "Libs/Dialogs/DialogProvider";
+import { build } from "./Models/Stores";
+import { StoreProvider } from "react-relux";
 
 const bootstrap = async () => {
     await services.authService.refreshAsync();
@@ -42,6 +44,7 @@ export const MacchaManager = (props: MacchaManagerProps) => {
         t,
         pathPrefix: option.pathPrefix,
     });
+    const [storeProvider] = useState(build());
 
     const resolvePathPrefix = (path: string) => {
         if (path[0] !== "/") {
@@ -89,22 +92,24 @@ export const MacchaManager = (props: MacchaManagerProps) => {
     };
 
     return (
-        <ThemeProvider theme={lightTheme}>
-            <DialogProvider>
-                <OptionProvider option={option}>
-                    {loginPage ?
-                        loginPage
-                        :
-                        <Frame menus={router.routes}
-                            routePressed={routePressed}>
-                            <Grow key={location.key} in>
-                                <Box sx={{ height: "100%" }}>
-                                    <AppRouterProvider config={router} />
-                                </Box>
-                            </Grow>
-                        </Frame>}
-                </OptionProvider>
-            </DialogProvider>
-        </ThemeProvider>
+        <StoreProvider provider={storeProvider}>
+            <ThemeProvider theme={lightTheme}>
+                <DialogProvider>
+                    <OptionProvider option={option}>
+                        {loginPage ?
+                            loginPage
+                            :
+                            <Frame menus={router.routes}
+                                routePressed={routePressed}>
+                                <Grow key={location.key} in>
+                                    <Box sx={{ height: "100%" }}>
+                                        <AppRouterProvider config={router} />
+                                    </Box>
+                                </Grow>
+                            </Frame>}
+                    </OptionProvider>
+                </DialogProvider>
+            </ThemeProvider>
+        </StoreProvider>
     );
 };

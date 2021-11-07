@@ -1,5 +1,3 @@
-export * from "./route";
-
 /**
  * Auth
  */

@@ -32,7 +32,7 @@ export class RitchEditor extends React.Component<RitchEditorProps> {
                 image: this.imageHandler.bind(this)
             }
         },
-    }
+    };
 
     async imageHandler(e: any, f: any) {
         const quill = this.quillRef?.getEditor();

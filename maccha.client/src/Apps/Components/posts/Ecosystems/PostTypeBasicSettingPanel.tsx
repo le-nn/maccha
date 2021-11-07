@@ -12,7 +12,7 @@ import { PostType } from "../../../Models/Domain/posts/entities/PostType";
 import { Taxonomy } from "../../../Models/Domain/Contents/Entities/Taxonomy";
 import { axios } from "../../../Repositories/config";
 import { FileCopy } from "@mui/icons-material";
-import { makeStyles } from "@mui/styles";
+import { css } from "@emotion/react";
 
 interface PostTypeBasicSettingPanelProps {
     postType: PostType;
@@ -20,8 +20,6 @@ interface PostTypeBasicSettingPanelProps {
 }
 
 export function PostTypeBasicSettingPanel(props: PostTypeBasicSettingPanelProps) {
-    const styles = useStyles();
-
     function handlePostTypeParamsChanged(key: keyof Taxonomy, value: unknown) {
         props.onChange(
             props.postType.clone({
@@ -54,7 +52,7 @@ export function PostTypeBasicSettingPanel(props: PostTypeBasicSettingPanelProps)
                 width="100%"
                 maxWidth="960px"
             >
-                <Typography variant="subtitle1" className={styles.itemTitle}>タクソノミー名</Typography>
+                <Typography variant="subtitle1" css={itemTitle}>タクソノミー名</Typography>
                 <ValidationTextField
                     required
                     placeholder="例：blogs"
@@ -75,7 +73,7 @@ export function PostTypeBasicSettingPanel(props: PostTypeBasicSettingPanelProps)
                 width="100%"
                 maxWidth="960px"
             >
-                <Typography variant="subtitle1" className={styles.itemTitle}>エンドポイント名</Typography>
+                <Typography variant="subtitle1" css={itemTitle}>エンドポイント名</Typography>
                 <Typography style={{ width: "100%", maxWidth: "100%", wordBreak: "break-all" }} >
                     {axios.defaults.baseURL}contents/{props.postType.taxonomy.name}
                 </Typography>
@@ -92,7 +90,7 @@ export function PostTypeBasicSettingPanel(props: PostTypeBasicSettingPanelProps)
                 width="100%"
                 maxWidth="960px"
             >
-                <Typography variant="subtitle1" className={styles.itemTitle}>表示名</Typography>
+                <Typography variant="subtitle1" css={itemTitle}>表示名</Typography>
                 <ValidationTextField
                     required
                     value={props.postType.taxonomy.displayName}
@@ -111,7 +109,7 @@ export function PostTypeBasicSettingPanel(props: PostTypeBasicSettingPanelProps)
                 width="100%"
                 maxWidth="960px"
             >
-                <Typography variant="subtitle1" className={styles.itemTitle}>備考</Typography>
+                <Typography variant="subtitle1" css={itemTitle}>備考</Typography>
                 <ValidationTextField
                     fullWidth
                     style={{ marginTop: "24px" }}
@@ -132,7 +130,7 @@ export function PostTypeBasicSettingPanel(props: PostTypeBasicSettingPanelProps)
                 width="100%"
                 maxWidth="960px"
             >
-                <Typography variant="subtitle1" className={styles.itemTitle}>表示形式</Typography>
+                <Typography variant="subtitle1" css={itemTitle}>表示形式</Typography>
                 <Box width="100%">
                     <Select
                         value={props.postType.displayFormat}
@@ -151,8 +149,6 @@ export function PostTypeBasicSettingPanel(props: PostTypeBasicSettingPanelProps)
     );
 }
 
-const useStyles = makeStyles({
-    itemTitle: {
-        width: "320px"
-    }
+const itemTitle = css({
+    width: "320px"
 });

@@ -4,7 +4,6 @@ import { IPostTypesRepository } from "@/Models/Posts/Repositories/IPostTypeRepos
 import { ICreatePostTypeParams } from "@/Models/Posts/Params/ICreatePostTypeParams";
 import { InjectRepository } from "@nestjs/typeorm";
 import { PostType } from "@/Models/Posts/Entities/PostType";
-import { InternalServerErrorException } from "@nestjs/common";
 import { ISavePostTypeParams } from "@/Models/Posts/Params/ISavePostTypeParams";
 import { SchemeEntity, TaxonomyEntity } from "../Database/Entities";
 import { Taxonomy } from "@/Models/Contents/Entities/Taxonomy";

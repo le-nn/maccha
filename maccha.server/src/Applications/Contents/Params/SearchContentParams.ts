@@ -1,7 +1,7 @@
 import { i18n } from "@/Applications/Commons/i18n";
 import { ICreateTaxonomyParams, ISaveTaxonomyParams, ISearchContentParams } from "@/Models/Contents/Params";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsArray, IsNumber, IsString,MinLength, ValidateNested } from "class-validator";
+import { IsArray, IsNumber, IsString, MinLength, ValidateNested } from "class-validator";
 import { CreateSchemeParams } from "./CreateSchemeParams";
 import { SaveSchemeParams } from "./SaveSchemeParams";
 
@@ -15,7 +15,7 @@ export class SearchContentParams implements ISearchContentParams {
             ja: "フィールドの検索クエリー."
         })
     })
-        filter = "";
+    filter = "";
 
     @ApiProperty({
         name: i18n({
@@ -23,7 +23,7 @@ export class SearchContentParams implements ISearchContentParams {
             ja: "取得するフィールドのコンテンツのサイズ制限クエリー."
         })
     })
-        limit = "";
+    limit = "";
 
     @ApiProperty({
         name: i18n({
@@ -31,7 +31,7 @@ export class SearchContentParams implements ISearchContentParams {
             ja: "並べ替えクエリ."
         })
     })
-        order = "";
+    order = "";
 
     @ApiProperty({
         name: i18n({
@@ -39,7 +39,7 @@ export class SearchContentParams implements ISearchContentParams {
             ja: "何件目から取得するか."
         })
     })
-        offset = 0;
+    offset = 0;
 
     @ApiProperty({
         name: i18n({
@@ -47,5 +47,5 @@ export class SearchContentParams implements ISearchContentParams {
             ja: "何件取得するか."
         })
     })
-        fetch = 30;
+    fetch = 30;
 }

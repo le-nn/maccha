@@ -2,7 +2,7 @@ import { MigrationInterface, QueryRunner } from "typeorm";
 import { runInitialSeed } from "../Seeds";
 
 export class Initialize1635530618037 implements MigrationInterface {
-    name = 'Initialize1635530618037'
+    name = 'Initialize1635530618037';
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TABLE \`user_entity\` (\`userId\` char(36) NOT NULL, \`name\` varchar(128) NOT NULL, \`email\` varchar(256) NOT NULL, \`password\` varchar(256) NOT NULL, \`role\` bigint UNSIGNED NOT NULL, \`isActive\` tinyint NOT NULL, \`avatar\` varchar(255) NOT NULL, \`updatedAt\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`createdAt\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), INDEX \`IDX_3fe76ecf0f0ef036ff981e9f67\` (\`name\`), INDEX \`IDX_158f20832b16ead19dcd50c743\` (\`role\`), UNIQUE INDEX \`IDX_415c35b9b3b6fe45a3b065030f\` (\`email\`), PRIMARY KEY (\`userId\`)) ENGINE=InnoDB`);

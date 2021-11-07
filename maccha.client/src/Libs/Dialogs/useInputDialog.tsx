@@ -53,7 +53,11 @@ export const useIntupDialog = () => {
                                     </Box>
                                 }
                                 <Box p={3}>
-                                    <TextField {...options?.textFieldProps} onChange={e => setText(e.target.value)} />
+                                    <TextField
+                                        {...options?.textFieldProps}
+                                        value={text}
+                                        onChange={e => setText(e.target.value)}
+                                    />
                                 </Box>
                             </Box>
                         </DialogContent>
