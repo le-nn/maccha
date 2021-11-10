@@ -34,14 +34,14 @@ interface MacchaManagerProps {
  * entry pont.
  * @param config config option params.
  */
-export const MacchaManager = (props: MacchaManagerProps) => {
+export const MacchaManager = (props: MacchaManagerProps): ReactNode => {
     const history = useAppNavigate();
     const location = useAppLocation();
     const [loginPage, setLoginPage] = useState<ReactNode | null>(null);
     const [option, setOption] = useState(defaults);
     const { t } = useTranslation();
     const router = routes({
-        t,
+        t: t as any,
         pathPrefix: option.pathPrefix,
     });
     const [storeProvider] = useState(build());

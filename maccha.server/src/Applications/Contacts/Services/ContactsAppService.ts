@@ -14,7 +14,7 @@ export class ContactAppService {
         return await this.contactsService.searchAsync(identifier);
     }
 
-    async fetchAsync(contactSettingId: string, contactId: string) {
+    async fetchAsync(contactId: string) {
         return await this.contactsService.fetchAsync(contactId);
     }
 

@@ -1,3 +1,4 @@
+import { KeyboardReturnOutlined } from "@mui/icons-material";
 import { IContactSetting } from "Apps/Models/Domain/Contacts/ContactSettings";
 import { ContactSettingsRepository } from "Apps/Repositories/ContactSettingsRepository";
 import { services } from "Apps/Services";
@@ -54,7 +55,12 @@ export class ContactSettingContextStore extends Store<ContactSettingContextState
         return state;
     }
 
-    async loadSettingAsync(contactSettingId: string) {
+    async loadSettingAsync(contactSettingId: string | null) {
+        if (!contactSettingId) {
+            this.mutate(new ModifySetting(null));
+            return;
+        }
+
         const contactSetting = await this.repository.fetchContactSetting(contactSettingId);
         this.mutate(new ModifySetting(contactSetting));
     }

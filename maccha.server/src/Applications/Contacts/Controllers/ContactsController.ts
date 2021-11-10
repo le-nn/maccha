@@ -15,14 +15,13 @@ import { ContactAppService } from "../Services/ContactsAppService";
 export class ContactsController {
     constructor(readonly contactAppService: ContactAppService) { }
 
-    @Get(":contactSettingId/:contactId")
+    @Get("content/:contactId")
     @SetMetadata("role", RoleType.Subscribe)
     @UseGuards(AuthGuard)
     public async find(
-        @Param("contactSettingId") contactSettingId: string,
         @Param("contactId") contactId: string
     ): Promise<any> {
-        const settings = await this.contactAppService.fetchAsync(contactSettingId, contactId);
+        const settings = await this.contactAppService.fetchAsync(contactId);
         return settings;
     }
 

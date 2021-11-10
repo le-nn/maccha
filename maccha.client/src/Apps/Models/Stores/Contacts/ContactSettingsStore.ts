@@ -49,7 +49,7 @@ export class ContactSettingsStore extends Store<ContactSettingsState> {
         }
     }
 
-    select(selectedSettingId: string) {
+    select(selectedSettingId: string | null) {
         this.mutate(new SetSelectedSettingId({
             id: selectedSettingId,
         }));

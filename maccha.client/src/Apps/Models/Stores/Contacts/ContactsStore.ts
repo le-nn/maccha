@@ -1,12 +1,14 @@
-import { ContactContent } from "Apps/Models/Domain/Contacts/Contact";
+import { ContactContent, ContactContentMeta } from "Apps/Models/Domain/Contacts/Contact";
 import { ContactsRepository } from "Apps/Repositories/ContactsRepository";
 import { Message, State, Store, store } from "relux.js";
 
 class ContactsStoreState extends State<ContactsStoreState>{
-    contacts: ContactContent[] = [];
+    contacts: ContactContentMeta[] = [];
+    selectedId: string | null = null;
 }
 
-class ModifyContacts extends Message<ContactContent[]> { }
+class ModifyContacts extends Message<ContactContentMeta[]> { }
+class SetSelectedContactContentId extends Message<{ selectedId: string | null }> { }
 
 @store({ name: "ContactsStore" })
 export class ContactsStore extends Store<ContactsStoreState> {
@@ -24,12 +26,42 @@ export class ContactsStore extends Store<ContactsStoreState> {
                     contacts: payload
                 });
             }
+            case SetSelectedContactContentId: {
+                const { payload } = message as SetSelectedContactContentId;
+                return state.clone({
+                    selectedId: payload.selectedId
+                });
+            }
         }
         return state;
     }
 
-    async loadAsync(contactSettingId: string) {
+    async loadAsync(contactSettingId: string | null) {
+        return;
+
+        if (!contactSettingId) {
+           // this.mutate(new ModifyContacts([]));
+            return;
+        }
+
         const contacts = await this.repository.fetchAsync(contactSettingId);
-        this.mutate(new ModifyContacts(contacts));
+        //this.mutate(new ModifyContacts(contacts));
+
+        const [c] = contacts;
+        if (!this.state.selectedId && c) {
+            console.log("aaaaaaaaaa", c);
+            this.select(c.contactContentId);
+        }
+        else if (!c) {
+            console.log("bbbbbbbbbbb", c);
+            this.select(null);
+        }
+    }
+
+    select(contactContentId: string | null) {
+        this.mutate(
+            new SetSelectedContactContentId({
+                selectedId: contactContentId
+            }));
     }
 }
