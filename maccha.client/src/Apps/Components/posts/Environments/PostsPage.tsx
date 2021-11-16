@@ -78,7 +78,6 @@ export default () => {
         if (selected) {
             setTimeout(() => history(`/posts/${selected.taxonomy.name}`), 10);
         }
-        console.log(selected);
     };
 
     const onPostTypeMenu = (event: React.MouseEvent<HTMLElement>, postType: PostType) => {
@@ -96,7 +95,6 @@ export default () => {
 
         if (await confirmDeletePostTypeAsync(`${postTypeContext.taxonomy.displayName}を本当に削除しますか？`)) {
             await services.postManagementsService.removeAsync(postTypeContext.postTypeId);
-            console.log(services.postManagementsService.postTypes);
         }
     };
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { RouterConfig } from "Libs/Routing/RouterConfig";
 import { TFunction } from "react-i18next";
-import { AccountBox, ContactMail, InsertPhoto, Language, LiveHelp, PostAdd, Settings } from "@mui/icons-material";
+import { AccountBox, ContactMail, InsertPhoto, Language, LiveHelp, Mail, PostAdd, Settings } from "@mui/icons-material";
 import { RoleType } from "./Models";
 import { group } from "console";
 
@@ -53,7 +53,7 @@ export const routes = (option?: {
         {
             path: "/contacts/*",
             title: option?.t("お問い合わせ") ?? "",
-            icon: () => <ContactMail />,
+            icon: () => <Mail />,
             component: () => import("Apps/Components/Contacts/Environments/ContactPageRoot"),
             roles: [RoleType.Edit, RoleType.Admin, RoleType.Subscribe],
             children:[

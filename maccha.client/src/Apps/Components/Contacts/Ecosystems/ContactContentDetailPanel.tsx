@@ -1,12 +1,13 @@
 import { CircularProgress, Typography, useTheme } from "@mui/material";
 import { Box, Backdrop } from "@mui/material";
 import { ContactContentContextStore } from "Apps/Models/Stores/Contacts/ContactContextStore";
-import React from "react";
-import { useObserver } from "react-relux";
+import React, { useEffect } from "react";
+import { useDispatch, useObserver } from "react-relux";
 import { DateTime } from "luxon";
 import { FlexSpacer } from "Apps/Components/commons";
 import { useTranslation } from "react-i18next";
 import { MailOutline } from "@mui/icons-material";
+import { ContactsStore } from "Apps/Models/Stores/Contacts/ContactsStore";
 
 export const ContactContentDetailPanel = () => {
     const detail = useObserver(ContactContentContextStore, s => s.contact);
@@ -25,7 +26,7 @@ export const ContactContentDetailPanel = () => {
                 <Box textAlign="center">
                     <MailOutline
                         sx={{
-                            fontSize: "180px",
+                            fontSize: "120px",
                             color: theme.palette.grey[400]
                         }}
                     />

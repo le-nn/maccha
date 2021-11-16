@@ -8,20 +8,16 @@ import { ContactsStore } from "Apps/Models/Stores/Contacts/ContactsStore";
 import { DateTime } from "luxon";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch, useObserver } from "react-relux";
+import { useDispatch, useObserver, useStore } from "react-relux";
 
 export const ContactListPanel = () => {
     const selectedId = useObserver(ContactsStore, s => s.selectedId);
     const contacts = useObserver(ContactsStore, s => s.contacts);
+    const forCompareIsContactContentIdChanged = useObserver(ContactContentContextStore, s => s.contact?.contactSettingId ?? null);
     const dispatch = useDispatch(ContactsStore);
     const dispatchContactContentContext = useDispatch(ContactContentContextStore);
     const [t] = useTranslation();
     const theme = useTheme();
-
-    useEffect(() => {
-        console.log("qqqq",selectedId);
-        dispatchContactContentContext(s => s.loadAsync(selectedId));
-    }, [selectedId]);
 
     const handleItemClicked = (c: ContactContentMeta) => {
         dispatch(s => s.select(c.contactContentId));
@@ -48,7 +44,7 @@ export const ContactListPanel = () => {
                             fontSize: "24px",
                             color: theme.palette.grey[400]
                         }}
-                    >{t("0件です")}</Typography>
+                    >{t("0 件です")}</Typography>
                 </Box>
             </Box>
         );

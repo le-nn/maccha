@@ -35,7 +35,6 @@ export class UsersService {
     public async fetchUesrsAsync() {
         try {
             const users = await this.repository.fetchUsersAsync();
-            console.log(users);
             this.users = users;
         }
         catch {

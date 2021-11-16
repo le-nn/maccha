@@ -18,10 +18,5 @@ export const build = () => {
 
         ]
     });
-
-    s.subscribe(s => {
-       // console.log(c++, s);
-    });
-
     return s;
 };

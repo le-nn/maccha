@@ -40,7 +40,6 @@ export class ContactsController {
         @Param("contactSettingId") contactSettingId: string,
         @Body() body: any
     ): Promise<any> {
-        console.log(body);
         const fields = Object.keys(body).map(k => ({
             name: k,
             value: body[k]

@@ -1,6 +1,7 @@
 import { ContactContent } from "Apps/Models/Domain/Contacts/Contact";
 import { ContactsRepository } from "Apps/Repositories/ContactsRepository";
 import { Message, State, Store, store } from "relux.js";
+import { ContactsStore } from "./ContactsStore";
 
 class ContactContentContextStoreState extends State<ContactContentContextStoreState>{
     contact: ContactContent | null = null;
@@ -12,8 +13,16 @@ class ModifyContactContent extends Message<ContactContent | null> { }
 export class ContactContentContextStore extends Store<ContactContentContextStoreState> {
     readonly repository = new ContactsRepository();
 
-    constructor() {
+    constructor(
+        readonly contactsStore: ContactsStore
+    ) {
         super(new ContactContentContextStoreState(), ContactContentContextStore.mutation);
+
+        contactsStore.subscribe(e => {
+            if (e.present.selectedId !== e.previous.selectedId) {
+                this.loadAsync(e.present.selectedId);
+            }
+        });
     }
 
     static mutation(state: ContactContentContextStoreState, message: Message): ContactContentContextStoreState {

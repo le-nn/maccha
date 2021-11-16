@@ -4,7 +4,7 @@ import { ContactsService } from "@/Models/Contacts/Services/ContactsService";
 import { Inject } from "@nestjs/common";
 import { CreateContactSettingParams } from "../Params/CreateContactSettingParams";
 
-export class ContactAppService {    
+export class ContactAppService {
     constructor(
         @Inject(ContactsService)
         readonly contactsService: ContactsService) {

@@ -17,7 +17,6 @@ export const ContactSettingsList = () => {
     const theme = useTheme();
 
     useEffect(() => {
-        console.log("selectedSettingId", selectedSettingId);
         dispatchContacts(s => s.loadAsync(selectedSettingId));
     }, [selectedSettingId]);
 
@@ -50,7 +49,7 @@ export const ContactSettingsList = () => {
                             fontSize: "24px",
                             color: theme.palette.grey[400]
                         }}
-                    >{t("0件です")}</Typography>
+                    >{t("0 件です")}</Typography>
                 </Box>
             </Box>
         );

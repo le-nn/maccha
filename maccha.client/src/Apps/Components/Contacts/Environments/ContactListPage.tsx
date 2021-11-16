@@ -13,17 +13,11 @@ import { useDispatch, useObserver } from "react-relux";
 import { ContactContentDetailPanel } from "../Ecosystems/ContactContentDetailPanel";
 import { ContactListPanel } from "../Ecosystems/ContactListPanel";
 import { ContactSettingsList } from "../Ecosystems/ContactSettingsList";
-import { ContactSettingDisplayPanel } from "./ContactSettingDisplayPanel";
+import { ContactSettingDisplayPanel } from "../Ecosystems/ContactSettingDisplayPanel";
 
 export default () => {
     const selectedSettingId = useObserver(ContactSettingsStore, s => s.selectedSettingId);
     const selectedContactContentId = useObserver(ContactsStore, s => s.selectedId);
-
-    const dispatch = useDispatch(ContactSettingContextStore);
-
-    useEffect(() => {
-        dispatch(s => s.loadSettingAsync(selectedSettingId));
-    }, [selectedSettingId]);
 
     return <>
         <Grid
@@ -39,7 +33,7 @@ export default () => {
             </Grid>
 
             <Grid xs={9} item sx={{ display: "flex" }}>
-                <Grow key={selectedSettingId} in>
+                <Grow key={selectedSettingId} in >
                     <div
                         css={css({
                             height: "100%",
@@ -57,7 +51,7 @@ export default () => {
                                 <Divider orientation="vertical" flexItem />
                             </Grid>
                             <Grid xs={9} item sx={{ display: "flex" }}>
-                                <Fade key={selectedContactContentId} in>
+                                <Fade key={selectedContactContentId} in >
                                     <div
                                         css={css({
                                             height: "100%",

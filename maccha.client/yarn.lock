@@ -11193,12 +11193,12 @@ react-refresh@^0.9.0:
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.9.0.tgz#71863337adc3e5c2f8a6bfddd12ae3bfe32aafbf"
   integrity sha512-Gvzk7OZpiqKSkxsQvO/mbTN1poglhmAV7gR/DdIrRrSMXraRQQlfikRJOr3Nb9GTMPC5kof948Zy6jJZIFtDvQ==
 
-react-relux@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/react-relux/-/react-relux-2.0.3.tgz#26b877994fb56fa5c9fbb3802279821f697b19aa"
-  integrity sha512-mU4Nv9RAssxigRRqVfjrwaMAL9J//lrgKgCjvykI3UfTas6piazGEctVwxupp9avT2O7zwdptfEsKhisJSTKiA==
+react-relux@^2.0.5:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/react-relux/-/react-relux-2.0.4.tgz#c7564a2b04f3bf1691cc57b09beb0c53b051fbe9"
+  integrity sha512-eCajRWw39vAcaiDrdg+o24xtxU1Pba8qdMOAzxGJY8Orkc2D0S7XYstEi+X1x8WE+SqtD+1OKON8Mzh2VBaO2g==
   dependencies:
-    relux.js "^2.0.4"
+    relux.js "^2.0.7"
 
 react-side-effect@^2.1.0:
   version "2.1.1"
@@ -11476,10 +11476,10 @@ regjsparser@^0.7.0:
   dependencies:
     jsesc "~0.5.0"
 
-relux.js@^2.0.4, relux.js@^2.0.6:
-  version "2.0.6"
-  resolved "https://registry.yarnpkg.com/relux.js/-/relux.js-2.0.6.tgz#7c8afb9ce80783c872ed53dd46fe70225a88c325"
-  integrity sha512-u3fPSdPQAbEuzsKvAR8RDd1/uAI+IacYUbGnmNjvYroF6bfIuyxIYeU/KOFjZk7y6Ity8DP0VwUZc1l8NI86Og==
+relux.js@^2.0.7, relux.js@^2.0.8:
+  version "2.0.8"
+  resolved "https://registry.yarnpkg.com/relux.js/-/relux.js-2.0.8.tgz#a26f7d6d390cce79f6ce6991d76b97330fe664f8"
+  integrity sha512-2KiHF1/dY49OyxpzT6LL9LLk2FHlR2mjOhvFmcbYOOx18Be9GvLq3O6Z7Q4IHcmurhiwSWUMpZO0ek/gb4BfDQ==
   dependencies:
     injection-js "^2.4.0"
     reflect-metadata "^0.1.13"

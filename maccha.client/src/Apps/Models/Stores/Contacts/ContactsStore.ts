@@ -37,23 +37,19 @@ export class ContactsStore extends Store<ContactsStoreState> {
     }
 
     async loadAsync(contactSettingId: string | null) {
-        return;
-
         if (!contactSettingId) {
-           // this.mutate(new ModifyContacts([]));
+            this.mutate(new ModifyContacts([]));
             return;
         }
 
         const contacts = await this.repository.fetchAsync(contactSettingId);
-        //this.mutate(new ModifyContacts(contacts));
+        this.mutate(new ModifyContacts(contacts));
 
         const [c] = contacts;
         if (!this.state.selectedId && c) {
-            console.log("aaaaaaaaaa", c);
             this.select(c.contactContentId);
         }
         else if (!c) {
-            console.log("bbbbbbbbbbb", c);
             this.select(null);
         }
     }

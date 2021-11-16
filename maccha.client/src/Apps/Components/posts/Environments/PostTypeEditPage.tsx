@@ -53,7 +53,6 @@ export default observer(() => {
     }, []);
 
     function handleCreate() {
-        console.log(postType);
         if (isNew) {
             services.postManagementsService.createPostTypeAsync({
                 taxonomy: postType.taxonomy,

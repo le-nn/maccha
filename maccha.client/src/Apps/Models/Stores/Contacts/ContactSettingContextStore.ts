@@ -2,7 +2,7 @@ import { KeyboardReturnOutlined } from "@mui/icons-material";
 import { IContactSetting } from "Apps/Models/Domain/Contacts/ContactSettings";
 import { ContactSettingsRepository } from "Apps/Repositories/ContactSettingsRepository";
 import { services } from "Apps/Services";
-import { Message, State, Store, store } from "relux.js";
+import { Message, State, Store, meta } from "relux.js";
 
 class ContactSettingContextState extends State<ContactSettingContextState>{
     contactSetting: IContactSetting | null = null;
@@ -12,7 +12,7 @@ class ContactSettingContextState extends State<ContactSettingContextState>{
 class ModifySetting extends Message<IContactSetting | null> { }
 class InitSetting extends Message { }
 
-@store({ name: "ContactSettingContextStore" })
+@meta({ name: "ContactSettingContextStore" })
 export class ContactSettingContextStore extends Store<ContactSettingContextState> {
     readonly repository = new ContactSettingsRepository();
 
