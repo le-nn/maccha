@@ -18,7 +18,8 @@ interface UserSettingPanelProps {
 
 export const UserSettingPanel = observer((props: UserSettingPanelProps) => {
     const { usersService, authService, webSiteManagementsService } = services;
-    const [selectedThemeColor, setSelectedThemeColor] = useState(localStorage.getItem("color") ?? "8db860");
+    const [selectedThemeColor, setSelectedThemeColor] = useState(
+        typeof localStorage !== "undefined" ? localStorage.getItem("color") ?? "8db860" : "");
 
     function handleThemeColor(value: string) {
         setSelectedThemeColor(value);

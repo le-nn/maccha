@@ -2,6 +2,10 @@ import { createTheme, ThemeOptions } from "@mui/material";
 import { mergeDeeply } from "../Libs/Utils/DeepMerge";
 
 const color = (() => {
+    if(typeof localStorage === "undefined"){
+        return "#8db860";
+    }
+
     const color = localStorage.getItem("color");
     if (!color) {
         localStorage.setItem("color", "#8db860");
