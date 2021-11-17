@@ -10,6 +10,6 @@
     "dependencies": {
         "maccha-server": "link:./maccha.server",
         "maccha-client": "link:./maccha.client",
-        "maccha-sdk": "link:./maccha.server"
+        "maccha-sdk": "link:./maccha.sdk"
     }
 }
