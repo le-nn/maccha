@@ -31,7 +31,9 @@ export default function LoginPage() {
     const loginAsync = async () => {
         try {
             await services.authService.login(email, password);
+            alert(option.pathPrefix + "/"+services.authService.isLogin);
             if (services.authService.isLogin) {
+                alert(option.pathPrefix + "/");
                 window.location.assign(option.pathPrefix + "/");
             }
             else {

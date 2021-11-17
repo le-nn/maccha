@@ -38,7 +38,7 @@ export {
  * entry pont.
  * @param config config option params.
  */
-export const MacchaManager = (props: MacchaManagerProps): ReactNode => {
+export const MacchaManager = (props: MacchaManagerProps) => {
     const history = useAppNavigate();
     const location = useAppLocation();
     const [loginPage, setLoginPage] = useState<ReactNode | null>(null);
@@ -51,7 +51,7 @@ export const MacchaManager = (props: MacchaManagerProps): ReactNode => {
     const [storeProvider] = useState(build());
 
     const resolvePathPrefix = (path: string) => {
-        if (path[0] !== "/") {
+        if (path.length > 0 && path[0] !== "/") {
             return "/" + path;
         }
         return path;

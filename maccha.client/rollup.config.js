@@ -6,6 +6,7 @@ import sass from "rollup-plugin-sass";
 import babelrc from "babelrc-rollup";
 import image from "@rollup/plugin-image";
 import alias from "@rollup/plugin-alias";
+import json from "@rollup/plugin-json";
 
 export default [{
     input: "./src/index.ts",
@@ -29,6 +30,7 @@ export default [{
                 /^(?!react-dom$)/,
             ],
         }),
+        json(),
         commonjs(),
         typescript({
             tsconfigOverride: {
