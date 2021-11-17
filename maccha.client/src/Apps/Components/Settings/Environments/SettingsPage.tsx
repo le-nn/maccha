@@ -163,8 +163,7 @@ export default observer(() => {
                         webSiteManagementsService.webSites.map((w) => (
                             <MenuItem
                                 key={w.name}
-                                value={w.webSiteId}
-                                button
+                                // button
                                 onClick={() => handleChangeWebSiteIdentifier(w)}
                             >
                                 <ListItemText>

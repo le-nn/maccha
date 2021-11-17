@@ -26,9 +26,13 @@ const defaults: MacchaConfig = {
     pathPrefix: "",
 };
 
-interface MacchaManagerProps {
+export interface MacchaManagerProps {
     option: MacchaConfig;
 }
+
+export {
+    MacchaConfig
+};
 
 /**
  * entry pont.
