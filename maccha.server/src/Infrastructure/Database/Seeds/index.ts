@@ -1,5 +1,5 @@
 import { RoleType } from "@/Models/Users/role.enum";
-import { hash } from "bcrypt";
+import { hash } from "bcryptjs";
 import { QueryRunner } from "typeorm";
 import { v4 } from "uuid";
 
