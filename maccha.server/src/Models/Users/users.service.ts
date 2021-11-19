@@ -2,7 +2,7 @@ import { IUsersRepository } from "./users-repository.interface";
 import { Inject, Injectable, BadRequestException } from "@nestjs/common";
 import { ICreateUserParams } from "./create-user-params";
 import { User } from "./user";
-import { compare, hash } from "bcrypt";
+import { compare, hash } from "bcryptjs";
 import { IUpdateUserParams } from "./update-user-params";
 import { MediaService } from "../Media/Services/MediaService";
 

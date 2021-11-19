@@ -1,4 +1,4 @@
-import { hash } from "bcrypt";
+import { hash } from "bcryptjs";
 
 async function main(): Promise<void> {
     const password = process.argv[2];

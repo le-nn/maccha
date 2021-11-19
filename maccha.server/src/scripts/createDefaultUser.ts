@@ -1,5 +1,5 @@
 import { QueryRunner } from "typeorm";
-import { hash } from "bcrypt";
+import { hash } from "bcryptjs";
 import { RoleType } from "@/Models/Users/role.enum";
 
 export async function creteaDefaultUser(queryRunner: QueryRunner): Promise<void> {
