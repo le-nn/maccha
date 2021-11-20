@@ -1,4 +1,4 @@
-import { DynamicModule, Global, INestApplication, Module, ValidationPipe } from "@nestjs/common";
+import { ArgumentsHost, Catch, DynamicModule, ExceptionFilter, Global, INestApplication, Module, NotFoundException, ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { ConnectionOptions, createConnection, MigrationInterface, QueryRunner } from "typeorm";
@@ -17,6 +17,9 @@ import { Migrations as MacchaMigrations } from "./Infrastructure/Database/Migrat
 import { AuthenticationsController } from "./Applications/Authentications/AuthenticationsController";
 import * as bodyParser from "body-parser";
 import { MediaModule } from "./modules/media.module";
+import express from "express";
+import path from "path";
+import { NotFoundExceptionFilter } from "./NotFoundFallback";
 
 export interface Logger {
     /**
@@ -73,13 +76,32 @@ export interface MacchaPlugin {
     migrations: MigrationInterface[];
 }
 
-
-interface MacchaOption {
+export interface MacchaOption {
     database: DbConfig;
     authorization: AuthOption;
     assetsDir: string;
     pulugins: MacchaPlugin[];
+    clientSpaPath: string;
 }
+
+const defaultOption: MacchaOption = {
+    assetsDir: path.join(process.cwd(), "public"),
+    authorization: {
+        expiresIn: "10m",
+        jwtKey: "security_key",
+    },
+    clientSpaPath: "/app",
+    database: {
+        database: "maccha",
+        host: "localhost",
+        logger: "simple-console",
+        logging: true,
+        password: "root",
+        port: 3306,
+        username: "root",
+    },
+    pulugins: []
+};
 
 const buildDbConfig = (option: MacchaOption) => {
     return {
@@ -145,9 +167,6 @@ class MainModule {
                 TypeOrmModule.forRootAsync({
                     useFactory: () => buildDbConfig(option)
                 }),
-                ServeStaticModule.forRoot({
-                    rootPath: option.assetsDir,
-                }),
                 AuthModule.register(option),
                 MacchaModule,
                 ...option.pulugins.map(p => p.modules).reduce((x, y) => [...x, y], [] as any)
@@ -168,7 +187,12 @@ export function getPlugins(): MacchaPlugin[] {
     return plugins;
 }
 
-export async function createMacchaApiServer(option: MacchaOption): Promise<INestApplication> {
+export async function createMacchaApiServer(_option: Partial<MacchaOption>): Promise<INestApplication> {
+    const option: MacchaOption = {
+        ...defaultOption,
+        ..._option
+    };
+
     plugins = option.pulugins;
 
     // run db migration
@@ -182,7 +206,6 @@ export async function createMacchaApiServer(option: MacchaOption): Promise<INest
 
     app.use(bodyParser.json({ limit: "50mb" }));
     app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
-
     // build documents
     const options = new DocumentBuilder()
         .setTitle("maccha cms")
@@ -192,5 +215,8 @@ export async function createMacchaApiServer(option: MacchaOption): Promise<INest
     const document = SwaggerModule.createDocument(app, options);
     SwaggerModule.setup("api", app, document);
 
+    app.use(express.static(option.assetsDir));
+
+    app.useGlobalFilters(new NotFoundExceptionFilter(option));
     return app;
 }

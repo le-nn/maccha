@@ -23,7 +23,8 @@ async function bootstrap(): Promise<void> {
         },
         pulugins: [
             TestPlugin
-        ]
+        ],
+        clientSpaPath:"/app"
     });
 
     console.log("start espresso cms listen on " + (process.env.PORT || 3000));
