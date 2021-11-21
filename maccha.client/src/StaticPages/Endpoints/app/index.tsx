@@ -3,6 +3,8 @@ import { MacchaManager } from "Apps";
 import { GlobalStyle } from "StaticPages/Styles";
 import { css } from "@mui/styled-engine";
 
+const isLocal = typeof location !== "undefined" ? location.href.includes("localhost") : false;
+
 /**
  * Load spa with client side routing.
  */
@@ -14,7 +16,7 @@ export default () => {
         })}>
         <GlobalStyle />
         <MacchaManager option={{
-            apiServerHost: "http://localhost:8081",
+            apiServerHost: isLocal ? "http://localhost:8081" : "/",
             pathPrefix: "/app",
         }} />
     </div>;
