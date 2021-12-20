@@ -3,7 +3,9 @@ import path = require("path");
 import env = require("dotenv");
 import { TestPlugin } from "../src/Plugins";
 
-env.config();
+env.config({
+    path: "../"
+});
 
 async function bootstrap(): Promise<void> {
     const app = await createMacchaApiServer({
@@ -24,10 +26,10 @@ async function bootstrap(): Promise<void> {
         pulugins: [
             TestPlugin
         ],
-        clientSpaPath:"/app"
+        clientSpaPath: "/app"
     });
 
-    console.log("start espresso cms listen on " + (process.env.PORT || 3000));
-    await app.listen(process.env.PORT || 3000);
+    console.log("start espresso cms listen on " + (process.env.PORT || 8081));
+    await app.listen(process.env.PORT || 8081);
 }
 bootstrap();
