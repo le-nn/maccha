@@ -4,6 +4,7 @@ import { IPostContactParams } from "@/Models/Contacts/params/IPostParams";
 import { IContactsRepository } from "@/Models/Contacts/Repositories/IContactsRepository";
 import { InjectRepository } from "@nestjs/typeorm";
 import { DateTime } from "luxon";
+import { concatMap, firstValueFrom, from, map, of, toArray } from "rxjs";
 import { Repository } from "typeorm";
 import { v4 } from "uuid";
 import { ContactContentEntity, ContactContentFieldEntity } from "../Database/Entities";
@@ -27,14 +28,33 @@ export class ContactsRepository implements IContactsRepository {
                 ],
                 where: {
                     contactSettingId: settingId,
+                },
+                order: {
+                    contactedAt: "DESC"
                 }
             });
 
-            return contacts.map(x => ({
-                title: "",
-                contactContentId: x.contactContentId,
-                contactedAt: x.contactedAt ?? DateTime.min()
-            }));
+            const getFields = async (contactId: string, contactedAt: DateTime): Promise<IContactContentMeta> => {
+                const fields = await this.contactContentFields.find({
+                    where: {
+                        contactContentId: contactId,
+                    },
+                    select: ["name", "value"]
+                });
+
+                return {
+                    contactContentId: contactId,
+                    contactedAt,
+                    title: fields.find(x => x.name.includes("title"))?.value || fields[0]?.value || "NO CONTENT"
+                };
+            };
+
+            const results = from(contacts).pipe(
+                concatMap(x => from(getFields(x.contactContentId, x.contactedAt ?? DateTime.min()))),
+                toArray()
+            );
+
+            return (await firstValueFrom(results)) ?? [];
         }
         catch (expect) {
             throw expect;
@@ -94,6 +114,7 @@ export class ContactsRepository implements IContactsRepository {
                     name: item.name,
                     value: item.value,
                     contactContentFieldId: v4(),
+                    contactSettingId,
                 });
             }
         }

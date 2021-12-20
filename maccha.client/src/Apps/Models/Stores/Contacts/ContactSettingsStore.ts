@@ -59,4 +59,14 @@ export class ContactSettingsStore extends Store<ContactSettingsState> {
         await this.repository.fetchContactSettings();
         await this.loadSettingsAsync();
     }
+
+    async removeItemAsync(contactSettingId: string) {
+        try {
+            await this.repository.removeAsync(contactSettingId);
+            await this.loadSettingsAsync();
+        }
+        catch {
+            throw new Error();
+        }
+    }
 }

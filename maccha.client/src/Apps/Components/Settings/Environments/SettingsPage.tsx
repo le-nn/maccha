@@ -54,7 +54,7 @@ export default observer(() => {
             console.log("failed to refresh");
         }
         finally {
-            window.location.assign("/settings");
+            window.location.reload();
         }
     }
 
@@ -150,9 +150,8 @@ export default observer(() => {
 
 
                 <Box mt={4}></Box>
-                <Typography variant="h6">Current Identifier </Typography>
                 <Select
-                    style={{ marginTop: "16px", color: theme.palette.text.primary }}
+                    style={{ marginTop: "16px"}}
                     variant="outlined"
                     value={authService.loginInfo.identifier}
                     color="primary"
@@ -164,6 +163,7 @@ export default observer(() => {
                             <MenuItem
                                 key={w.name}
                                 // button
+                                value={w.name}
                                 onClick={() => handleChangeWebSiteIdentifier(w)}
                             >
                                 <ListItemText>

@@ -16,14 +16,11 @@ export const ContactSettingDisplayPanel = () => {
 
     return (
         <Box position="relative" p={3}>
-            <Backdrop open={!setting} sx={{ position: "absolute" }}>
-                <CircularProgress />
-            </Backdrop>
-
-            <Box>
+            {!!setting && <Box>
                 <Typography style={{ wordBreak: "break-all" }}>POST</Typography>
                 <Typography style={{ wordBreak: "break-all" }}>{axios.defaults.baseURL}api/contacts/{setting?.contactSettingId}</Typography>
             </Box>
+            }
             <Box>
                 {
                     setting?.schemes.map(s => <Box

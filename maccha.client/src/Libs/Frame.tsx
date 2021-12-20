@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, ReactNode } from "react";
 import { useTheme, Theme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { fromEvent } from "rxjs";
@@ -17,9 +17,8 @@ import {
 } from "@mui/material";
 import { useLocation } from "@reach/router";
 import { useTranslation } from "react-i18next";
-import { Route, RouterConfig } from "./Routing/RouterConfig";
+import { Route } from "./Routing/RouterConfig";
 import { useOption } from "Apps/Hooks/useOption";
-import { keys } from "@mui/system";
 
 const closeWidth = 52;
 const drawerWidth = 320;
@@ -47,23 +46,28 @@ export const Frame = (props: FrameProps) => {
         setMobileOpen(!mobileOpen);
     };
 
-    typeof window !== "undefined" && fromEvent(_window, "resize").pipe(
-        map(() => _window.innerWidth),
-        pairwise(),
-    ).subscribe(e => {
-        const [beforeWidth, currentWidth] = e;
+    useEffect(() => {
+        const disposable = fromEvent(_window, "resize").pipe(
+            map(() => _window.innerWidth),
+            pairwise(),
+        ).subscribe(e => {
+            const [beforeWidth, currentWidth] = e;
 
-        if (theme.breakpoints.values["lg"] < currentWidth) {
-            if (beforeWidth < currentWidth) {
-                setMobileOpen(true);
+            if (theme.breakpoints.values["lg"] < currentWidth) {
+                if (beforeWidth < currentWidth) {
+                    setMobileOpen(true);
+                }
             }
-        }
-        else {
-            if (beforeWidth >= currentWidth) {
-                setMobileOpen(false);
+            else {
+                if (beforeWidth >= currentWidth) {
+                    setMobileOpen(false);
+                }
             }
-        }
-    });
+        });
+
+        return () => disposable.unsubscribe();
+    }, []);
+
 
     const routePressed = (route: Route) => {
         props.routePressed && props.routePressed(route);
@@ -122,19 +126,12 @@ export const Frame = (props: FrameProps) => {
                                 {props.logo && props.logo(mobileOpen)}
                             </Box>
 
-                            {/* Profile */}
-                            {/* <Box flex="1 1 auto" marginLeft="28px" width="calc(100% - 94px)">
-                                <Typography variant="caption" style={{ color: "rgb(168,168,168)" }} >
-                                    {mobileOpen ? t("管理者ツール") : ""}
-                                </Typography>
-                            </Box> */}
-
                             <Box display="flex"
                                 alignItems="center"
                                 justifyContent="center"
                                 padding={mobileOpen ? "8px" : "0px"}
                                 mt={2}>
-                                {props.commandBox}
+                                {props.commandBox && props.commandBox(mobileOpen)}
                             </Box>
 
                             {/* Navigation */}
@@ -187,7 +184,7 @@ export const Frame = (props: FrameProps) => {
                                 justifyContent="center"
                                 padding={mobileOpen ? "8px" : "0px"}
                                 mt={2}>
-                                {props.commandBox}
+                                {props.commandBox && props.commandBox(mobileOpen)}
                             </Box>
 
                             {/* Navigation */}
@@ -210,7 +207,7 @@ type DrawerPropos = {
     routePressed: (route: Route) => void | Promise<void>;
 }
 
-function NavigationList(props: DrawerPropos) {
+const NavigationList = (props: DrawerPropos) => {
     const location = useLocation();
     const theme = useTheme();
     const parent = useRef<HTMLDivElement>(null);
@@ -327,7 +324,7 @@ function NavigationList(props: DrawerPropos) {
             }}></div>
         </div >
     );
-}
+};
 
 const useStyles = makeStyles(
     (theme: Theme) => ({

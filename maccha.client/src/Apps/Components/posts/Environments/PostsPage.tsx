@@ -24,7 +24,6 @@ import {
 } from "@mui/icons-material";
 import { PostTypeSettingPanel } from "../Ecosystems/PostTypeSettingDisplayPanel";
 import ProfileImage from "../../commons/ProfileImage";
-import { lightTheme } from "Apps/theme";
 import { PostType } from "../../../Models/Domain/posts/entities/PostType";
 import PostListPanel from "../Ecosystems/PostListPanel";
 import { confirmDeletePostTypeAsync } from "../Ecosystems/confirmRemovePostTypeDialog";
@@ -32,6 +31,11 @@ import { useAppLocation, useAppNavigate } from "Libs/Routing/RouterConfig";
 import { useParams } from "@reach/router";
 import { css } from "@mui/styled-engine";
 import { RoleType } from "Apps/Models";
+import { EmptyItemsPanel } from "Apps/Components/commons/EmptyItemsPanel";
+import { useTranslation } from "react-i18next";
+import { RoundedListItem } from "Apps/Components/commons/RoundedListItem";
+
+const normalize = (path: string) => "/" + path.split("/").filter(x => x !== "").join("/");
 
 export default () => {
     const history = useAppNavigate();
@@ -43,11 +47,13 @@ export default () => {
     const theme = useTheme();
     const routeMatch = useParams() ?? {};
 
+    const { t } = useTranslation();
+
     useEffect(() => {
         const selected = services.postManagementsService.selected;
         if (selected) {
             if (!routeMatch.taxonomy) {
-                window.history.replaceState("", "", `${location.pathname}/${selected.taxonomy.name}`);
+                window.history.pushState("", "", `${normalize(location.pathname)}/${selected.taxonomy.name}`);
             }
             else {
                 services.postManagementsService.selectFromName(routeMatch.taxonomy);
@@ -68,6 +74,7 @@ export default () => {
 
     function onEditClicked() {
         if (postTypeContext) {
+
             history(`/posts/${postTypeContext.taxonomy.name}/edit`);
         }
     }
@@ -123,43 +130,42 @@ export default () => {
                             minWidth="200px"
                             maxWidth="200px"
                             overflow="auto"
+                            display="flex"
+                            flexDirection="column"
                         >
-                            <Button
-                                disabled={!(authService.loginInfo.role >= RoleType.Edit)}
-                                onClick={onAddPostTypeClicked}
-                                color="primary"
-                                variant="contained"
-                                style={{
-                                    borderRadius: "18px",
-                                    margin: "8px", marginTop: "16px"
-                                }}
+                            <Box mx="auto">
+                                <Button
+                                    disabled={!(authService.loginInfo.role >= RoleType.Edit)}
+                                    onClick={onAddPostTypeClicked}
+                                    color="primary"
+                                    variant="contained"
+                                    style={{
+                                        borderRadius: "18px",
+                                        margin: "8px", marginTop: "16px"
+                                    }}
+                                >
+                                    <Add />
+                                    投稿タイプを追加
+                                </Button>
+                            </Box>
+                            <List
+                                css={postTypeBar}
                             >
-                                <Add />
-                                投稿タイプを追加
-                            </Button>
-                            <List component="nav" css={postTypeBar} aria-label="contacts">
                                 {
-                                    postManagementsService.postTypes.map(
-                                        (t, i) => (
-                                            <ListItem
-                                                key={t.taxonomy.name}
-                                                button
-                                                css={postManagementsService.selected?.taxonomy.name === t.taxonomy.name ? activeItem : ""}
-                                                onClick={() => onPostTypeListClicked(i)} >
-                                                <ListItemText primary={t.taxonomy.displayName} />
-                                                {
-                                                    authService.loginInfo.role >= RoleType.Edit && (
-                                                        <IconButton
-                                                            size="small"
-                                                            onClick={e => onPostTypeMenu(e, t)}
-                                                        >
-                                                            <MoreVert />
-                                                        </IconButton>
-                                                    )
-                                                }
-                                            </ListItem>
+                                    postManagementsService.postTypes.length === 0 ?
+                                        (<EmptyItemsPanel message={t("投稿タイプが\nありません")} />)
+                                        : postManagementsService.postTypes.map(
+                                            (t, i) => (
+                                                <RoundedListItem
+                                                    key={t.taxonomy.name}
+                                                    selected={postManagementsService.selected?.taxonomy.name === t.taxonomy.name}
+                                                    onClick={() => onPostTypeListClicked(i)}
+                                                    onOptionClicked={e => onPostTypeMenu(e, t)}
+                                                    optionEnabled={authService.loginInfo.role >= RoleType.Edit}
+                                                    text={t.taxonomy.displayName}
+                                                />
+                                            )
                                         )
-                                    )
                                 }
                             </List>
 
@@ -226,13 +232,6 @@ export default () => {
 const postTypeBar = css({
     width: "100%",
     flex: "1 1 auto",
+    justifyContent: "center",
+    alignItems: "center"
 });
-
-const container = css({
-    height: "100%"
-});
-
-const activeItem = css({
-    background: lightTheme.palette.primary.main + "!important",
-});
-

@@ -8,7 +8,7 @@ import {
     useTheme
 } from "@mui/material";
 import { PostCardMenu } from "../Molecles";
-import { WrappedTextBlock, DateTimeText, FlexSpacer } from "../../commons";
+import { WrappedTextBlock, DateTimeText, Spacer } from "Libs/Components";
 import { services } from "../../../Services";
 import { RoleType } from "../../../Models";
 import { Content } from "../../../Models/Domain/Contents/Entities/Content";
@@ -106,7 +106,7 @@ export const PostCard = (props: PostCardProps) => {
                             </Typography>
                         </Box>
 
-                        <FlexSpacer />
+                        <Spacer />
 
                         {/* <Box display="flex" alignItems="center">
                             <Icon
@@ -138,7 +138,7 @@ export const PostCard = (props: PostCardProps) => {
 
                     <Box display="flex">
                         <DateTimeText
-                            showTime
+                            isShowTime
                             color="textSecondary"
                             fontSize="12px"
                             date={(props.content.publishIn ?? props.content.createdAt).toJSDate()}

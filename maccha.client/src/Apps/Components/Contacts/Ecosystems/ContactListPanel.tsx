@@ -1,6 +1,8 @@
 import { ListAlt } from "@mui/icons-material";
 import { ListItem, ListItemText, Typography, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
+import { EmptyItemsPanel } from "Apps/Components/commons/EmptyItemsPanel";
+import { IndicatorListItem } from "Apps/Components/commons/IndicatorListItem";
 import { ContactContentMeta } from "Apps/Models/Domain/Contacts/Contact";
 import { ContactContentContextStore } from "Apps/Models/Stores/Contacts/ContactContextStore";
 import { ContactSettingsStore } from "Apps/Models/Stores/Contacts/ContactSettingsStore";
@@ -13,7 +15,7 @@ import { useDispatch, useObserver, useStore } from "react-relux";
 export const ContactListPanel = () => {
     const selectedId = useObserver(ContactsStore, s => s.selectedId);
     const contacts = useObserver(ContactsStore, s => s.contacts);
-    const forCompareIsContactContentIdChanged = useObserver(ContactContentContextStore, s => s.contact?.contactSettingId ?? null);
+    const fields = useObserver(ContactContentContextStore, s => s.contact?.fields ?? []);
     const dispatch = useDispatch(ContactsStore);
     const dispatchContactContentContext = useDispatch(ContactContentContextStore);
     const [t] = useTranslation();
@@ -25,53 +27,25 @@ export const ContactListPanel = () => {
 
     if (contacts.length === 0) {
         return (
-            <Box
-                width="100%"
-                height="100%"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-            >
-                <Box textAlign="center">
-                    <ListAlt
-                        sx={{
-                            fontSize: "120px",
-                            color: theme.palette.grey[400]
-                        }}
-                    />
-                    <Typography
-                        sx={{
-                            fontSize: "24px",
-                            color: theme.palette.grey[400]
-                        }}
-                    >{t("0 件です")}</Typography>
-                </Box>
-            </Box>
+            <EmptyItemsPanel />
         );
     }
 
     return (
         <Box width="100%">
             {
-                contacts.map(c => (<ListItem
+                contacts.map(c => (<IndicatorListItem
                     key={c.contactContentId}
-                    button
-                    onClick={e => handleItemClicked(c)}
-                >
-                    <ListItemText
-                        primary={
-                            <Typography>
-                                {
-                                    DateTime.fromISO(c.contactedAt)
-                                        .toFormat("yyyy/MM/dd - HH:mm")
-                                }
-                            </Typography>
-                        }
-                        color={c.contactContentId === selectedId ?
-                            "primary" : ""}
-                    >
-                    </ListItemText>
-                </ListItem>))
+                    onClick={() => handleItemClicked(c)}
+                    text={
+                        DateTime.fromISO(c.contactedAt)
+                            .toFormat("yyyy/MM/dd - HH:mm")
+                    }
+                    subText={
+                        c.title
+                    }
+                    selected={c.contactContentId === selectedId}
+                />))
             }
         </Box>
     );

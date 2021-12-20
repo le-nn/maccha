@@ -28,12 +28,16 @@ import { axios } from "../../../Repositories/config";
 import { useAppLocation, useAppNavigate } from "Libs/Routing/RouterConfig";
 import { Delete, Edit, Preview } from "@mui/icons-material";
 import { useOption } from "Apps/Hooks/useOption";
+import { EmptyItemsPanel } from "Apps/Components/commons/EmptyItemsPanel";
+import { useTranslation } from "react-i18next";
 
 export default observer(() => {
     const history = useAppNavigate();
     const location = useAppLocation();
     const query = new URLSearchParams(location.search);
     const option = useOption();
+    const { t } = useTranslation();
+
     useEffect(() => {
         const page = Number(query.get("page") ?? 1);
         const postType = services.postManagementsService.selected;
@@ -122,28 +126,39 @@ export default observer(() => {
 
             <Box display="flex" flex="1 1 auto" overflow="auto" p={1}>
                 {
-                    services.postManagementsService.selected?.displayFormat === "card" &&
-                    <ItemsWrapGrid
-                        segmentLength={280}
-                        items={services.postsService.posts.map(item => ({ id: item.contentId, content: item }))}
-                        itemSlot={item => <PostCard
-                            key={item.id}
-                            previewPressed={() => onPreviewPressed(item.content.contentId)}
-                            deletePresed={() => onDeletePresed(item.content)}
-                            editPressed={() => onEditPressed(item.content)}
-                            content={item.content}
-                        />}
-                    />
+                    !services.postManagementsService.selected && <EmptyItemsPanel message={t("投稿がありません")} />
                 }
                 {
-                    services.postManagementsService.selected?.displayFormat === "table" &&
-                    <PostSearchView
-                        previewPressed={c => onPreviewPressed(c.contentId)}
-                        deletePresed={c => onDeletePresed(c)}
-                        editPressed={c => onEditPressed(c)}
-                        contents={services.postsService.posts}
-                        schemes={services.postManagementsService.selected?.taxonomy.schemes ?? []}
-                    />
+                    services.postManagementsService.selected?.displayFormat === "card" && (
+                        services.postsService.posts.length === 0 ?
+                            <EmptyItemsPanel message={t("投稿がありません")} />
+                            :
+                            <ItemsWrapGrid
+                                segmentLength={280}
+                                items={services.postsService.posts.map(item => ({ id: item.contentId, content: item }))}
+                                itemSlot={item => <PostCard
+                                    key={item.id}
+                                    previewPressed={() => onPreviewPressed(item.content.contentId)}
+                                    deletePresed={() => onDeletePresed(item.content)}
+                                    editPressed={() => onEditPressed(item.content)}
+                                    content={item.content}
+                                />}
+                            />
+                    )
+                }
+                {
+                    services.postManagementsService.selected?.displayFormat === "table" && (
+                        services.postsService.posts.length === 0 ?
+                            <EmptyItemsPanel message={t("投稿がありません")} />
+                            :
+                            <PostSearchView
+                                previewPressed={c => onPreviewPressed(c.contentId)}
+                                deletePresed={c => onDeletePresed(c)}
+                                editPressed={c => onEditPressed(c)}
+                                contents={services.postsService.posts}
+                                schemes={services.postManagementsService.selected?.taxonomy.schemes ?? []}
+                            />
+                    )
                 }
             </Box>
         </Box >
@@ -256,7 +271,7 @@ function PostSearchView(props: PostSearchViewProps) {
                             </TableCell>
                             <TableCell>
                                 <DateTimeText
-                                    showTime
+                                    isShowTime
                                     color="textSecondary"
                                     fontSize="12px"
                                     date={(c.publishIn ?? c.createdAt).toJSDate()}

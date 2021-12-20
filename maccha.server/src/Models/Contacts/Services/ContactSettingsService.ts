@@ -1,5 +1,6 @@
 import { Inject } from "@nestjs/common";
 import { ICreateContactSettingParams } from "../params/ICreateContactSettingParams";
+import { ISaveContactSettingParams } from "../params/ISaveContactSettingParams";
 import { IContactSettingsRepository } from "../Repositories/IContactSettingsRepository";
 
 export class ContactSettingsService {
@@ -19,4 +20,12 @@ export class ContactSettingsService {
     async createAsync(params: ICreateContactSettingParams): Promise<void> {
         await this.contactSettingsRepository.createAsync(params);
     }
+
+    async removeAsync(contactSettingId:string){
+        await this.contactSettingsRepository.deleteAsync(contactSettingId);
+    }
+
+   async saveAsync(params: ISaveContactSettingParams) {
+       await this.contactSettingsRepository.saveAsync(params);
+   }
 }

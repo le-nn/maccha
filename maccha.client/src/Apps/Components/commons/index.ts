@@ -1,5 +1,4 @@
 export * from "./WrappedTextBlock";
-export * from "./DateTimeText";
 export * from "./SearchBox";
 export * from "./PhotoGridView";
 export * from "./FileDropArea";

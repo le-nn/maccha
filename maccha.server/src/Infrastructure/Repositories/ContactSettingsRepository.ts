@@ -6,12 +6,14 @@ import { IContactSettingsRepository } from "@/Models/Contacts/Repositories/ICont
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { v4 } from "uuid";
-import { ContactEmailSettingEntity, ContactSettingEntity } from "../Database/Entities";
+import { ContactContentEntity, ContactContentFieldEntity, ContactEmailSettingEntity, ContactSettingEntity } from "../Database/Entities";
 
 export class ContactSettingsRepository implements IContactSettingsRepository {
     constructor(
         @InjectRepository(ContactSettingEntity) private readonly contactSettings: Repository<ContactSettingEntity>,
-        @InjectRepository(ContactEmailSettingEntity) private readonly contactEmails: Repository<ContactEmailSettingEntity>
+        @InjectRepository(ContactEmailSettingEntity) private readonly contactEmails: Repository<ContactEmailSettingEntity>,
+        @InjectRepository(ContactContentEntity) private readonly contactContents: Repository<ContactContentEntity>,
+        @InjectRepository(ContactContentFieldEntity) private readonly contactContentFields: Repository<ContactContentFieldEntity>
     ) {
 
     }
@@ -62,13 +64,25 @@ export class ContactSettingsRepository implements IContactSettingsRepository {
         }
     }
 
-    deleteAsync(contactSettingId: string): Promise<void> {
-        // this.contactEmails.createQueryBuilder()
-        //     .delete()
-        //     .from(ContactEmailSettingEntity)
-        //     .where("contactSettingId = :id", { id: params.emailSettings })
-        //     .execute();
-        throw new Error("Method not implemented.");
+    async deleteAsync(contactSettingId: string): Promise<void> {
+        try {
+            await this.contactContentFields.delete({
+                contactSettingId,
+            });
+            await this.contactContents.delete({
+                contactSettingId,
+            });
+            await this.contactEmails.delete({
+                contactSettingId,
+            });
+            await this.contactSettings.delete({
+                contactSettingId,
+            });
+        }
+        catch (ex) {
+            console.error(ex);
+            throw new Error("unhandled error occured.");
+        }
     }
 
     async findAsync(contactSettingId: string): Promise<ContactSetting | null> {
@@ -108,7 +122,33 @@ export class ContactSettingsRepository implements IContactSettingsRepository {
         }
     }
 
-    saveAsync(params: ISaveContactSettingParams): Promise<void> {
-        throw new Error("Method not implemented.");
+    async saveAsync(params: ISaveContactSettingParams): Promise<void> {
+        try {
+            const contactSettingId = params.contactSettingId;
+            const settings = await this.contactSettings.save({
+                contactSettingId: contactSettingId,
+                identifier: params.identifier,
+                name: params.name,
+                schemes: params.schemes.join(",")
+            });
+            await this.contactEmails.delete({
+                contactSettingId
+            });
+            await this.contactEmails.save(
+                params.emailSettings.map(e => ({
+                    bodyTemplate: e.bodyTemplate,
+                    contactEmailSettingId: v4(),
+                    contactSettingId,
+                    from: e.from,
+                    header: e.header,
+                    titleTemplate: e.titleTemplate,
+                    to: e.to,
+                }))
+            );
+        }
+        catch (expect) {
+            console.log(expect);
+            throw expect;
+        }
     }
 }

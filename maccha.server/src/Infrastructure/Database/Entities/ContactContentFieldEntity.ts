@@ -16,6 +16,10 @@ export class ContactContentFieldEntity {
 
     @Column()
     @Index()
+    contactSettingId!: string;
+
+    @Column()
+    @Index()
     contactContentId!: string;
 
     constructor(params: ContactContentFieldEntity) {

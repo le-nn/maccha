@@ -7,6 +7,7 @@ import { i18n } from "../../Commons/i18n";
 import { RoleType } from "@/Models/Users/role.enum";
 import { CreateContactSettingParams } from "../Params/CreateContactSettingParams";
 import { ContactSettingsAppService } from "../Services/ContactSettingsService";
+import { ISaveContactSettingParams } from "@/Models/Contacts/params/ISaveContactSettingParams";
 
 /**
  * provide users endpoints.
@@ -40,6 +41,22 @@ export class ContactSettingsController {
     @UseGuards(AuthGuard)
     async createAsync(@Body() params: CreateContactSettingParams) {
         const settings = await this.contactSettingsAppService.createAsync(params);
+        return settings;
+    }
+
+    @Put()
+    @SetMetadata("role", RoleType.Edit)
+    @UseGuards(AuthGuard)
+    async saveAsync(@Body() params: ISaveContactSettingParams) {
+        const settings = await this.contactSettingsAppService.saveAsync(params);
+        return settings;
+    }
+
+    @Delete(":contactSettingId")
+    @SetMetadata("role", RoleType.Edit)
+    @UseGuards(AuthGuard)
+    async deleteAsync(@Param("contactSettingId") contactSettingId: string) {
+        const settings = await this.contactSettingsAppService.removeAsync(contactSettingId);
         return settings;
     }
 }

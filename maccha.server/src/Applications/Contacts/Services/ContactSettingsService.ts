@@ -1,3 +1,4 @@
+import { ISaveContactSettingParams } from "@/Models/Contacts/params/ISaveContactSettingParams";
 import { ContactSettingsService } from "@/Models/Contacts/Services/ContactSettingsService";
 import { Inject } from "@nestjs/common";
 import { CreateContactSettingParams } from "../Params/CreateContactSettingParams";
@@ -17,5 +18,13 @@ export class ContactSettingsAppService {
 
     async createAsync(params: CreateContactSettingParams) {
         return await this.contactSettingsService.createAsync(params);
+    }
+
+    async saveAsync(params: ISaveContactSettingParams) {
+        return await this.contactSettingsService.saveAsync(params);
+    }
+
+    async removeAsync(contactSettingId: string) {
+        return await this.contactSettingsService.removeAsync(contactSettingId);
     }
 }

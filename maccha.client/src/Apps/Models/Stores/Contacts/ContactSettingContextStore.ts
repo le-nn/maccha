@@ -11,6 +11,7 @@ class ContactSettingContextState extends State<ContactSettingContextState>{
 
 class ModifySetting extends Message<IContactSetting | null> { }
 class InitSetting extends Message { }
+class SetIsNew extends Message<boolean>{ }
 
 @meta({ name: "ContactSettingContextStore" })
 export class ContactSettingContextStore extends Store<ContactSettingContextState> {
@@ -26,6 +27,11 @@ export class ContactSettingContextStore extends Store<ContactSettingContextState
                 const { payload } = message as ModifySetting;
                 return state.clone({
                     contactSetting: payload,
+                });
+            }
+            case SetIsNew: {
+                return state.clone({
+                    isNew: false,
                 });
             }
             case InitSetting: {
@@ -63,6 +69,7 @@ export class ContactSettingContextStore extends Store<ContactSettingContextState
 
         const contactSetting = await this.repository.fetchContactSetting(contactSettingId);
         this.mutate(new ModifySetting(contactSetting));
+        this.mutate(new SetIsNew(false));
     }
 
     async initAsNewSetting() {

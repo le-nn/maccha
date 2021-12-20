@@ -94,6 +94,7 @@ export default () => {
         >
             <Box>
                 <TextField
+                    value={settingContext.name}
                     onChange={e => changeSettingContext("name", e.target.value)}
                     label={t("名前")} />
             </Box>

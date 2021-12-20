@@ -1,12 +1,12 @@
 import { useScrollTrigger } from "@mui/material";
-import React, { useContext,useEffect,useState } from "react";
+import React, { useContext, useEffect, useState, CSSProperties } from "react";
 import { Transition, TransitionStatus } from 'react-transition-group';
-import { CSSProperties } from "@mui/material";
+
 
 const ScrollContext = React.createContext<HTMLElement | null>(null);
 
 interface ScrollContainer {
-    children: React.ReactNode | React.ReactNodeArray;
+    children: React.ReactNode | React.ReactNode[];
     style?: CSSProperties;
 }
 

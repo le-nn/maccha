@@ -1,8 +1,8 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import {MigrationInterface, QueryRunner} from "typeorm";
 import { runInitialSeed } from "../Seeds";
 
-export class Initialize1635530618037 implements MigrationInterface {
-    name = 'Initialize1635530618037';
+export class Initialize1639996705038 implements MigrationInterface {
+    name = 'Initialize1639996705038'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TABLE \`user_entity\` (\`userId\` char(36) NOT NULL, \`name\` varchar(128) NOT NULL, \`email\` varchar(256) NOT NULL, \`password\` varchar(256) NOT NULL, \`role\` bigint UNSIGNED NOT NULL, \`isActive\` tinyint NOT NULL, \`avatar\` varchar(255) NOT NULL, \`updatedAt\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`createdAt\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), INDEX \`IDX_3fe76ecf0f0ef036ff981e9f67\` (\`name\`), INDEX \`IDX_158f20832b16ead19dcd50c743\` (\`role\`), UNIQUE INDEX \`IDX_415c35b9b3b6fe45a3b065030f\` (\`email\`), PRIMARY KEY (\`userId\`)) ENGINE=InnoDB`);
@@ -15,7 +15,7 @@ export class Initialize1635530618037 implements MigrationInterface {
         await queryRunner.query(`CREATE TABLE \`field_entity\` (\`fieldId\` char(36) NOT NULL, \`name\` varchar(128) NOT NULL, \`schemeId\` varchar(128) NOT NULL, \`value\` longtext NOT NULL, \`contentId\` varchar(255) NOT NULL, \`taxonomyId\` varchar(255) NOT NULL, INDEX \`IDX_a1169144cd45b3aecb09037507\` (\`contentId\`), INDEX \`IDX_028f4e10f831a0d4026c4fc663\` (\`taxonomyId\`), PRIMARY KEY (\`fieldId\`)) ENGINE=InnoDB`);
         await queryRunner.query(`CREATE TABLE \`contact_email_setting_entity\` (\`contactEmailSettingId\` char(36) NOT NULL, \`to\` varchar(255) NOT NULL, \`from\` varchar(255) NOT NULL, \`header\` varchar(255) NOT NULL, \`titleTemplate\` varchar(512) NOT NULL, \`bodyTemplate\` longtext NOT NULL, \`contactSettingId\` varchar(255) NOT NULL, INDEX \`IDX_fa845d54680fd6600ed3e93d8b\` (\`contactSettingId\`), PRIMARY KEY (\`contactEmailSettingId\`)) ENGINE=InnoDB`);
         await queryRunner.query(`CREATE TABLE \`contact_content_entity\` (\`contactContentId\` char(36) NOT NULL, \`contactSettingId\` varchar(255) NOT NULL, \`identifier\` varchar(255) NOT NULL, \`contactedAt\` datetime NULL, INDEX \`IDX_a96d20a900d3de96dc6b239408\` (\`contactSettingId\`), INDEX \`IDX_0f770f82ff631fded9ba4bbc6a\` (\`identifier\`), PRIMARY KEY (\`contactContentId\`)) ENGINE=InnoDB`);
-        await queryRunner.query(`CREATE TABLE \`contact_content_field_entity\` (\`contactContentFieldId\` char(36) NOT NULL, \`name\` varchar(128) NOT NULL, \`value\` longtext NOT NULL, \`contactContentId\` varchar(255) NOT NULL, INDEX \`IDX_3bfc2900e6aedf4b4581a0cd6a\` (\`contactContentId\`), PRIMARY KEY (\`contactContentFieldId\`)) ENGINE=InnoDB`);
+        await queryRunner.query(`CREATE TABLE \`contact_content_field_entity\` (\`contactContentFieldId\` char(36) NOT NULL, \`name\` varchar(128) NOT NULL, \`value\` longtext NOT NULL, \`contactSettingId\` varchar(255) NOT NULL, \`contactContentId\` varchar(255) NOT NULL, INDEX \`IDX_04fca1af41b416e2f01c3fb217\` (\`contactSettingId\`), INDEX \`IDX_3bfc2900e6aedf4b4581a0cd6a\` (\`contactContentId\`), PRIMARY KEY (\`contactContentFieldId\`)) ENGINE=InnoDB`);
         await queryRunner.query(`CREATE TABLE \`contact_setting_entity\` (\`contactSettingId\` char(36) NOT NULL, \`name\` varchar(128) NOT NULL, \`schemes\` varchar(512) NOT NULL, \`identifier\` varchar(255) NOT NULL, INDEX \`IDX_36ead2ca0a0f7488dea65cab68\` (\`identifier\`), PRIMARY KEY (\`contactSettingId\`)) ENGINE=InnoDB`);
         await queryRunner.query(`ALTER TABLE \`user_web_site_entity\` ADD CONSTRAINT \`FK_a893ef903a0c6804f5ebf019337\` FOREIGN KEY (\`webSiteId\`) REFERENCES \`web_site_entity\`(\`webSiteId\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE \`post_type_entity\` ADD CONSTRAINT \`FK_4ad0a6c725ceace2c07c9df8ef4\` FOREIGN KEY (\`taxonomyId\`) REFERENCES \`taxonomy_entity\`(\`taxonomyId\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
@@ -30,6 +30,7 @@ export class Initialize1635530618037 implements MigrationInterface {
         await queryRunner.query(`DROP INDEX \`IDX_36ead2ca0a0f7488dea65cab68\` ON \`contact_setting_entity\``);
         await queryRunner.query(`DROP TABLE \`contact_setting_entity\``);
         await queryRunner.query(`DROP INDEX \`IDX_3bfc2900e6aedf4b4581a0cd6a\` ON \`contact_content_field_entity\``);
+        await queryRunner.query(`DROP INDEX \`IDX_04fca1af41b416e2f01c3fb217\` ON \`contact_content_field_entity\``);
         await queryRunner.query(`DROP TABLE \`contact_content_field_entity\``);
         await queryRunner.query(`DROP INDEX \`IDX_0f770f82ff631fded9ba4bbc6a\` ON \`contact_content_entity\``);
         await queryRunner.query(`DROP INDEX \`IDX_a96d20a900d3de96dc6b239408\` ON \`contact_content_entity\``);

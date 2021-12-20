@@ -3,7 +3,7 @@ import { PropTypes, Typography } from "@mui/material";
 
 interface DateTimeTextProps {
     date?: Date;
-    showTime?: boolean;
+    isShowTime?: boolean;
     align?: "left"|"right"|"center";
     color?:
     | "initial"
@@ -13,30 +13,24 @@ interface DateTimeTextProps {
     | "textPrimary"
     | "textSecondary"
     | "error";
-    display?: "initial" | "block" | "inline";
-    gutterBottom?: boolean;
-    noWrap?: boolean;
-    paragraph?: boolean;
-    variant?: "left"|"right"|"center" | "inherit";
-    variantMapping?: Partial<Record<"left"|"right"|"center", string>>;
     fontSize?: string;
 }
 
 export function DateTimeText(props: DateTimeTextProps) {
-    const { date, showTime } = props;
+    const { date, isShowTime,color } = props;
     return (
-        <Typography {...props as any} style={{ fontSize: props.fontSize }}>
+        <Typography color={color} style={{ fontSize: props.fontSize }}>
             { date?.getFullYear()}
-            < small > 年</small >
+            <small> 年</small >
             {(date?.getMonth() ?? 0) + 1}
             <small>月</small>
             { date?.getDate()}
             <small>日</small>
             {
-                showTime && (
+                isShowTime && (
                     <>
                         {date?.getHours()}
-                        < small >時</small>
+                        <small>時</small>
                         {date?.getMinutes()}
                         <small>分</small>
                     </>

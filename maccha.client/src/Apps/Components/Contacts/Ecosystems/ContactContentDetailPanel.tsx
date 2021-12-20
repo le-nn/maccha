@@ -1,4 +1,4 @@
-import { CircularProgress, Typography, useTheme } from "@mui/material";
+import { Typography, useTheme } from "@mui/material";
 import { Box, Backdrop } from "@mui/material";
 import { ContactContentContextStore } from "Apps/Models/Stores/Contacts/ContactContextStore";
 import React, { useEffect } from "react";
@@ -42,7 +42,8 @@ export const ContactContentDetailPanel = () => {
     }
 
     return (
-        <Box width="100%"
+        <Box
+            width="100%"
             p={2}
         >
             <Box p={2}>

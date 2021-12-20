@@ -1,5 +1,5 @@
-import { Initialize1635530618037 } from "./1635530618037-Initialize";
+import { Initialize1639996705038 } from "./1639996705038-Initialize";
 
 export const Migrations: Function[] = [
-    Initialize1635530618037
+    Initialize1639996705038
 ];

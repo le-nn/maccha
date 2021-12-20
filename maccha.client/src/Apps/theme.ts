@@ -58,8 +58,6 @@ const common: ThemeOptions = {
                 },
             },
         },
-        MuiInputBase: {
-        },
         MuiOutlinedInput: {
             styleOverrides: {
                 notchedOutline: {

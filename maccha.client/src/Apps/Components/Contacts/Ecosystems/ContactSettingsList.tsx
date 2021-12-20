@@ -1,11 +1,17 @@
-import { List, Box, ListItem, Button, ListItemText, Typography, useTheme } from "@mui/material";
+import { List, Box, ListItem, Button, ListItemText, Typography, useTheme, Menu, MenuItem, Divider } from "@mui/material";
 import { ContactSettingsStore } from "Apps/Models/Stores/Contacts/ContactSettingsStore";
 import { useObserver, useDispatch } from "react-relux";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useAppNavigate } from "Libs/Routing/RouterConfig";
 import { ContactsStore } from "Apps/Models/Stores/Contacts/ContactsStore";
 import { ListAlt } from "@mui/icons-material";
+import { RoundedListItem } from "Apps/Components/commons/RoundedListItem";
+import { services } from "../../../Services";
+import { RoleType } from "Apps/Models";
+import { useIntupDialog } from "Libs/Dialogs/useInputDialog";
+import { useNotifybar } from "Libs/Dialogs/useNotifybar";
+import { Spacer } from "Libs/Components";
 
 export const ContactSettingsList = () => {
     const list = useObserver(ContactSettingsStore, s => s.contactSettings);
@@ -16,9 +22,21 @@ export const ContactSettingsList = () => {
     const navigate = useAppNavigate();
     const theme = useTheme();
 
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const { authService } = services;
+    const selectedId = useRef<string | null>(null);
+
+    const { show } = useNotifybar();
+
     useEffect(() => {
         dispatchContacts(s => s.loadAsync(selectedSettingId));
     }, [selectedSettingId]);
+
+    const handleOpenMenu = (event: React.MouseEvent<HTMLElement>, id: string) => {
+        event.stopPropagation();
+        setAnchorEl(event.currentTarget);
+        selectedId.current = id;
+    };
 
     const createContactSetting = async () => {
         await navigate("/contacts/new/edit");
@@ -28,15 +46,55 @@ export const ContactSettingsList = () => {
         dispatch(s => s.select(settingId));
     };
 
+    const handleCloseMenu = () => {
+        selectedId.current = null;
+        setAnchorEl(null);
+    };
+
+    const handleEdit = () => {
+        const selected = selectedId.current;
+        navigate("/contacts/" + selected + "/edit");
+        handleCloseMenu();
+    };
+
+    const handleRemove = async () => {
+        const selected = selectedId.current;
+        handleCloseMenu();
+
+        try {
+            if (!selected) {
+                throw new Error();
+            }
+
+            await dispatch(s => s.removeItemAsync(selected));
+            show(t("削除しました"));
+        }
+        catch {
+            show(t("削除に失敗しました"));
+        }
+    };
+
     if (list.length === 0) {
         return (
             <Box
-                width="100%"
-                height="100%"
                 display="flex"
+                flexDirection="column"
                 alignItems="center"
-                justifyContent="center"
+                height="100%"
+                width="100%"
             >
+                <Box py={4}>
+                    <Button
+                        onClick={createContactSetting}
+                        sx={{
+                            borderRadius: "24px"
+                        }}
+                        variant="contained"
+                    >
+                        {t("お問い合わせ設定を作成")}
+                    </Button>
+                </Box>
+                <Spacer/>
                 <Box textAlign="center">
                     <ListAlt
                         sx={{
@@ -51,6 +109,7 @@ export const ContactSettingsList = () => {
                         }}
                     >{t("0 件です")}</Typography>
                 </Box>
+                <Spacer/>
             </Box>
         );
     }
@@ -77,16 +136,39 @@ export const ContactSettingsList = () => {
             <Box width="100%">
                 <List>
                     {
-                        list.map(x => <ListItem
-                            button
+                        list.map(x => <RoundedListItem
                             key={x.contactSettingId}
-                            onClick={e => handleContactSettingClicked(x.contactSettingId)}
-                        >
-                            <ListItemText primary={x.name} />
-                        </ListItem>)
+                            onClick={() => handleContactSettingClicked(x.contactSettingId)}
+                            text={x.name}
+                            selected={x.contactSettingId === selectedSettingId}
+                            optionEnabled={authService.loginInfo.role >= RoleType.Edit}
+                            onOptionClicked={e => handleOpenMenu(e, x.contactSettingId)}
+                        />)
                     }
                 </List>
             </Box>
+
+            <Menu
+                id="long-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={!!anchorEl}
+                onClose={handleCloseMenu}
+                PaperProps={{
+                    style: {
+                        maxHeight: 48 * 4.5,
+                        width: "20ch",
+                    },
+                }}
+            >
+                <MenuItem onClick={() => handleEdit()}>
+                    編集
+                </MenuItem>
+                <Divider />
+                <MenuItem onClick={handleRemove}>
+                    削除
+                </MenuItem>
+            </Menu>
         </Box >
     );
 };

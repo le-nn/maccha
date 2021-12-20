@@ -35,6 +35,8 @@ export class ContactsService {
             return fields.filter(x => table.includes(x.name));
         };
 
+        // TODO: confirm rather exists scheme key
+
         await this.contactsRepository.postAsync(contactSettingId, {
             contactedAt: DateTime.now(),
             title: "",

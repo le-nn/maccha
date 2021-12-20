@@ -45,4 +45,16 @@ export class ContactSettingsRepository {
             throw ex;
         }
     }
+
+    async removeAsync(contactSettingId: string) {
+        try {
+            const result = await axios.delete("/api/contact-settings/" + contactSettingId);
+            return result.data;
+        }
+        catch (ex: any) {
+            console.error(ex);
+            throw new Error(ex.message);
+        }
+    }
+
 }
