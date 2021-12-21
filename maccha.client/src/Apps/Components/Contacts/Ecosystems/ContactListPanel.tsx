@@ -32,7 +32,7 @@ export const ContactListPanel = () => {
     }
 
     return (
-        <Box width="100%">
+        <Box width="100%" height={"100%"} sx={{ overflowY: "auto" }}>
             {
                 contacts.map(c => (<IndicatorListItem
                     key={c.contactContentId}

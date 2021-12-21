@@ -36,8 +36,8 @@ export const RoundedListItem = ({
 
     return (
         <Box
-            py={0.5}
-            px={1}>
+            py={{ xs: 0.5, md: 1 }}
+            px={{ xs: 1, md: 2 }}>
             <ListItem
                 button
                 css={[
@@ -46,7 +46,8 @@ export const RoundedListItem = ({
                         ? selectedStyle
                         : ""
                 ]}
-                onClick={onClick}>
+                onClick={onClick}
+            >
                 <ListItemText primary={text} />
                 {
                     optionEnabled && (

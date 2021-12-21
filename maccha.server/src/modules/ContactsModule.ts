@@ -17,7 +17,7 @@ import { ContactsRepository } from "@/Infrastructure/Repositories/ContactsReposi
             ContactContentFieldEntity,
             ContactSettingEntity,
             ContactEmailSettingEntity
-        ])
+        ]),
     ],
     controllers: [
         ContactsController,

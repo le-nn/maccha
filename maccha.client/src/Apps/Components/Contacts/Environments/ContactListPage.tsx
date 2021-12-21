@@ -32,7 +32,7 @@ export default () => {
                 <Divider orientation="vertical" flexItem />
             </Grid>
 
-            <Grid xs={9} item sx={{ display: "flex" }}>
+            <Grid xs={9} item sx={{ display: "flex", height: "100%" }}>
                 <Grow key={selectedSettingId} in >
                     <div
                         css={css({
@@ -46,11 +46,11 @@ export default () => {
                                 height: "100%"
                             }}
                         >
-                            <Grid xs={3} item sx={{ display: "flex" }}>
+                            <Grid xs={3} item sx={{ display: "flex", height: "100%" }}>
                                 <ContactListPanel />
                                 <Divider orientation="vertical" flexItem />
                             </Grid>
-                            <Grid xs={9} item sx={{ display: "flex" }}>
+                            <Grid xs={9} item sx={{ display: "flex", height: "100%" }}>
                                 <Fade key={selectedContactContentId} in >
                                     <div
                                         css={css({

@@ -20,6 +20,7 @@ import { MediaModule } from "./modules/media.module";
 import express from "express";
 import path from "path";
 import { NotFoundExceptionFilter } from "./NotFoundFallback";
+import { MailService } from "./Infrastructure/Mail/MailServie";
 
 export interface Logger {
     /**
@@ -82,6 +83,7 @@ export interface MacchaOption {
     assetsDir: string;
     pulugins: MacchaPlugin[];
     clientSpaPath: string;
+    mailConnectionString: string;
 }
 
 const defaultOption: MacchaOption = {
@@ -100,7 +102,8 @@ const defaultOption: MacchaOption = {
         port: 3306,
         username: "root",
     },
-    pulugins: []
+    pulugins: [],
+    mailConnectionString: "user=null;password=null;host=null;port=0",
 };
 
 const buildDbConfig = (option: MacchaOption) => {
@@ -157,11 +160,18 @@ class AuthModule {
     }
 }
 
+@Global()
 @Module({})
-class MainModule {
+export class MainModule {
     static register(option: MacchaOption): DynamicModule {
         return {
             module: MainModule,
+            providers: [
+                {
+                    provide: "IMailService",
+                    useFactory: () => new MailService(option.mailConnectionString)
+                }
+            ],
             imports: [
                 MulterModule.register(),
                 TypeOrmModule.forRootAsync({
@@ -171,6 +181,7 @@ class MainModule {
                 MacchaModule,
                 ...option.pulugins.map(p => p.modules).reduce((x, y) => [...x, y], [] as any)
             ],
+            exports: ["IMailService"]
         };
     }
 }

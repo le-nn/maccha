@@ -4,7 +4,7 @@ import { IPostContactParams } from "@/Models/Contacts/params/IPostParams";
 import { IContactsRepository } from "@/Models/Contacts/Repositories/IContactsRepository";
 import { InjectRepository } from "@nestjs/typeorm";
 import { DateTime } from "luxon";
-import { concatMap, firstValueFrom, from, map, of, toArray } from "rxjs";
+import { concatMap, firstValueFrom, from, map, toArray } from "rxjs";
 import { Repository } from "typeorm";
 import { v4 } from "uuid";
 import { ContactContentEntity, ContactContentFieldEntity } from "../Database/Entities";
@@ -35,17 +35,28 @@ export class ContactsRepository implements IContactsRepository {
             });
 
             const getFields = async (contactId: string, contactedAt: DateTime): Promise<IContactContentMeta> => {
-                const fields = await this.contactContentFields.find({
+                const title = await this.contactContentFields.findOne({
+                    where: {
+                        contactContentId: contactId,
+                        name: "title"
+                    },
+                    select: ["name", "value"]
+                });
+
+                const title2 = title ?? await this.contactContentFields.findOne({
                     where: {
                         contactContentId: contactId,
                     },
-                    select: ["name", "value"]
+                    select: ["name", "value"],
+                    order: {
+                        name: "ASC"
+                    }
                 });
 
                 return {
                     contactContentId: contactId,
                     contactedAt,
-                    title: fields.find(x => x.name.includes("title"))?.value || fields[0]?.value || "NO CONTENT"
+                    title: title2?.value ?? "NO CONTENT"
                 };
             };
 
@@ -72,6 +83,9 @@ export class ContactsRepository implements IContactsRepository {
             const fields = await this.contactContentFields.find({
                 where: {
                     contactContentId: contactId
+                },
+                order: {
+                    name: "ASC"
                 }
             });
 
@@ -109,7 +123,7 @@ export class ContactsRepository implements IContactsRepository {
             });
 
             for (const item of params.fields) {
-                await this.contactContentFields.save({
+                await this.contactContentFields.insert({
                     contactContentId: contentId,
                     name: item.name,
                     value: item.value,
