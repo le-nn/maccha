@@ -8,10 +8,11 @@ import { timer } from "rxjs";
 import { axios } from "../../../Repositories/config";
 import { css } from "@mui/styled-engine";
 
+const base = axios.defaults.baseURL;
+
 export const ImageGrid = observer(() => {
     const [path, setPath] = useState("");
     const [selected, setSelected] = useState<string | null>(null);
-    const [isAnimating, setIsAnimating] = useState(false);
 
     useEffect(() => {
         services.mediaService.fetchAllFilesAsync();
@@ -21,7 +22,7 @@ export const ImageGrid = observer(() => {
         <Box mt={2} display="flex" flexWrap="wrap" width="100%">
             <PhotoGridView
                 multiSelect
-                baseUrl={axios.defaults.baseURL}
+                baseUrl={base === "/" ? "" : base}
                 images={services.mediaService.files}
                 selected={services.mediaService.selected}
                 selectionChanged={selected => services.mediaService.setSelected(selected)}
