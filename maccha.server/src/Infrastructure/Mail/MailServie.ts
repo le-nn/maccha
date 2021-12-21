@@ -8,7 +8,7 @@ export class MailService implements IMailService {
 
     constructor(connectionString: string) {
         if (!connectionString) {
-            throw new Error("connectionString is undefined."):
+            throw new Error("connectionString is undefined.");
         }
 
         // Parse connection strings.
