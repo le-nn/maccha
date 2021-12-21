@@ -56,7 +56,12 @@ function registerAutoTokeRefresh() {
 registerAutoTokeRefresh();
 
 export const setUrl = (url: string) => {
-    axios.defaults.baseURL = url[url.length - 1] !== "/" ? url + "/" : url;
+    if (url === "/") {
+        axios.defaults.baseURL = "/";
+    }
+    else {
+        axios.defaults.baseURL = url[url.length - 1] !== "/" ? url + "/" : url;
+    }
 };
 
 export const setToken = (token: string) => {

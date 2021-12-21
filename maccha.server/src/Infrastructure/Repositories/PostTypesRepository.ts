@@ -90,23 +90,26 @@ export class PostTypesRepository implements IPostTypesRepository {
                 taxonomy: undefined as any,
             }));
 
-            const _ = await from(params.taxonomy.schemes.map((s, i) => ({ ...s, sort: i }))).pipe(
-                mergeMap(
-                    s => from(
-                        this.schemes.save(
-                            new SchemeEntity({
-                                metadata: s.metadata,
-                                description: s.description,
-                                displayName: s.displayName,
-                                type: s.type,
-                                name: s.name,
-                                taxonomyId: createdTaxonomy.taxonomyId,
-                                sort: s.sort
-                            })
-                        )
+            const _ = await lastValueFrom(
+                from(
+                    params.taxonomy.schemes.map((s, i) => ({ ...s, sort: i }))).pipe(
+                        mergeMap(
+                            s => from(
+                                this.schemes.save(
+                                    new SchemeEntity({
+                                        metadata: s.metadata,
+                                        description: s.description,
+                                        displayName: s.displayName,
+                                        type: s.type,
+                                        name: s.name,
+                                        taxonomyId: createdTaxonomy.taxonomyId,
+                                        sort: s.sort
+                                    })
+                                )
+                            )
+                        ),
                     )
-                ),
-            ).toPromise();
+            );
             if (postType.postTypeId) {
                 const c = await this.findAsync(postType.postTypeId);
                 if (c) {
