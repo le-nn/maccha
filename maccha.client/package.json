@@ -79,6 +79,7 @@
         "@types/uuid": "^8.3.3",
         "@typescript-eslint/eslint-plugin": "^5.8.0",
         "@typescript-eslint/parser": "^5.8.0",
+        "babel-jsx-utils": "^1.1.0",
         "babel-plugin-transform-typescript-metadata": "^0.3.2",
         "babel-preset-gatsby": "^2.4.0",
         "babelrc-rollup": "^3.0.0",
