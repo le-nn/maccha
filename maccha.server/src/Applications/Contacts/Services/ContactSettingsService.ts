@@ -1,6 +1,6 @@
 import { ISaveContactSettingParams } from "@/Models/Contacts/params/ISaveContactSettingParams";
 import { ContactSettingsService } from "@/Models/Contacts/Services/ContactSettingsService";
-import { Inject } from "@nestjs/common";
+import { BadRequestException, Inject } from "@nestjs/common";
 import { CreateContactSettingParams } from "../Params/CreateContactSettingParams";
 
 export class ContactSettingsAppService {
@@ -9,7 +9,12 @@ export class ContactSettingsAppService {
     }
 
     async fetchAsync(contactSettingId: string) {
-        return await this.contactSettingsService.fetchAsync(contactSettingId);
+        try {
+            return await this.contactSettingsService.fetchAsync(contactSettingId);
+        }
+        catch(ex) {
+            throw new BadRequestException(`${contactSettingId} is not found.`);
+        }
     }
 
     async getAllAsync(identifier: string) {

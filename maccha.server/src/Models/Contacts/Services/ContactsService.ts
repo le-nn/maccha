@@ -44,7 +44,7 @@ export class ContactsService {
         params: IPostContactFieldParams[]): Promise<void> {
         const setting = await this.contactSettingsRepository.findAsync(contactSettingId);
         if (!setting) {
-            throw new Error("ContactSettingId : " + contactSettingId + "is not found.");
+            throw new Error("ContactSettingId : " + contactSettingId + " is not found.");
         }
 
         try {

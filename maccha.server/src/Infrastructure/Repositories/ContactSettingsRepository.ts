@@ -26,7 +26,7 @@ export class ContactSettingsRepository implements IContactSettingsRepository {
                     identifier
                 }
             });
-            console.log(settings, identifier);
+
             return settings.map(x => ({
                 contactSettingId: x.contactSettingId,
                 name: x.name,

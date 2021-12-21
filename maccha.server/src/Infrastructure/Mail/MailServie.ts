@@ -7,6 +7,10 @@ export class MailService implements IMailService {
     transporter: Transporter;
 
     constructor(connectionString: string) {
+        if (!connectionString) {
+            throw new Error("connectionString is undefined."):
+        }
+
         // Parse connection strings.
         this.settings = connectionString.split(";").reduce<Setting>((x, y) => {
             const [left, right] = y.split("=");
