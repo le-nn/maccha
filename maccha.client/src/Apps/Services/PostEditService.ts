@@ -61,7 +61,7 @@ export class PostsEditServic {
     public async saveAsync() {
         const content = this.content;
         if (content === null) {
-            throw new Error("post is not selected or initializeed.");
+            throw new Error("post is not selected or initialized.");
         }
         else if (this.taxonomy === null) {
             throw new Error("post type is not selected.");
@@ -74,9 +74,9 @@ export class PostsEditServic {
                     new Content({
                         taxonomyId: content.taxonomyId,
                         description: content.description,
-                        updatedAt: content.updatedAt.toISO() as any,
-                        createdAt: content.createdAt.toISO() as any,
-                        publishIn: content.publishIn?.toISO() as any ?? null,
+                        updatedAt: content.updatedAt as any,
+                        createdAt: content.createdAt as any,
+                        publishIn: content.publishIn as any ?? null,
                         fields: content.fields.map(x => new Field({
                             name: x.name,
                             schemeId: x.schemeId,
@@ -96,9 +96,9 @@ export class PostsEditServic {
                         contentId: content.contentId,
                         taxonomyId: content.taxonomyId,
                         description: content.description,
-                        updatedAt: content.updatedAt.toISO() as any,
-                        createdAt: content.createdAt.toISO() as any,
-                        publishIn: content.publishIn?.toISO() as any ?? null,
+                        updatedAt: content.updatedAt as any,
+                        createdAt: content.createdAt as any,
+                        publishIn: content.publishIn as any ?? null,
                         fields: content.fields.map(x => new Field({
                             name: x.name,
                             schemeId: x.schemeId,

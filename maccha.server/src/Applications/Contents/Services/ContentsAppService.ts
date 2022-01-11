@@ -69,9 +69,8 @@ export class ContentsAppService {
         }
 
         const taxonomy = await this.taxonomiesService.getByIdAsync(taxonomyId);
-
         if (taxonomy) {
-            return await this.contentsService.createAsync(
+            const result = await this.contentsService.createAsync(
                 loginUser.identifier,
                 {
                     fields: params.fields,
@@ -84,6 +83,10 @@ export class ContentsAppService {
                     taxonomyId,
                     userId: loginUser.userId,
                 });
+
+            if (!result) {
+                throw new InternalServerErrorException("Cannot create post.");
+            }
         }
 
         throw new InternalServerErrorException("Unhandled error occured.");

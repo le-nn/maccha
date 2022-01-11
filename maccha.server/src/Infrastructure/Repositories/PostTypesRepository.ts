@@ -69,7 +69,7 @@ export class PostTypesRepository implements IPostTypesRepository {
 
     public async createAsync(identifier: string, params: ICreatePostTypeParams): Promise<PostType> {
         try {
-            if (await this.taxonomies.findOne({ name: params.taxonomy.name })) {
+            if (await this.taxonomies.findOne({ name: params.taxonomy.name, identifier })) {
                 throw new Error(`taxonomy ${params.taxonomy.name} is already exists.`);
             }
 

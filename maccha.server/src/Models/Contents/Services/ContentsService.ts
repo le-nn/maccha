@@ -45,7 +45,7 @@ export class ContentsService {
      * @param params Params to create.
      * @returns Created content.
      */
-    public async createAsync(identifier: string, params: ICreateContentParams): Promise<Content> {
+    public async createAsync(identifier: string, params: ICreateContentParams): Promise<Content | null> {
         return await this.contentsRepository.createAsync(
             identifier,
             params

@@ -84,13 +84,10 @@ ORDER BY \`createdAt\` DESC
 LIMIT ${params.fetch} OFFSET ${params.offset}
 ;`;
 
-                console.log(sql);
-
                 const rawData = await connection.query(sql) as (ContentEntity & any)[];
                 const count = (await connection.query("SELECT FOUND_ROWS() as count;"))[0].count as number;
                 return [rawData, count];
             });
-
 
             // fetch fields
             const fields = await lastValueFrom(from(rows).pipe(
@@ -180,8 +177,9 @@ LIMIT ${params.fetch} OFFSET ${params.offset}
         return new Content();
     }
 
-    async createAsync(identifier: string, params: ICreateContentParams): Promise<Content> {
+    async createAsync(identifier: string, params: ICreateContentParams): Promise<Content | null> {
         try {
+            console.log(params);
             const content = await this.contents.save(new ContentEntity({
                 createdBy: params.userId,
                 thumbnail: params.thumbnail,
@@ -203,13 +201,13 @@ LIMIT ${params.fetch} OFFSET ${params.offset}
                     taxonomyId: params.taxonomyId
                 }));
             }
-
         }
         catch {
+            console.log("------------");
             throw new Error("Cannot to create content.");
         }
 
-        return new Content();
+        return null;
     }
 
     async deleteAsync(contentId: string): Promise<void> {

@@ -32,6 +32,7 @@ import { EmptyItemsPanel } from "Apps/Components/commons/EmptyItemsPanel";
 import { useTranslation } from "react-i18next";
 import { AuthStore } from "Apps/Models/Stores/Auth/AuthStore";
 import { useObserver } from "react-relux";
+import { DateTime } from "luxon";
 
 export default observer(() => {
     const history = useAppNavigate();
@@ -276,7 +277,7 @@ const PostSearchView = (props: PostSearchViewProps) => {
                                     isShowTime
                                     color="textSecondary"
                                     fontSize="12px"
-                                    date={(c.publishIn ?? c.createdAt).toJSDate()}
+                                    date={DateTime.fromISO(c.publishIn ?? c.createdAt).toJSDate()}
                                 />
                             </TableCell>
                             <TableCell>

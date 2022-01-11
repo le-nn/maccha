@@ -37,7 +37,7 @@ export interface IContentsRepository {
     createAsync(
         identifier: string,
         params: ICreateContentParams
-    ): Promise<Content>;
+    ): Promise<Content|null>;
 
     /**
      * Delete content by id async.
