@@ -51,7 +51,8 @@ export class PostsService {
         try {
             const searchResult = await this.repository.searchPostsAsync(postTypeName, this.searchOption);
             this._hitCount = searchResult.hitCount;
-            this._posts = searchResult.collection;
+            console.log(searchResult.collection );
+            this._posts = searchResult.collection ;
         }
         catch {
             console.error("failed to search posts.");

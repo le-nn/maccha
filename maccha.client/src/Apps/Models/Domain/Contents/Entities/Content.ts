@@ -13,9 +13,9 @@ export class Content {
     readonly thumbnail: string = "";
     readonly metadata: string = "";
     readonly status: StatusType = StatusType.Public;
-    readonly updatedAt: DateTime = DateTime.local();
-    readonly createdAt: DateTime = DateTime.local();
-    readonly publishIn: DateTime | null = null;
+    readonly updatedAt: string = "";
+    readonly createdAt: string = "";
+    readonly publishIn: string | null = null;
     readonly createdBy = { name: "", thumbnail: "" };
     readonly identifier: string = "";
     readonly fields: Field[] = [];

@@ -18,6 +18,7 @@ import { css } from "@mui/styled-engine";
 import { AuthStore } from "Apps/Models/Stores/Auth/AuthStore";
 import { useObserver } from "react-relux";
 import { roles } from "Apps/roles";
+import { DateTime } from "luxon";
 
 interface PostCardProps {
     content: Content;
@@ -31,7 +32,7 @@ export const PostCard = (props: PostCardProps) => {
     const theme = useTheme();
     const name = useObserver(AuthStore, s => s.loginInfo?.name ?? "");
     const avatar = useObserver(AuthStore, s => s.loginInfo?.avatar ?? "");
-    const postDisabled = useObserver(AuthStore, s => ![...roles.posts.remove, ...roles.posts.edit].includes(s.loginInfo?.role ?? RoleType.None));
+    const postDisabled = useObserver(AuthStore, s => ![...roles.posts.removeOther, ...roles.posts.editOther].includes(s.loginInfo?.role ?? RoleType.None));
 
     return (
         <Card css={classes.card} elevation={5}>
@@ -147,7 +148,7 @@ export const PostCard = (props: PostCardProps) => {
                             isShowTime
                             color="textSecondary"
                             fontSize="12px"
-                            date={(props.content.publishIn ?? props.content.createdAt).toJSDate()}
+                            date={DateTime.fromISO(props.content.publishIn || props.content.createdAt).toJSDate()}
                         />
                     </Box>
                 </Box >
