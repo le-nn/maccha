@@ -17,10 +17,13 @@ export class TaxonomiesRepository implements ITaxonomiesRepository {
 
     }
 
-    public async findIdByNameAsync(name: string): Promise<string | null> {
+    public async findIdByNameAsync(name: string, identifier: string): Promise<string | null> {
         try {
             const taxonomy = await this.taxonomies.findOne({
-                name
+                where:{
+                    identifier:identifier,
+                    name,
+                }
             });
             if (!taxonomy || taxonomy.isDeleted) {
                 return null;

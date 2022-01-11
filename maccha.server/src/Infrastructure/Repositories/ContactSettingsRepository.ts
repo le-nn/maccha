@@ -58,9 +58,8 @@ export class ContactSettingsRepository implements IContactSettingsRepository {
                 }))
             );
         }
-        catch (expect) {
-            console.log(expect);
-            throw expect;
+        catch (expect: any) {
+            throw new Error(expect.message);
         }
     }
 
@@ -146,9 +145,8 @@ export class ContactSettingsRepository implements IContactSettingsRepository {
                 }))
             );
         }
-        catch (expect) {
-            console.log(expect);
-            throw expect;
+        catch (expect: any) {
+            throw new Error(expect.message);
         }
     }
 }

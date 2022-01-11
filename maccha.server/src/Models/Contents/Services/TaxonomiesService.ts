@@ -25,8 +25,8 @@ export class TaxonomiesService {
      * @param taxonomyName taxonomy name.
      * @returns taxomony.
      */
-    public async getIdByNameAsync(taxonomyName: string): Promise<string | null> {
-        return await this.taxonomiesRepository.findIdByNameAsync(taxonomyName);
+    public async getIdByNameAsync(taxonomyName: string, identifier: string): Promise<string | null> {
+        return await this.taxonomiesRepository.findIdByNameAsync(taxonomyName, identifier);
     }
 
     /**

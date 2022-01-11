@@ -77,7 +77,7 @@ AS B ON B.\`userId\`=\`content_entity\`.\`createdBy\`
 
                 const sql = `
 SELECT SQL_CALC_FOUND_ROWS * FROM \`content_entity\` 
-INNER JOIN(${fieldSql}) AS A ON A.\`contentId\`=\`content_entity\`.\`contentId\`
+LEFT OUTER JOIN(${fieldSql}) AS A ON A.\`contentId\`=\`content_entity\`.\`contentId\`
 ${userSql}
 WHERE \`taxonomyId\`='${taxonomyId}' 
 ORDER BY \`createdAt\` DESC 
@@ -124,7 +124,6 @@ LIMIT ${params.fetch} OFFSET ${params.offset}
                 ),
                 toArray()
             ));
-
             return [
                 fields,
                 count
@@ -179,7 +178,6 @@ LIMIT ${params.fetch} OFFSET ${params.offset}
 
     async createAsync(identifier: string, params: ICreateContentParams): Promise<Content | null> {
         try {
-            console.log(params);
             const content = await this.contents.save(new ContentEntity({
                 createdBy: params.userId,
                 thumbnail: params.thumbnail,
@@ -203,7 +201,6 @@ LIMIT ${params.fetch} OFFSET ${params.offset}
             }
         }
         catch {
-            console.log("------------");
             throw new Error("Cannot to create content.");
         }
 

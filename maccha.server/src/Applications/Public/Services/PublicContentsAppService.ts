@@ -19,7 +19,7 @@ export class PublicContentsAppService {
         taxonomy: string,
         contentId: string
     ): Promise<PublicContentResponse> {
-        const taxonomyId = await this.taxonomiesService.getIdByNameAsync(taxonomy);
+        const taxonomyId = await this.taxonomiesService.getIdByNameAsync(taxonomy, indentifier);
         if (!taxonomyId) {
             throw new BadRequestException("Taxonomy is not found.");
         }
@@ -57,7 +57,7 @@ export class PublicContentsAppService {
         taxonomy: string,
         params: ISearchContentParams
     ): Promise<[PublicContentResponse[], number]> {
-        const taxonomyId = await this.taxonomiesService.getIdByNameAsync(taxonomy);
+        const taxonomyId = await this.taxonomiesService.getIdByNameAsync(taxonomy, identifier);
 
         if (taxonomyId === null) {
             throw new BadRequestException(`taxonomy ${taxonomy} is not found`);

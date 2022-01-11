@@ -26,7 +26,7 @@ export class ContentsAppService {
         taxonomyName: string,
         contentId: string
     ) {
-        const taxonomyId = await this.taxonomiesService.getIdByNameAsync(taxonomyName);
+        const taxonomyId = await this.taxonomiesService.getIdByNameAsync(taxonomyName, identifier);
         if (!taxonomyId) {
             throw new BadRequestException("Taxonomy is not found.");
         }
@@ -45,7 +45,7 @@ export class ContentsAppService {
         taxonomy: string,
         params: ISearchContentParams
     ): Promise<[Content[], number]> {
-        const taxonomyId = await this.taxonomiesService.getIdByNameAsync(taxonomy);
+        const taxonomyId = await this.taxonomiesService.getIdByNameAsync(taxonomy, identifier);
         if (taxonomyId === null) {
             throw new BadRequestException(`taxonomy ${taxonomy} is not found`);
         }
@@ -63,14 +63,14 @@ export class ContentsAppService {
         taxonomyName: string,
         params: CreateContentParams
     ): Promise<Content> {
-        const taxonomyId = await this.taxonomiesService.getIdByNameAsync(taxonomyName);
+        const taxonomyId = await this.taxonomiesService.getIdByNameAsync(taxonomyName, loginUser.identifier);
         if (!taxonomyId) {
             throw new BadRequestException("Taxonomy is not found.");
         }
 
         const taxonomy = await this.taxonomiesService.getByIdAsync(taxonomyId);
         if (taxonomy) {
-            const result = await this.contentsService.createAsync(
+            await this.contentsService.createAsync(
                 loginUser.identifier,
                 {
                     fields: params.fields,
@@ -83,10 +83,6 @@ export class ContentsAppService {
                     taxonomyId,
                     userId: loginUser.userId,
                 });
-
-            if (!result) {
-                throw new InternalServerErrorException("Cannot create post.");
-            }
         }
 
         throw new InternalServerErrorException("Unhandled error occured.");
@@ -102,7 +98,7 @@ export class ContentsAppService {
         taxonomyName: string,
         params: SaveContentParams
     ): Promise<Content> {
-        const taxonomyId = await this.taxonomiesService.getIdByNameAsync(taxonomyName);
+        const taxonomyId = await this.taxonomiesService.getIdByNameAsync(taxonomyName, loginUser.identifier);
         if (!taxonomyId) {
             throw new BadRequestException("Taxonomy is not found.");
         }
@@ -137,7 +133,7 @@ export class ContentsAppService {
         taxonomyName: string,
         contentId: string
     ): Promise<void> {
-        const taxonomyId = await this.taxonomiesService.getIdByNameAsync(taxonomyName);
+        const taxonomyId = await this.taxonomiesService.getIdByNameAsync(taxonomyName, loginUser.identifier);
         if (!taxonomyId) {
             throw new BadRequestException("Taxonomy is not found.");
         }

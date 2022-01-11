@@ -7,7 +7,8 @@ export interface ITaxonomiesRepository {
     ): Promise<Taxonomy | null>;
 
     findIdByNameAsync(
-        name: string
+        name: string,
+        identifier: string,
     ): Promise<string | null>;
 
     findAllAsync(

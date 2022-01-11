@@ -47,9 +47,9 @@ export class ContentsController {
     public async find(
         @Param("taxonomy") taxonomy: string,
         @Param("contentId") contentId: string,
-        @Headers("X-Identifier") identifier: string
+        @Claim() loginUser: LoginUser
     ): Promise<ContentResponse> {
-        const content = await this.contentsService.getAsync(identifier, taxonomy, contentId);
+        const content = await this.contentsService.getAsync(loginUser.identifier, taxonomy, contentId);
         if (!content) {
             throw new NotFoundException(`Content ${contentId} is not found.`);
         }
@@ -78,10 +78,10 @@ export class ContentsController {
     public async search(
         @Param("taxonomy") taxonomy: string,
         @Query() params: any,
-        @Headers("X-Identifier") identifier: string
+        @Claim() loginUser: LoginUser
     ): Promise<SearchResultResponse<ContentResponse>> {
         const [collection, hitCount] = await this.contentsService.searchAsync(
-            identifier,
+            loginUser.identifier,
             taxonomy,
             params);
         return {
