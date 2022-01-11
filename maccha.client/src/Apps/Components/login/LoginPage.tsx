@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useObserver } from "mobx-react";
 import { useTheme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { CardContent, Card, Typography, Hidden, Button, CardActions, TextField, InputAdornment, FormControl } from "@mui/material";
 import { Alert, AlertTitle } from "@mui/lab";
 import { AccountCircle, VpnKey } from "@mui/icons-material";
-import { services } from "../../Services";
 import { useOption } from "Apps/Hooks/useOption";
+import { useDispatch, useObserver } from "react-relux";
+import { AuthStore } from "Apps/Models/Stores/Auth/AuthStore";
 
 export default function LoginPage() {
     const classes = useStyles();
@@ -16,6 +16,9 @@ export default function LoginPage() {
     const [isShowError, setIsShowError] = useState(false);
 
     const option = useOption();
+
+    const dispatch = useDispatch(AuthStore);
+    const isLogin = useObserver(AuthStore, s => s.isLogin);
 
     useEffect(() => {
         const onEnter = (e: KeyboardEvent) => {
@@ -30,8 +33,8 @@ export default function LoginPage() {
 
     const loginAsync = async () => {
         try {
-            await services.authService.login(email, password);
-            if (services.authService.isLogin) {
+            await dispatch(auth => auth.login(email, password));
+            if (isLogin) {
                 window.location.assign(option.pathPrefix + "/");
             }
             else {
@@ -43,7 +46,6 @@ export default function LoginPage() {
         }
     };
 
-    return useObserver(() => {
         return (
             <div>
                 <Card elevation={2} className={classes.card} >
@@ -103,7 +105,6 @@ export default function LoginPage() {
                 </Card>
             </div>
         );
-    });
 }
 
 const useStyles = makeStyles({

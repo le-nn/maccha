@@ -41,33 +41,33 @@ export const routes = (option?: {
                     path: ":taxonomy/edit"
                 },
             ],
-            roles: [RoleType.Edit, RoleType.Admin, RoleType.Subscribe]
+            roles: [RoleType.Edit, RoleType.Admin, RoleType.Post, RoleType.Subscribe]
         },
         {
             path: "/media",
             title: "メディア",
             icon: () => <InsertPhoto />,
             component: () => import("Apps/Components/Media/Enviroments/MediaPage"),
-            roles: [RoleType.Edit, RoleType.Admin, RoleType.Subscribe]
+            roles: [RoleType.Edit, RoleType.Admin, RoleType.Post, RoleType.Subscribe]
         },
         {
             path: "/contacts/*",
             title: option?.t("お問い合わせ") ?? "",
             icon: () => <Mail />,
             component: () => import("Apps/Components/Contacts/Environments/ContactPageRoot"),
-            roles: [RoleType.Edit, RoleType.Admin, RoleType.Subscribe],
-            children:[
+            roles: [RoleType.Edit, RoleType.Admin, RoleType.Post, RoleType.Subscribe],
+            children: [
                 {
-                    component:() => import("Apps/Components/Contacts/Environments/ContactSettingPage"),
-                    path:"new/edit"
+                    component: () => import("Apps/Components/Contacts/Environments/ContactSettingPage"),
+                    path: "new/edit"
                 },
                 {
-                    component:() => import("Apps/Components/Contacts/Environments/ContactSettingPage"),
-                    path:":contactSettingId/edit"
+                    component: () => import("Apps/Components/Contacts/Environments/ContactSettingPage"),
+                    path: ":contactSettingId/edit"
                 },
                 {
-                    component:() => import("Apps/Components/Contacts/Environments/ContactListPage"),
-                    path:"/"
+                    component: () => import("Apps/Components/Contacts/Environments/ContactListPage"),
+                    path: "/"
                 },
             ]
         },
@@ -76,7 +76,7 @@ export const routes = (option?: {
             title: "設定",
             icon: () => <Settings />,
             component: () => import("Apps/Components/Settings/Environments/SettingsPage"),
-            roles: [RoleType.Edit, RoleType.Admin, RoleType.Subscribe]
+            roles: [RoleType.Edit, RoleType.Admin, RoleType.Post, RoleType.Subscribe]
         },
         {
             path: "/user-managements",
@@ -98,7 +98,7 @@ export const routes = (option?: {
             title: "API定義",
             icon: () => <LiveHelp />,
             component: () => import("Apps/Components/References/ApiReferencePage"),
-            roles: [RoleType.Subscribe],
+            roles: [RoleType.Admin],
             group: option?.t("管理")
         },
     ]

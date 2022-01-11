@@ -9,17 +9,17 @@ import {
     Select,
     Menu,
     MenuItem,
-    ListItemText, Avatar
+    ListItemText, Avatar, useTheme
 } from "@mui/material";
-import ProfileImage from "../../commons/ProfileImage";
-import { theme } from "../../../theme";
 import ProfileCard from "./ProfileCard";
 import { axios } from "../../../Repositories/config";
+import { useObserver } from "react-relux";
+import { AuthStore } from "Apps/Models/Stores/Auth/AuthStore";
 
 export default function HeaderToolbar() {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const { authService, webSiteManagementsService } = services;
-
+    const theme = useTheme();
+    const avatar = useObserver(AuthStore, s => s.loginInfo?.avatar ?? "");
     const handleOpenProfile = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -39,7 +39,7 @@ export default function HeaderToolbar() {
                     width: "40px",
                     cursor: "pointer"
                 }}
-                src={axios.defaults.baseURL + services.authService.loginInfo.avatar}
+                src={axios.defaults.baseURL + avatar}
             />
             <Menu
                 id="lock-menu"

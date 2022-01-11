@@ -34,6 +34,9 @@ import { RoleType } from "Apps/Models";
 import { EmptyItemsPanel } from "Apps/Components/commons/EmptyItemsPanel";
 import { useTranslation } from "react-i18next";
 import { RoundedListItem } from "Apps/Components/commons/RoundedListItem";
+import { useObserver } from "react-relux";
+import { AuthStore } from "Apps/Models/Stores/Auth/AuthStore";
+import { roles } from "Apps/roles";
 
 const normalize = (path: string) => "/" + path.split("/").filter(x => x !== "").join("/");
 
@@ -49,6 +52,13 @@ export default () => {
 
     const { t } = useTranslation();
 
+    const postDisabled = useObserver(AuthStore, s => ![
+        ...roles.posts.create,
+        ...roles.posts.editOther,
+        ...roles.posts.editOther
+    ].includes(s.loginInfo?.role ?? RoleType.None));
+    const identifier = useObserver(AuthStore, s => s.loginInfo?.identifier);
+    const postTypesDisble = useObserver(AuthStore, s => !(roles.postTypes.create.includes(s.loginInfo?.role ?? RoleType.None)));
     useEffect(() => {
         const selected = services.postManagementsService.selected;
         if (selected) {
@@ -112,8 +122,8 @@ export default () => {
     return <Observer>
         {
             (() => {
-                const { postManagementsService, authService } = services;
-                if (!authService.loginInfo.identifier) {
+                const { postManagementsService } = services;
+                if (!identifier) {
                     return (
                         <Box width="100%" height="100%" display="flex" justifyContent="center" alignItems="center">
                             <Typography variant="h5" style={{ color: theme.palette.error.main }}>
@@ -135,7 +145,7 @@ export default () => {
                         >
                             <Box mx="auto">
                                 <Button
-                                    disabled={!(authService.loginInfo.role >= RoleType.Edit)}
+                                    disabled={postTypesDisble}
                                     onClick={onAddPostTypeClicked}
                                     color="primary"
                                     variant="contained"
@@ -145,7 +155,7 @@ export default () => {
                                     }}
                                 >
                                     <Add />
-                                    投稿タイプを追加
+                                    {t("投稿タイプを追加")}
                                 </Button>
                             </Box>
                             <List
@@ -161,7 +171,7 @@ export default () => {
                                                     selected={postManagementsService.selected?.taxonomy.name === t.taxonomy.name}
                                                     onClick={() => onPostTypeListClicked(i)}
                                                     onOptionClicked={e => onPostTypeMenu(e, t)}
-                                                    optionEnabled={authService.loginInfo.role >= RoleType.Edit}
+                                                    optionEnabled={postDisabled}
                                                     text={t.taxonomy.displayName}
                                                 />
                                             )
@@ -202,7 +212,7 @@ export default () => {
                         >
                             <PostListPanel />
                             <Fab
-                                disabled={!services.postManagementsService.selected || !(authService.loginInfo.role >= RoleType.Post)}
+                                disabled={!services.postManagementsService.selected || postDisabled}
                                 style={{
                                     position: "absolute",
                                     zIndex: 9999,
@@ -219,7 +229,9 @@ export default () => {
 
                         <Box minWidth="220px" maxWidth="220px" height="100%" overflow="auto">
                             {services.postManagementsService.selected &&
-                                <PostTypeSettingPanel postType={services.postManagementsService.selected} />
+                                <PostTypeSettingPanel
+                                    postType={services.postManagementsService.selected}
+                                />
                             }
                         </Box>
                     </Box >

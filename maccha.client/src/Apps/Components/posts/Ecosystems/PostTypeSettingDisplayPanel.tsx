@@ -8,31 +8,39 @@ import { schemeTypeDisplayNames } from "../../../Models/Domain/Contents/Entities
 import { axios } from "Apps/Repositories/config";
 import { FlexSpacer } from "../../commons";
 import { useAppNavigate } from "Libs/Routing/RouterConfig";
+import { useObserver } from "react-relux";
+import { AuthStore } from "Apps/Models/Stores/Auth/AuthStore";
+import { roles } from "Apps/roles";
+import { RoleType } from "Apps/Models";
 
 interface PostTypeSettingPanelProps {
     postType: PostType;
 }
 
-export function PostTypeSettingPanel(props: PostTypeSettingPanelProps) {
+export const PostTypeSettingPanel = (props: PostTypeSettingPanelProps) => {
     const { postType } = props;
     const history = useAppNavigate();
+    const editPostTypeEnabled = useObserver(AuthStore, s => roles.postTypes.edit.includes(s.loginInfo?.role ?? RoleType.None));
 
-    function handleEdit() {
+
+    const handleEdit = () => {
         history(`/posts/${postType.taxonomy.name}/edit`);
-    }
+    };
 
-    function copyToClipBoard(text: string) {
+    const copyToClipBoard = (text: string) => {
         navigator.clipboard?.writeText(text);
-    }
+    };
 
     return (
         <Box p={2}>
             <Box display="flex" width="100%" alignItems="center">
                 <Typography variant="h6">投稿設定</Typography>
                 <Box flex="1 1 auto" />
-                <IconButton color="primary" onClick={handleEdit}>
-                    <EditIcon />
-                </IconButton>
+                {editPostTypeEnabled &&
+                    <IconButton color="primary" onClick={handleEdit}>
+                        <EditIcon />
+                    </IconButton>
+                }
             </Box>
 
             <Divider />
@@ -41,9 +49,15 @@ export function PostTypeSettingPanel(props: PostTypeSettingPanelProps) {
                 <Box display="flex">
                     <Typography variant="overline" color="textSecondary">エンドポイント</Typography>
                     <FlexSpacer />
-                    <IconButton color="primary" size="small" onClick={_ => copyToClipBoard(`${axios.defaults.baseURL}contents/${props.postType.taxonomy.name}`)}>
-                        <FileCopy fontSize="small" />
-                    </IconButton>
+                    {
+                        <IconButton
+                            color="primary"
+                            size="small"
+                            onClick={_ => copyToClipBoard(`${axios.defaults.baseURL}contents/${props.postType.taxonomy.name}`)}
+                        >
+                            <FileCopy fontSize="small" />
+                        </IconButton>
+                    }
                 </Box>
                 <Typography style={{ wordBreak: "break-all" }}>{axios.defaults.baseURL}contents/{props.postType.taxonomy.name}</Typography>
             </Box>
@@ -74,16 +88,42 @@ export function PostTypeSettingPanel(props: PostTypeSettingPanelProps) {
                                     s => (
                                         <Box mb={1} key={s.schemeId}>
                                             <Box>
-                                                <Typography variant="body2" style={{ fontSize: "12px" }} color="textSecondary" noWrap>{s.name ? s.name : "　"}</Typography>
+                                                <Typography
+                                                    variant="body2"
+                                                    style={{ fontSize: "12px" }}
+                                                    color="textSecondary"
+                                                    noWrap
+                                                >
+                                                    {s.name ? s.name : "　"}
+                                                </Typography>
                                             </Box>
                                             <Box>
-                                                <Typography variant="body2" style={{ fontSize: "12px" }} color="textSecondary" noWrap>{s.displayName ? s.displayName : "　"}</Typography>
+                                                <Typography
+                                                    variant="body2"
+                                                    style={{ fontSize: "12px" }}
+                                                    color="textSecondary"
+                                                    noWrap
+                                                >
+                                                    {s.displayName ? s.displayName : "　"}
+                                                </Typography>
                                             </Box>
                                             <Box>
-                                                <Typography color="primary" variant="subtitle2" noWrap>{schemeTypeDisplayNames[s.type] ?? "　"}</Typography>
+                                                <Typography
+                                                    color="primary"
+                                                    variant="subtitle2"
+                                                    noWrap
+                                                >
+                                                    {schemeTypeDisplayNames[s.type] ?? "　"}
+                                                </Typography>
                                             </Box>
                                             <Box>
-                                                <Typography style={{ fontSize: "11px" }} variant="caption" color="textSecondary">{s.description}</Typography>
+                                                <Typography
+                                                    style={{ fontSize: "11px" }}
+                                                    variant="caption"
+                                                    color="textSecondary"
+                                                >
+                                                    {s.description}
+                                                </Typography>
                                             </Box>
                                             <Box mt={1} />
                                             <Divider />
@@ -100,4 +140,4 @@ export function PostTypeSettingPanel(props: PostTypeSettingPanelProps) {
             </Box>
         </Box >
     );
-}
+};

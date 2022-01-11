@@ -15,6 +15,9 @@ import { Content } from "../../../Models/Domain/Contents/Entities/Content";
 import { axios } from "../../../Repositories/config";
 import { postStatusTypeDisplay } from "Apps/Models/Domain/posts/entities/PostStatusType";
 import { css } from "@mui/styled-engine";
+import { AuthStore } from "Apps/Models/Stores/Auth/AuthStore";
+import { useObserver } from "react-relux";
+import { roles } from "Apps/roles";
 
 interface PostCardProps {
     content: Content;
@@ -26,13 +29,16 @@ interface PostCardProps {
 export const PostCard = (props: PostCardProps) => {
     const { content, deletePresed, editPressed, previewPressed } = props;
     const theme = useTheme();
+    const name = useObserver(AuthStore, s => s.loginInfo?.name ?? "");
+    const avatar = useObserver(AuthStore, s => s.loginInfo?.avatar ?? "");
+    const postDisabled = useObserver(AuthStore, s => ![...roles.posts.remove, ...roles.posts.edit].includes(s.loginInfo?.role ?? RoleType.None));
 
     return (
         <Card css={classes.card} elevation={5}>
             <Box display="flex" flexDirection="column" height="100%">
                 <Box css={classes.profile}>
                     <Avatar
-                        src={axios.defaults.baseURL + services.authService.loginInfo.avatar}
+                        src={axios.defaults.baseURL + avatar}
                         style={{
                             width: "32px",
                             height: "32px",
@@ -66,12 +72,12 @@ export const PostCard = (props: PostCardProps) => {
                                 deletePresed={deletePresed}
                                 editPressed={editPressed}
                                 disableDeleteButton={
-                                    services.authService.loginInfo.role <= RoleType.Post &&
-                                    content.createdBy.name !== services.authService.loginInfo.name
+                                    postDisabled ||
+                                    content.createdBy.name !== name
                                 }
                                 disableEditButton={
-                                    services.authService.loginInfo.role <= RoleType.Post &&
-                                    content.createdBy.name !== services.authService.loginInfo.name
+                                    postDisabled ||
+                                    content.createdBy.name !== name
                                 }
                             />
                         </Box>

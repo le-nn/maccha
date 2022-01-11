@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useContext, useEffect, useState } from "react";
 import { Avatar, Box, Grow, ListItemText, MenuItem, Select, ThemeProvider, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { lightTheme } from "./theme";
 import { useTranslation } from "react-i18next";
@@ -9,15 +9,17 @@ import { services } from "./Services";
 import { axios, setUrl } from "./Repositories/config";
 import { Frame } from "Libs/Frame";
 import LoginPage from "Apps/Components/login/LoginPage";
-import { MacchaConfig, OptionProvider } from "./Hooks/useOption";
+import { MacchaConfig, OptionProvider, useOption } from "./Hooks/useOption";
 import { DialogProvider } from "Libs/Dialogs/DialogProvider";
 import { build } from "./Models/Stores";
-import { StoreProvider } from "react-relux";
+import { StoreProvider, useDispatch, useObserver } from "react-relux";
+import { Provider } from "relux.js";
 import { observer } from "mobx-react";
 import { WebSite } from "./Models/Domain/sites/web-site";
+import { AuthStore } from "./Models/Stores/Auth/AuthStore";
 
-const bootstrap = async () => {
-    await services.authService.refreshAsync();
+const bootstrap = async (auth: AuthStore) => {
+    await auth.refreshAsync();
     await services.webSiteManagementsService.fetchWebsitesAsync();
     await services.pluginsService.fetchAsync();
     await services.usersService.fetchUesrsAsync();
@@ -36,6 +38,8 @@ export {
     MacchaConfig
 };
 
+export let stores: Provider | null = null;
+
 /**
  * entry pont.
  * @param config config option params.
@@ -50,17 +54,13 @@ export const MacchaManager = (props: MacchaManagerProps) => {
         t: t as any,
         pathPrefix: option.pathPrefix,
     });
-    const [storeProvider] = useState(() => build());
+    const [storeProvider] = useState(() => stores = build());
 
     const resolvePathPrefix = (path: string) => {
         if (path.length > 0 && path[0] !== "/") {
             return "/" + path;
         }
         return path;
-    };
-
-    const routePressed = async (e: Route) => {
-        history(router.basepath + e.path);
     };
 
     useEffect(() => {
@@ -76,12 +76,14 @@ export const MacchaManager = (props: MacchaManagerProps) => {
         props.option.apiServerHost,
         props.option.logo,
         props.option.pathPrefix,
+        storeProvider,
     ]);
 
     const init = async (option: MacchaConfig) => {
         try {
-            services.authService.initialize();
-            if (!services.authService.isLogin) {
+            const authStore = storeProvider.resolve(AuthStore);
+            authStore.initialize();
+            if (!authStore.state.isLogin) {
                 setLoginPage(<LoginPage />);
                 return;
             }
@@ -90,7 +92,7 @@ export const MacchaManager = (props: MacchaManagerProps) => {
                 history(option?.pathPrefix + "/posts");
             }
 
-            await bootstrap();
+            await bootstrap(authStore);
         }
         catch {
             setLoginPage(<LoginPage />);
@@ -105,22 +107,48 @@ export const MacchaManager = (props: MacchaManagerProps) => {
                         {loginPage ?
                             loginPage
                             :
-                            <Frame menus={router.routes}
-                                commandBox={isOpene => <NavigationHeader
-                                    open={isOpene}
-                                />}
-                                routePressed={routePressed}>
-                                <Grow key={location.key} in>
-                                    <Box sx={{ height: "100%" }}>
-                                        <AppRouterProvider config={router} />
-                                    </Box>
-                                </Grow>
-                            </Frame>}
+                            <Main />
+                        }
                     </OptionProvider>
                 </DialogProvider>
             </ThemeProvider>
         </StoreProvider>
     );
+};
+
+const Main = () => {
+    const history = useAppNavigate();
+    const location = useAppLocation();
+    const { t } = useTranslation();
+    const option = useOption();
+    const router = routes({
+        t: t as any,
+        pathPrefix: option.pathPrefix,
+    });
+    const role = useObserver(AuthStore, s => s.loginInfo?.role);
+
+    const resolvePathPrefix = (path: string) => {
+        if (path.length > 0 && path[0] !== "/") {
+            return "/" + path;
+        }
+        return path;
+    };
+
+    const routePressed = async (e: Route) => {
+        history(router.basepath + e.path);
+    };
+
+    return <Frame menus={router.routes.filter(x => x.roles?.includes(role))}
+        commandBox={isOpene => <NavigationHeader
+            open={isOpene}
+        />}
+        routePressed={routePressed}>
+        <Grow key={location.key} in>
+            <Box sx={{ height: "100%" }}>
+                <AppRouterProvider config={router} />
+            </Box>
+        </Grow>
+    </Frame>;
 };
 
 const NavigationHeader = observer(({
@@ -129,12 +157,13 @@ const NavigationHeader = observer(({
     open: boolean,
 }) => {
     const theme = useTheme();
-    const user = services.authService.loginInfo;
+    const user = useObserver(AuthStore, s => s.loginInfo);
+    const dispach = useDispatch(AuthStore);
     const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
 
     const handleChangeWebSiteIdentifier = async (webSite: WebSite) => {
         try {
-            await services.authService.refreshAsync(webSite.webSiteId);
+            await dispach(auth => auth.refreshAsync(webSite.webSiteId));
         }
         catch {
             console.log("failed to refresh");
@@ -143,6 +172,10 @@ const NavigationHeader = observer(({
             window.location.reload();
         }
     };
+
+    if (!user) {
+        return <>NO User</>;
+    }
 
     return (
         <Box
@@ -178,7 +211,7 @@ const NavigationHeader = observer(({
             {(open) && <Box px={2} >
                 <Select
                     variant="outlined"
-                    value={services.authService.loginInfo.identifier}
+                    value={user.identifier}
                     color="primary"
                     label="ログイン中のサイト"
                     fullWidth
@@ -188,11 +221,11 @@ const NavigationHeader = observer(({
                             <MenuItem
                                 key={w.name}
                                 // button
-                                value={w.name}
+                                value={w.webSiteId}
                                 onClick={() => handleChangeWebSiteIdentifier(w)}
                             >
                                 <ListItemText>
-                                    {w.name}
+                                    {w.displayName}
                                 </ListItemText>
                             </MenuItem>
                         ))

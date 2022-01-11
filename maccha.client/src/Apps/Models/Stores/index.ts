@@ -1,22 +1,26 @@
+import { AuthRepository } from "Apps/Repositories/AuthRepository";
+import { MediaRepositry } from "Apps/Repositories/MediaRepository";
 import { createProvider } from "relux.js";
+import { AuthStore } from "./Auth/AuthStore";
 import { ContactContentContextStore } from "./Contacts/ContactContextStore";
 import { ContactSettingContextStore } from "./Contacts/ContactSettingContextStore";
 import { ContactSettingsStore } from "./Contacts/ContactSettingsStore";
 import { ContactsStore } from "./Contacts/ContactsStore";
-
-//let c = 0;
+import { MediaStore } from "./Media/MediaStore";
 
 export const build = () => {
-    const s = createProvider({
+    return createProvider({
         stores: [
             ContactsStore,
             ContactSettingsStore,
             ContactSettingContextStore,
-            ContactContentContextStore
+            ContactContentContextStore,
+            AuthStore,
+            MediaStore
         ],
         services: [
-
+            AuthRepository,
+            MediaRepositry,
         ]
     });
-    return s;
 };

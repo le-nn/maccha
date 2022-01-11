@@ -52,7 +52,7 @@ export const ImageGrid = observer(() => {
                 >
                     <img
                         onClick={() => setSelected(null)}
-                        src={axios.defaults.baseURL + path}
+                        src={base === "/" ? path : base + path}
                         alt={path}
                         css={img}
                     />

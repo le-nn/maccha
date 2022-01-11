@@ -6,12 +6,13 @@ export class UpdateWebSiteParams implements IUpdateWebSiteParams {
     @ApiProperty({ description: "WEBサイトID" })
     @IsString()
     @MinLength(1)
-        webSiteId!: string;
+    webSiteId!: string;
 
     @ApiProperty({ description: "WEBサイト識別名" })
     @IsString()
     @MinLength(1)
-        name!: string;
+    @Matches(/^[a-z0-9|_|\-]*$/, { message: "only lower case alphabet or number" })
+    name!: string;
 
     @ApiProperty({ description: "WEBサイト名" })
     @IsString()

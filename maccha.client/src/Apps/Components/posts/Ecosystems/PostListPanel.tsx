@@ -30,6 +30,8 @@ import { Delete, Edit, Preview } from "@mui/icons-material";
 import { useOption } from "Apps/Hooks/useOption";
 import { EmptyItemsPanel } from "Apps/Components/commons/EmptyItemsPanel";
 import { useTranslation } from "react-i18next";
+import { AuthStore } from "Apps/Models/Stores/Auth/AuthStore";
+import { useObserver } from "react-relux";
 
 export default observer(() => {
     const history = useAppNavigate();
@@ -173,9 +175,9 @@ interface PostSearchViewProps {
     schemes: Scheme[];
 }
 
-function PostSearchView(props: PostSearchViewProps) {
+const PostSearchView = (props: PostSearchViewProps) => {
     const theme = useTheme();
-
+    const avatar = useObserver(AuthStore, s => s.loginInfo?.avatar ?? "");
     return (
         <TableContainer>
             <Table stickyHeader aria-label="sticky table">
@@ -237,7 +239,7 @@ function PostSearchView(props: PostSearchViewProps) {
                             <TableCell>
                                 <Box display="flex">
                                     <Avatar
-                                        src={axios.defaults.baseURL + services.authService.loginInfo.avatar}
+                                        src={axios.defaults.baseURL + avatar}
                                         style={{
                                             width: "32px",
                                             height: "32px",
@@ -300,4 +302,4 @@ function PostSearchView(props: PostSearchViewProps) {
             </Table>
         </TableContainer>
     );
-}
+};

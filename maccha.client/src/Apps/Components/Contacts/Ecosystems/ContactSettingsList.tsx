@@ -12,6 +12,9 @@ import { RoleType } from "Apps/Models";
 import { useIntupDialog } from "Libs/Dialogs/useInputDialog";
 import { useNotifybar } from "Libs/Dialogs/useNotifybar";
 import { Spacer } from "Libs/Components";
+import { AuthStore } from "Apps/Models/Stores/Auth/AuthStore";
+import { LoginInfo } from "Apps/Models/Domain/auth/login-info";
+import { roles } from "Apps/roles";
 
 export const ContactSettingsList = () => {
     const list = useObserver(ContactSettingsStore, s => s.contactSettings);
@@ -23,7 +26,7 @@ export const ContactSettingsList = () => {
     const theme = useTheme();
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    const { authService } = services;
+    const role = useObserver(AuthStore, s => s.loginInfo?.role ?? RoleType.None);
     const selectedId = useRef<string | null>(null);
 
     const { show } = useNotifybar();
@@ -83,18 +86,20 @@ export const ContactSettingsList = () => {
                 height="100%"
                 width="100%"
             >
-                <Box py={4}>
-                    <Button
-                        onClick={createContactSetting}
-                        sx={{
-                            borderRadius: "24px"
-                        }}
-                        variant="contained"
-                    >
-                        {t("お問い合わせ設定を作成")}
-                    </Button>
-                </Box>
-                <Spacer/>
+                {
+                    roles.contactSettings.remove.includes(role) && <Box py={4}>
+                        <Button
+                            onClick={createContactSetting}
+                            sx={{
+                                borderRadius: "24px"
+                            }}
+                            variant="contained"
+                        >
+                            {t("お問い合わせ設定を作成")}
+                        </Button>
+                    </Box>
+                }
+                <Spacer />
                 <Box textAlign="center">
                     <ListAlt
                         sx={{
@@ -109,7 +114,7 @@ export const ContactSettingsList = () => {
                         }}
                     >{t("0 件です")}</Typography>
                 </Box>
-                <Spacer/>
+                <Spacer />
             </Box>
         );
     }
@@ -123,15 +128,19 @@ export const ContactSettingsList = () => {
             width="100%"
         >
             <Box py={4}>
-                <Button
-                    onClick={createContactSetting}
-                    sx={{
-                        borderRadius: "24px"
-                    }}
-                    variant="contained"
-                >
-                    {t("お問い合わせ設定を作成")}
-                </Button>
+                {
+                    roles.contactSettings.remove.includes(role) && <Box py={4}>
+                        <Button
+                            onClick={createContactSetting}
+                            sx={{
+                                borderRadius: "24px"
+                            }}
+                            variant="contained"
+                        >
+                            {t("お問い合わせ設定を作成")}
+                        </Button>
+                    </Box>
+                }
             </Box>
             <Box width="100%">
                 <List>
@@ -141,7 +150,7 @@ export const ContactSettingsList = () => {
                             onClick={() => handleContactSettingClicked(x.contactSettingId)}
                             text={x.name}
                             selected={x.contactSettingId === selectedSettingId}
-                            optionEnabled={authService.loginInfo.role >= RoleType.Edit}
+                            optionEnabled={roles.contactSettings.remove.includes(role)}
                             onOptionClicked={e => handleOpenMenu(e, x.contactSettingId)}
                         />)
                     }

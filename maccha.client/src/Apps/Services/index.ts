@@ -1,5 +1,4 @@
 
-import { AuthService } from "./AuthService";
 import { UsersService } from "./UsersService";
 import { WebSiteManagementsService } from "./WebSiteManagementsService";
 import { PostsService } from "./PostsService";
@@ -11,7 +10,6 @@ import { PluginsService } from "./PluginsService";
 // @singleton()
 export class ServiceContext {
     constructor(
-        readonly authService: AuthService,
         readonly usersService: UsersService,
         readonly webSiteManagementsService: WebSiteManagementsService,
         readonly postsService: PostsService,
@@ -32,7 +30,6 @@ export class ServiceContext {
 //     .registerType(PostManagementsService, PostManagementsService);
 
 export const services = new ServiceContext(
-    new AuthService(),
     new UsersService(),
     new WebSiteManagementsService(),
     new PostsService(),

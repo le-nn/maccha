@@ -11,7 +11,7 @@ import {
     Select,
     MenuItem, ListItemText, Fab
 } from "@mui/material";
-import { observer, useObserver } from "mobx-react";
+import { observer } from "mobx-react";
 import { services } from "../../../Services";
 import { FlexSpacer, messageAsync } from "../../../Components/commons";
 import SwipeableViews from "react-swipeable-views";
@@ -22,6 +22,8 @@ import { User } from "../../../Models/Domain/users/user";
 import { showFilePickerAsync } from "../Ecosystems/showFilePickerAsync";
 import { axios } from "../../../Repositories/config";
 import { AccountCircle, Edit, Save, ViewModule } from "@mui/icons-material";
+import { useStore, useObserver } from "react-relux";
+import { AuthStore } from "Apps/Models/Stores/Auth/AuthStore";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -38,17 +40,26 @@ function TabPanel(props: TabPanelProps) {
 export default observer(() => {
     const theme = useTheme();
     const [selectedTab, setSelectedTab] = useState<number>(0);
-    const { usersService, authService, webSiteManagementsService } = services;
+    const { usersService, webSiteManagementsService } = services;
     const [isChanged, setIsChanged] = useState(false);
 
+    const store = useStore(AuthStore);
+    const avatar = useObserver(AuthStore, s => s.loginInfo?.avatar ?? "");
+    const identifier = useObserver(AuthStore, s => s.loginInfo?.identifier);
+
     useEffect(() => {
-        usersService.selectUserAsync(authService.loginInfo.userId);
-        webSiteManagementsService.selectWebSiteAsync(authService.loginInfo.identifier);
+        const info = store.state.loginInfo;
+        if (!info) {
+            throw new Error();
+        }
+
+        usersService.selectUserAsync(info.userId);
+        webSiteManagementsService.selectWebSiteAsync(info.identifier);
     }, []);
 
     async function handleChangeWebSiteIdentifier(webSite: WebSite) {
         try {
-            await services.authService.refreshAsync(webSite.webSiteId);
+            await store.refreshAsync(webSite.webSiteId);
         }
         catch {
             console.log("failed to refresh");
@@ -97,7 +108,7 @@ export default observer(() => {
         const file = await showFilePickerAsync();
         if (file) {
             await usersService.saveMyAvatarAsync(file);
-            await services.authService.refreshAsync();
+            await store.refreshAsync();
         }
     }
 
@@ -128,7 +139,7 @@ export default observer(() => {
                     position="relative"
                 >
                     <Avatar
-                        src={axios.defaults.baseURL + services.authService.loginInfo.avatar}
+                        src={axios.defaults.baseURL + avatar}
                         style={{
                             width: "180px",
                             height: "180px"
@@ -151,9 +162,9 @@ export default observer(() => {
 
                 <Box mt={4}></Box>
                 <Select
-                    style={{ marginTop: "16px"}}
+                    style={{ marginTop: "16px" }}
                     variant="outlined"
-                    value={authService.loginInfo.identifier}
+                    value={identifier}
                     color="primary"
                     label="ログイン中のサイト"
                     fullWidth
@@ -224,7 +235,7 @@ export default observer(() => {
                                 variant="contained"
                                 onClick={_ => saveAsync()}
                             >
-                                <Save style={{ marginRight: "4px" }}/>
+                                <Save style={{ marginRight: "4px" }} />
                                 保存
                             </Button>
                         </Box>

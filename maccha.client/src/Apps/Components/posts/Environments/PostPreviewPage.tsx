@@ -12,12 +12,6 @@ import "./style.scss";
 import { useAppNavigate } from "Libs/Routing/RouterConfig";
 import { Edit } from "@mui/icons-material";
 
-interface TabPanelProps {
-    children?: React.ReactNode;
-    index: any;
-    value: any;
-}
-
 export default () => {
     const { postEditService, postManagementsService } = services;
     const match = useParams<any>();

@@ -27,14 +27,17 @@ import { User } from "../../Models/Domain/users/user";
 import { RoleType, displayRoles } from "../../Models";
 import { axios } from "../../Repositories/config";
 import { makeStyles } from "@mui/styles";
+import { useStore } from "react-relux";
+import { AuthStore } from "Apps/Models/Stores/Auth/AuthStore";
 
-export default function UsersPage() {
+export default () => {
     const classes = useStyles();
     const [selected, setSelected] = React.useState<string[]>([]);
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const theme = useTheme();
+    const authStore = useStore(AuthStore);
 
     useEffect(() => {
         services.usersService.fetchUesrsAsync();
@@ -48,8 +51,8 @@ export default function UsersPage() {
                 "",
                 RoleType.Subscribe,
                 true,
-                services.authService.loginInfo.identifier ?
-                    [services.authService.loginInfo.identifier] :
+                authStore.state.loginInfo?.identifier ?
+                    [authStore.state.loginInfo.identifier] :
                     [],
                 ""
             ),
@@ -180,7 +183,7 @@ export default function UsersPage() {
                                             {user.isActive ? "有効" : "無効"}
                                         </TableCell>
                                         <TableCell style={{ textAlign: "center" }}>
-                                            <IconButton onClick={() => editEsync(user)}><List/></IconButton>
+                                            <IconButton onClick={() => editEsync(user)}><List /></IconButton>
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -200,7 +203,7 @@ export default function UsersPage() {
             </Box >
         );
     });
-}
+};
 
 const useStyles = makeStyles({
     root: {

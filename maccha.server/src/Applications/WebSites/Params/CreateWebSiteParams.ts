@@ -1,26 +1,26 @@
 import { ICreateWebSiteParams } from "@/Models/WebSites/create-werb-site.params";
-import { IsString, MinLength, Contains, Matches } from "class-validator";
+import { IsString, MinLength, Contains, Matches, IsUrl } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 
 export class CreteWebSiteParams implements ICreateWebSiteParams {
-    @ApiProperty({ description: "サイト識別名" })
+    @ApiProperty({ description: "WEBサイト識別名" })
     @IsString()
     @MinLength(1)
-    @Matches(/^[a-z0-9]*$/, { message: "only lower case alphabet or number" })
-        name!: string;
+    @Matches(/^[a-z0-9|_|\-]*$/, { message: "only lower case alphabet or number" })
+    name!: string;
 
-    @ApiProperty({ description: "サイト名" })
+    @ApiProperty({ description: "WEBサイト名" })
     @IsString()
     @MinLength(1)
-        displayName!: string;
+    displayName!: string;
 
-    @ApiProperty({ description: "サイトのURL" })
+    @ApiProperty({ description: "ホストURL" })
     @IsString()
     @MinLength(1)
-    @Matches(/(http[s]?):\/\/[^\/\.]+?\..+\w$/i, { message: "invalid url" })
-        host!: string;
+    @IsUrl()
+    host!: string;
 
-    @ApiProperty({ description: "サイト説明" })
+    @ApiProperty({ description: "説明" })
     @IsString()
-        description!: string;
+    description!: string;
 }

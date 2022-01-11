@@ -3,6 +3,7 @@ import { IContactSetting } from "Apps/Models/Domain/Contacts/ContactSettings";
 import { ContactSettingsRepository } from "Apps/Repositories/ContactSettingsRepository";
 import { services } from "Apps/Services";
 import { Message, State, Store, meta } from "relux.js";
+import { AuthStore } from "../Auth/AuthStore";
 
 class ContactSettingContextState extends State<ContactSettingContextState>{
     contactSetting: IContactSetting | null = null;
@@ -10,14 +11,14 @@ class ContactSettingContextState extends State<ContactSettingContextState>{
 }
 
 class ModifySetting extends Message<IContactSetting | null> { }
-class InitSetting extends Message { }
+class InitSetting extends Message<string> { }
 class SetIsNew extends Message<boolean>{ }
 
 @meta({ name: "ContactSettingContextStore" })
 export class ContactSettingContextStore extends Store<ContactSettingContextState> {
     readonly repository = new ContactSettingsRepository();
 
-    constructor() {
+    constructor(private readonly authStore: AuthStore) {
         super(new ContactSettingContextState(), ContactSettingContextStore.mutation);
     }
 
@@ -35,10 +36,11 @@ export class ContactSettingContextStore extends Store<ContactSettingContextState
                 });
             }
             case InitSetting: {
+                const { payload } = message as InitSetting;
                 return state.clone({
                     contactSetting: {
                         contactSettingId: "",
-                        identifier: services.authService.loginInfo.identifier,
+                        identifier: payload,
                         name: "",
                         schemes: [
                             "name",
@@ -73,7 +75,7 @@ export class ContactSettingContextStore extends Store<ContactSettingContextState
     }
 
     async initAsNewSetting() {
-        this.mutate(new InitSetting());
+        this.mutate(new InitSetting(this.authStore.state.loginInfo?.identifier ?? ""));
     }
 
     async modifySetting(setting: IContactSetting) {

@@ -83,7 +83,7 @@ export class AuthRepository {
     /**
      * Load from local storage.
      */
-    public loadFromLocalStorage(): LoginInfo {
+    public loadFromLocalStorage(): LoginInfo | null {
         try {
             const info = localStorage.getItem("loginInfo");
             if (info) {
@@ -95,6 +95,6 @@ export class AuthRepository {
         catch (ex) {
             console.error("failed to load login info from local storage", ex);
         }
-        return new LoginInfo();
+        return null;
     }
 }

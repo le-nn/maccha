@@ -1,3 +1,5 @@
+import { stores } from "Apps";
+import { AuthStore } from "Apps/Models/Stores/Auth/AuthStore";
 import Axios, { AxiosAdapter } from "axios";
 import { LoginInfo } from "../Models/Domain/auth/login-info";
 import { ServiceContext, services } from "../Services";
@@ -42,10 +44,9 @@ function registerAutoTokeRefresh() {
         count++;
         unresister();
 
-        await services.authService.refreshAsync();
+        await stores?.resolve(AuthStore).refreshAsync();
         const config = error.response.config;
-        config.headers.Authorization = services.authService.loginInfo.token;
-
+        config.headers.Authorization = stores?.resolve(AuthStore).state.loginInfo?.token;
         register();
 
         return axios.request(config);
