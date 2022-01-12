@@ -10,10 +10,7 @@ export class PublicContentResponse {
     readonly description: string = "";
     readonly thumbnail: string = "";
     readonly metadata: string = "";
-    readonly status: StatusType = StatusType.Public;
     readonly publishIn: string = "";
-    readonly createdBy = { name: "", thumbnail: "" };
-    readonly identifier: string = "";
     readonly fields: { [key: string]: string } = {};
 
     /**

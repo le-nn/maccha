@@ -41,17 +41,30 @@ export class WebSitesService {
 
         return await Promise.all(sites);
     }
+    
+    /**
+     * get a web site by identifierasync.
+     * @param identifierto get identifier
+     */
+     public async getWebSiteIdAsync(identifier: string): Promise<string | null> {
+        try {
+            return await this.webSitesRepository.getWebSiteIdAsync(identifier);
+        }
+        catch {
+            return null;
+        }
+    }
 
     /**
      * get a web site by identifierasync.
      * @param identifierto get identifier
      */
-    public async getAsync(identifier: string): Promise<WebSite | undefined> {
+    public async getAsync(identifier: string): Promise<WebSite | null> {
         try {
             return await this.webSitesRepository.getAsync(identifier);
         }
         catch {
-            return undefined;
+            return null;
         }
     }
 

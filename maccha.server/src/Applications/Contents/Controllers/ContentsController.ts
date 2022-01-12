@@ -10,6 +10,7 @@ import { ContentResponse } from "../Responses/ContentResponse";
 import { DateTime } from "luxon";
 import { SearchResultResponse } from "@/Applications/Commons/search-result-response";
 import { SaveContentParams } from "../Params/SaveContentParams";
+import { SearchContentParams } from "../Params/SearchContentParams";
 
 /**
  * provide users endpoints.
@@ -77,13 +78,20 @@ export class ContentsController {
     })
     public async search(
         @Param("taxonomy") taxonomy: string,
-        @Query() params: any,
+        @Query() params: SearchContentParams,
         @Claim() loginUser: LoginUser
     ): Promise<SearchResultResponse<ContentResponse>> {
         const [collection, hitCount] = await this.contentsService.searchAsync(
             loginUser.identifier,
             taxonomy,
-            params);
+            {
+                fetch: Number(params.fetch ?? 30),
+                filter: params.filter ?? "",
+                offset: Number(params.offset ?? 0),
+                orders: params.orders ?? "",
+                search: params.search ?? "",
+                fields: params.fields ?? "",
+            });
         return {
             collection,
             hitCount

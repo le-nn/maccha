@@ -8,4 +8,5 @@ export interface IWebSitesRepository {
     createAsync(params: ICreateWebSiteParams): Promise<WebSite>;
     updateAsync(webSite: IUpdateWebSiteParams): Promise<WebSite>;
     deleteAsync(identifier: string): Promise<void>;
+    getWebSiteIdAsync(identifier: string): Promise<string | null>;
 }

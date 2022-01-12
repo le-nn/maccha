@@ -1,6 +1,7 @@
 import { ContentsService, TaxonomiesService } from "@/Models/Contents";
 import { Content } from "@/Models/Contents/Entities/Content";
 import { ISearchContentParams } from "@/Models/Contents/Params";
+import { WebSitesService } from "@/Models/WebSites/web-sites.service";
 import { BadRequestException, Inject, NotFoundException } from "@nestjs/common";
 import { createDecipher } from "crypto";
 import { PublicContentResponse } from "../Responses/PublicContentResponse";
@@ -10,16 +11,22 @@ import { PublicContentResponse } from "../Responses/PublicContentResponse";
  */
 export class PublicContentsAppService {
     constructor(
+        @Inject(WebSitesService) private readonly webSitesService: WebSitesService,
         @Inject(ContentsService) private readonly contentsService: ContentsService,
         @Inject(TaxonomiesService) private readonly taxonomiesService: TaxonomiesService
     ) { }
 
     public async getAsync(
-        indentifier: string,
+        identifier: string,
         taxonomy: string,
         contentId: string
     ): Promise<PublicContentResponse> {
-        const taxonomyId = await this.taxonomiesService.getIdByNameAsync(taxonomy, indentifier);
+        const webSiteId = await this.webSitesService.getWebSiteIdAsync(identifier);
+        if (!webSiteId) {
+            throw new NotFoundException(`identifier "${identifier}" is not found.`);
+        }
+
+        const taxonomyId = await this.taxonomiesService.getIdByNameAsync(taxonomy, identifier);
         if (!taxonomyId) {
             throw new BadRequestException("Taxonomy is not found.");
         }
@@ -31,16 +38,10 @@ export class PublicContentsAppService {
         return new PublicContentResponse({
             contentId: c.contentId,
             title: c.title,
-            createdBy: {
-                name: c.createdBy.name,
-                thumbnail: c.createdBy.thumbnail
-            },
             description: c.description,
-            identifier: c.identifier,
             metadata: c.metadata,
             publishIn: c.publishIn?.toJSON() ?? c.createdAt.toJSON(),
             fields: c.fields.reduce((x, y) => ({ ...x, [y.name]: y.value }), {} as any),
-            status: c.status,
             thumbnail: c.thumbnail
         });
     }
@@ -57,8 +58,12 @@ export class PublicContentsAppService {
         taxonomy: string,
         params: ISearchContentParams
     ): Promise<[PublicContentResponse[], number]> {
-        const taxonomyId = await this.taxonomiesService.getIdByNameAsync(taxonomy, identifier);
+        const webSiteId = await this.webSitesService.getWebSiteIdAsync(identifier);
+        if (!webSiteId) {
+            throw new NotFoundException(`identifier "${identifier}" is not found.`);
+        }
 
+        const taxonomyId = await this.taxonomiesService.getIdByNameAsync(taxonomy, webSiteId);
         if (taxonomyId === null) {
             throw new BadRequestException(`taxonomy ${taxonomy} is not found`);
         }
@@ -69,16 +74,10 @@ export class PublicContentsAppService {
             collection.map(c => new PublicContentResponse({
                 contentId: c.contentId,
                 title: c.title,
-                createdBy: {
-                    name: c.createdBy.name,
-                    thumbnail: c.createdBy.thumbnail
-                },
                 description: c.description,
-                identifier: c.identifier,
                 metadata: c.metadata,
                 publishIn: c.publishIn?.toJSON() ?? c.createdAt.toJSON(),
                 fields: c.fields.reduce((x, y) => ({ ...x, [y.name]: y.value }), {} as any),
-                status: c.status,
                 thumbnail: c.thumbnail
             })),
             count

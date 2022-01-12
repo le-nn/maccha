@@ -1,5 +1,6 @@
 import { SearchResultResponse } from "@/Applications/Commons/search-result-response";
 import { Claim } from "@/Applications/Commons/user.decorator";
+import { SearchContentParams } from "@/Applications/Contents/Params/SearchContentParams";
 import { LoginUser } from "@/Models/Authentications/login-user";
 import { Controller, Body, Post, Param, Get, NotFoundException, Headers, Query } from "@nestjs/common";
 import { ApiTags, ApiBody, ApiOperation, ApiCreatedResponse, ApiHeader, ApiParam } from "@nestjs/swagger";
@@ -11,7 +12,7 @@ import { PublicContentsAppService } from "../Services/PublicContentsAppService";
  * provide users endpoints.
  */
 @ApiTags("Public Contents")
-@Controller({ path: "contents" })
+@Controller({ path: "public/:identifier/contents" })
 export class PublicContentsController {
     constructor(private readonly contentsService: PublicContentsAppService) { }
 
@@ -39,9 +40,9 @@ export class PublicContentsController {
     public async find(
         @Param("taxonomy") taxonomy: string,
         @Param("contentId") contentId: string,
-        @Claim() loginUser: LoginUser
+        @Param("identifier") identifier: string,
     ): Promise<PublicContentResponse> {
-        const content = await this.contentsService.getAsync(loginUser.identifier, taxonomy, contentId);
+        const content = await this.contentsService.getAsync(identifier, taxonomy, contentId);
         if (!content) {
             throw new NotFoundException(`Content ${contentId} is not found.`);
         }
@@ -69,13 +70,21 @@ export class PublicContentsController {
     })
     public async search(
         @Param("taxonomy") taxonomy: string,
-        @Query() params: any,
-        @Claim() loginUser: LoginUser
+        @Query() params: SearchContentParams,
+        @Param("identifier") identifier: string,
     ): Promise<SearchResultResponse<PublicContentResponse>> {
         const [collection, hitCount] = await this.contentsService.searchAsync(
-            loginUser.identifier,
+            identifier,
             taxonomy,
-            params);
+            {
+                fetch: Number(params.fetch ?? 30),
+                filter: params.filter ?? "",
+                offset: Number(params.offset ?? 0),
+                orders: params.orders ?? "",
+                search: params.search ?? "",
+                fields: params.fields ?? "",
+            });
+
         return {
             collection,
             hitCount

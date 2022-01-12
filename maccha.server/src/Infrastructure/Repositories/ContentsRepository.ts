@@ -66,8 +66,8 @@ export class ContentsRepository implements IContentsRepository {
             const [rows, count] = await this.contents.manager.transaction(async connection => {
                 const filterSql = "";// buildFilterSql(parseFilterQuery());
                 const fieldSql = `
-SELECT DISTINCT \`contentId\` FROM \`field_entity\`
-WHERE \`taxonomyId\`='${taxonomyId}' ${filterSql}
+SELECT DISTINCT \`contentId\` as \`fieldContentId\` FROM \`field_entity\`
+WHERE \`taxonomyId\`='${taxonomyId}' ${filterSql ? "AND" + filterSql : ""}
                 `;
 
                 const userSql = `
@@ -77,7 +77,7 @@ AS B ON B.\`userId\`=\`content_entity\`.\`createdBy\`
 
                 const sql = `
 SELECT SQL_CALC_FOUND_ROWS * FROM \`content_entity\` 
-LEFT OUTER JOIN(${fieldSql}) AS A ON A.\`contentId\`=\`content_entity\`.\`contentId\`
+${filterSql ? "INNER" : "LEFT OUTER"} JOIN(${fieldSql}) AS A ON A.\`fieldContentId\`=\`content_entity\`.\`contentId\`
 ${userSql}
 WHERE \`taxonomyId\`='${taxonomyId}' 
 ORDER BY \`createdAt\` DESC 
@@ -89,48 +89,57 @@ LIMIT ${params.fetch} OFFSET ${params.offset}
                 return [rawData, count];
             });
 
+            const split = params.fields.split(",");
+            const selects = split.length ? In(split) : undefined;
+            const mapContent = async (c: any) => {
+                return new Content({
+                    contentId: c.contentId,
+                    createdAt: c.createdAt,
+                    updatedAt: c.updatedAt,
+                    description: c.description,
+                    identifier: c.identifier,
+                    metadata: c.metadata,
+                    publishIn: c.publishIn,
+                    status: c.status,
+                    taxonomyId: c.taxonomyId,
+                    thumbnail: c.thumbnail,
+                    title: c.title,
+                    fields: (await this.fields.find({
+                        where: {
+                            contentId: c.contentId,
+                            name: selects,
+                        }
+                    })).map(
+                        (f: any) => new Field({
+                            fieldId: f.fieldId,
+                            name: f.name,
+                            schemeId: f.schemeId,
+                            value: f.value
+                        })
+                    ),
+                    createdBy: {
+                        name: c.name,
+                        thumbnail: c.avatar,
+                    }
+                });
+            };
+
             // fetch fields
-            const fields = await lastValueFrom(from(rows).pipe(
-                mergeMap(
-                    c => of([] as FieldEntity[]).pipe(
-                        map(
-                            fs => new Content({
-                                contentId: c.contentId,
-                                createdAt: c.createdAt,
-                                updatedAt: c.updatedAt,
-                                description: c.description,
-                                identifier: c.identifier,
-                                metadata: c.metadata,
-                                publishIn: c.publishIn,
-                                status: c.status,
-                                taxonomyId: c.taxonomyId,
-                                thumbnail: c.thumbnail,
-                                title: c.title,
-                                fields: fs.map(
-                                    f => new Field({
-                                        fieldId: f.fieldId,
-                                        name: f.name,
-                                        schemeId: f.schemeId,
-                                        value: f.value
-                                    })
-                                ),
-                                createdBy: {
-                                    name: c.name,
-                                    thumbnail: c.avatar,
-                                }
-                            })
-                        ),
-                    )
-                ),
-                toArray()
-            ));
+            const fields = await lastValueFrom(
+                from(rows).pipe(
+                    map(c => from(mapContent(c))),
+                    mergeMap(x => x),
+                    toArray()
+                ));
+
             return [
                 fields,
                 count
             ];
         }
         catch (ex: any) {
-            throw new Error("Cannot to search contents.");
+            console.log(ex);
+            throw new Error(`Cannot to search contents. `);
         }
     }
 
@@ -169,7 +178,6 @@ LIMIT ${params.fetch} OFFSET ${params.offset}
 
         }
         catch (ex: any) {
-            console.error(ex);
             throw new Error("Cannot to save content in repository.");
         }
 

@@ -15,6 +15,30 @@ export class SearchContentParams implements ISearchContentParams {
             ja: "フィールドの検索クエリー."
         })
     })
+    search = "";
+
+    @ApiProperty({
+        name: i18n({
+            en: "filter query of field.",
+            ja: "フィールドの検索クエリー."
+        })
+    })
+    orders = "";
+
+    @ApiProperty({
+        name: i18n({
+            en: "filter query of field.",
+            ja: "フィールドの検索クエリー."
+        })
+    })
+    fields = "";
+
+    @ApiProperty({
+        name: i18n({
+            en: "filter query of field.",
+            ja: "フィールドの検索クエリー."
+        })
+    })
     filter = "";
 
     @ApiProperty({

@@ -25,8 +25,8 @@ export class TaxonomiesService {
      * @param taxonomyName taxonomy name.
      * @returns taxomony.
      */
-    public async getIdByNameAsync(taxonomyName: string, identifier: string): Promise<string | null> {
-        return await this.taxonomiesRepository.findIdByNameAsync(taxonomyName, identifier);
+    public async getIdByNameAsync(taxonomyName: string, webSiteId: string): Promise<string | null> {
+        return await this.taxonomiesRepository.findIdByNameAsync(taxonomyName, webSiteId);
     }
 
     /**
@@ -34,9 +34,9 @@ export class TaxonomiesService {
      * @param taxomonyIds taxonomy ids.
      * @returns Taxonomies.
      */
-    public async getListAsync(taxomonyIds?: string[], identifier?: string): Promise<Taxonomy[]> {
+    public async getListAsync(taxomonyIds?: string[], webSiteId?: string): Promise<Taxonomy[]> {
         try {
-            return this.taxonomiesRepository.findAllAsync(taxomonyIds, identifier);
+            return this.taxonomiesRepository.findAllAsync(taxomonyIds, webSiteId);
         }
         catch (ex: any) {
             throw new Error(ex.message);
@@ -55,8 +55,8 @@ export class TaxonomiesService {
      * Create new taxonomy async.
      * @param params params to create taxonomy.
      */
-    public async createAsync(identifier: string, params: ICreateTaxonomyParams): Promise<Taxonomy> {
-        return this.taxonomiesRepository.createAsync(identifier, params);
+    public async createAsync(webSiteId: string, params: ICreateTaxonomyParams): Promise<Taxonomy> {
+        return this.taxonomiesRepository.createAsync(webSiteId, params);
     }
 
     /**

@@ -1,7 +1,8 @@
 export interface ISearchContentParams {
     filter: string;
-    limit: string;
-    order: string;
+    search:string;
+    orders: string;
+    fields: string;
     offset: number;
     fetch: number;
 }

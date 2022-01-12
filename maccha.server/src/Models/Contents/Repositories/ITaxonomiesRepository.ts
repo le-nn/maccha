@@ -8,16 +8,16 @@ export interface ITaxonomiesRepository {
 
     findIdByNameAsync(
         name: string,
-        identifier: string,
+        webSiteId: string,
     ): Promise<string | null>;
 
     findAllAsync(
         taxonomyIds?: string[],
-        identifier?: string
+        webSiteId?: string
     ): Promise<Taxonomy[]>;
 
     createAsync(
-        identifier: string,
+        webSiteId: string,
         params: ICreateTaxonomyParams
     ): Promise<Taxonomy>;
 

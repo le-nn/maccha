@@ -16,6 +16,16 @@ export class WebSitesRepository implements IWebSitesRepository {
         @InjectConnection() private readonly connection: Connection
     ) { }
 
+    public async getWebSiteIdAsync(identifier: string): Promise<string | null> {
+        try {
+            const created = await this.webSites.findOne({ name: identifier });
+            return created?.webSiteId ?? null;
+        }
+        catch {
+            return null;
+        }
+    }
+
     /**
      * get all web sites
      * @returns web sites list
