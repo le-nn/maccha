@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Flipper, Flipped } from "react-flip-toolkit";
 import { css } from "@emotion/react";
+import { Grow } from "@mui/material";
 
 const containerStyle = css`
     width: 100%;
@@ -23,19 +24,18 @@ interface ItemsWrapGridProps<T extends { id: string }> {
 export const ItemsWrapGrid = <T extends { id: string }>(props: ItemsWrapGridProps<T>) => {
     const { itemSlot, items } = props;
     const container = useRef<HTMLDivElement | null>(null);
-    const [itemWidth, setItemWidth] = useState("100%");
+    const [itemWidth, setItemWidth] = useState<string | null>(null);
 
     useEffect(() => {
-        updateWidth(itemWidth);
         const id =
             setInterval(() => {
                 updateWidth(itemWidth);
             }, 200);
         return () => clearInterval(id);
-    }, [itemWidth]);
+    }, [itemWidth, props.segmentLength]);
 
-    const segmentLength = props.segmentLength ?? 220;
-    function updateWidth(itemWidth: string) {
+    const updateWidth = (itemWidth: string | null) => {
+        const segmentLength = props.segmentLength ?? 220;
         const rect = container.current?.getBoundingClientRect();
         if (rect) {
             const width = rect.width;
@@ -45,7 +45,7 @@ export const ItemsWrapGrid = <T extends { id: string }>(props: ItemsWrapGridProp
                 setItemWidth(`${size}%`);
             }
         }
-    }
+    };
 
     return (
         <div css={containerStyle} ref={container}>
@@ -58,10 +58,14 @@ export const ItemsWrapGrid = <T extends { id: string }>(props: ItemsWrapGridProp
                         <Flipped
                             key={post.id}
                             flipId={post.id}
-                            translate
+                            translate={!!itemWidth}
                         >
-                            <div style={{ width: itemWidth, padding: `${props.space ?? 12}px` }}>
-                                {itemSlot(post)}
+                            <div style={{ width: itemWidth ?? "", padding: `${props.space ?? 12}px` }}>
+                                <Grow in={!!itemWidth}>
+                                    <div>
+                                        {itemSlot(post)}
+                                    </div>
+                                </Grow>
                             </div>
                         </Flipped>
                     )
