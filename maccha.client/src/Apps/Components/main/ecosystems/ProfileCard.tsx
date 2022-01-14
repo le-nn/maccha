@@ -68,12 +68,12 @@ export default () => {
                 <Select
                     style={{ marginTop: "16px", color: theme.palette.text.primary }}
                     variant="outlined"
-                    value={loginInfo?.identifier}
+                    value={loginInfo?.webSiteId}
                     color="primary"
                     label="ログイン中のサイト"
                     fullWidth
                 >
-                    {
+                    {/* {
                         webSiteManagementsService.webSites.map((w) => (
                             <MenuItem
                                 key={w.name}
@@ -82,11 +82,11 @@ export default () => {
                                 onClick={() => handleChangeWebSiteIdentifier(w)}
                             >
                                 <ListItemText>
-                                    {w.name}
+                                    {w.displayName}
                                 </ListItemText>
                             </MenuItem>
                         ))
-                    }
+                    } */}
                 </Select>
 
                 <Button variant="contained" color="primary" fullWidth style={{ marginTop: "12px" }} onClick={() => handleLogout()}> Logout </Button>

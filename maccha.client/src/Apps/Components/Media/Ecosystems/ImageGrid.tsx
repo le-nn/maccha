@@ -7,16 +7,26 @@ import { Flipped, Flipper } from "react-flip-toolkit";
 import { timer } from "rxjs";
 import { axios } from "../../../Repositories/config";
 import { css } from "@mui/styled-engine";
+import { EmptyItemsPanel } from "Apps/Components/commons/EmptyItemsPanel";
+import { useTranslation } from "react-i18next";
 
 const base = axios.defaults.baseURL;
 
 export const ImageGrid = observer(() => {
     const [path, setPath] = useState("");
     const [selected, setSelected] = useState<string | null>(null);
-
+    const { t } = useTranslation();
     useEffect(() => {
         services.mediaService.fetchAllFilesAsync();
     }, []);
+
+    if (!services.mediaService.files.length) {
+        return (
+            <Box mt={2} display="flex" flexWrap="wrap" width="100%"  height="100%" justifyContent={"center"} alignItems={"center"}>
+                <EmptyItemsPanel message={t("ファイルがありません")} />
+            </Box>
+        );
+    }
 
     return (
         <Box mt={2} display="flex" flexWrap="wrap" width="100%">

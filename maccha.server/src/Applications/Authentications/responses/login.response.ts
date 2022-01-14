@@ -12,6 +12,7 @@ export class LoginResponse implements Token, LoginUser {
     readonly role: RoleType = RoleType.None;
     readonly name: string = "";
     readonly identifier: string = "";
+    readonly webSiteId: string = "";
     readonly avatar: string = "";
 
     constructor(params: (Token & LoginUser)) {

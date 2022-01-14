@@ -34,7 +34,7 @@ export class WebSitesService {
 
         const sites = [];
         if (user) {
-            for (const i of user.identifiers) {
+            for (const i of user.webSiteIds) {
                 sites.push(this.webSitesRepository.getAsync(i));
             }
         }
@@ -59,9 +59,9 @@ export class WebSitesService {
      * get a web site by identifierasync.
      * @param identifierto get identifier
      */
-    public async getAsync(identifier: string): Promise<WebSite | null> {
+    public async getAsync(webSiteId: string): Promise<WebSite | null> {
         try {
-            return await this.webSitesRepository.getAsync(identifier);
+            return await this.webSitesRepository.getAsync(webSiteId);
         }
         catch {
             return null;

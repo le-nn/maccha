@@ -34,7 +34,7 @@ export class User implements IUser {
     /**
      * web sites
      */
-    public identifiers: string[];
+    public webSiteIds: string[];
 
     /**
      * avatar image url.
@@ -49,7 +49,7 @@ export class User implements IUser {
      * @param password user password
      * @param role user role
      * @param isActive is active user
-     * @param identifiers web sites that user can login
+     * @param webSiteIds web sites that user can login
      */
     constructor(
         userId: string,
@@ -57,7 +57,7 @@ export class User implements IUser {
         email: string,
         role: RoleType,
         isActive: boolean,
-        identifiers: string[],
+        webSiteIds: string[],
         avatar: string
     ) {
         this.userId = userId;
@@ -65,7 +65,7 @@ export class User implements IUser {
         this.name = name;
         this.email = email;
         this.role = role;
-        this.identifiers = identifiers;
+        this.webSiteIds = webSiteIds;
         this.avatar = avatar;
     }
 
@@ -73,7 +73,7 @@ export class User implements IUser {
      * clone this instance
      */
     public clone(): User {
-        return new User(this.userId, this.name, this.email, this.role, this.isActive, this.identifiers, this.avatar);
+        return new User(this.userId, this.name, this.email, this.role, this.isActive, this.webSiteIds, this.avatar);
     }
 
     public with(params: Partial<User>) {

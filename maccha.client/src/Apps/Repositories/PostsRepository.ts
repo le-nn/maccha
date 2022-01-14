@@ -49,9 +49,9 @@ export class PostsRepository {
      * save user.
      * @param user user
      */
-    public async saveAsync(identifier: string, post: Content): Promise<Content> {
+    public async saveAsync(webSiteId: string, post: Content): Promise<Content> {
         try {
-            const response = await axios.put<Content>("/api/contents/" + identifier, post);
+            const response = await axios.put<Content>("/api/contents/" + webSiteId, post);
             return this.toDomain(response.data);
         }
         catch (ex) {
@@ -102,9 +102,9 @@ export class PostsRepository {
             description: post.description,
             identifier: post.identifier,
             taxonomyId: post.taxonomyId,
-            createdAt: DateTime.fromISO(post.createdAt as any),
-            updatedAt: DateTime.fromISO(post.updatedAt as any),
-            publishIn: post.publishIn ? DateTime.fromISO(post.publishIn as any) : null,
+            createdAt: post.createdAt,
+            updatedAt:post.updatedAt,
+            publishIn: post.publishIn ?post.publishIn : null,
             metadata: post.metadata,
             fields: post.fields.map(f => new Field({
                 fieldId: f.fieldId,

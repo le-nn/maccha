@@ -109,7 +109,7 @@ export class WebSitesController {
         const user = await this.usersService.findByIdAsync(loginUser.userId);
         if (!user) throw new NotFoundException();
 
-        if (user.role === RoleType.Admin || (user.role === RoleType.Edit && user?.identifiers.includes(webSite.webSiteId))) {
+        if (user.role === RoleType.Admin || (user.role === RoleType.Edit && user?.webSiteIds.includes(webSite.webSiteId))) {
             const site = await this.webSitesService.updateAsync(webSite);
             return new WebSiteResponse({
                 webSiteId: site.webSiteId,

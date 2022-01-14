@@ -1,7 +1,7 @@
 import { RoleType } from "../auth/role";
 
 export interface IUpdateUserParams {
-    identifiers: string[];
+    webSiteIds: string[];
     userId: string;
     name: string;
     email: string;

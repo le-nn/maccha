@@ -19,7 +19,7 @@ export class UserResponse {
         description: "サイト一覧",
         type: () => [WebSiteResponse]
     })
-    public readonly identifiers!: string[];
+    public readonly webSiteIds!: string[];
 
     @ApiProperty({ description: "有効かどうか" })
     public readonly isActive!: boolean;

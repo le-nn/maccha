@@ -9,5 +9,6 @@ export interface LoginUser {
     iat: number;
     exp: number;
     identifier: string;
+    webSiteId: string;
     avatar: string;
 }

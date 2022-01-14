@@ -49,7 +49,8 @@ export class AuthenticationsController {
             role: login.role,
             exp: login.exp,
             iat: login.iat,
-            identifier: login.identifier,
+            webSiteId: login.webSiteId,
+            identifier:login.identifier,
             avatar: login.avatar
         });
     }
@@ -73,7 +74,8 @@ export class AuthenticationsController {
             role: login.role,
             exp: login.exp,
             iat: login.iat,
-            identifier: login.identifier,
+            webSiteId: login.webSiteId,
+            identifier:login.identifier,
             avatar: login.avatar
         });
     }

@@ -37,6 +37,7 @@ export class PostTypesController {
     public async getAll(
         @Claim() loginUser: LoginUser
     ): Promise<PostTypeResponse[] | FailedResponse> {
+       console.log(loginUser);
         const types = await this.postTypesService.getAllAsync(loginUser.identifier);
         return types.map(
             p => new PostTypeResponse({

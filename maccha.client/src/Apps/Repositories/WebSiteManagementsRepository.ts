@@ -7,9 +7,9 @@ import { IUpdateWebSiteParams } from "../Models/Domain/sites/update-web-site.par
 
 export class WebSiteManagementsRepository {
 
-    public async fetchWebSiteAync(identifier: string): Promise<WebSite> {
+    public async fetchWebSiteAync(webSiteId: string): Promise<WebSite> {
         try {
-            const result = await axios.get<WebSite>("/api/web-sites/" + identifier);
+            const result = await axios.get<WebSite>("/api/web-sites/" + webSiteId);
             const x = result.data;
             return new WebSite(x.webSiteId, x.displayName, x.name, x.host, x.description);
         }

@@ -26,23 +26,36 @@ export class AuthService implements IAuthService {
     public async loginAsync(email: string, password: string): Promise<Token & LoginUser> {
         try {
             const user = await this.usersService.validateUser(email, password);
-            const identifier = await (async () => {
+            const [webSiteId, identifier] = await (async (): Promise<[string, string] | [null, null]> => {
                 if (user.role === RoleType.Admin) {
                     const [webSite] = await this.webSitesService.getAllAsync();
-                    return webSite.webSiteId;
+                    return [webSite.webSiteId, webSite.name];
                 }
                 else {
-                    return user.identifiers[0] ?? "";
+                    const webSiteId = user.webSiteIds[0];
+                    if (!webSiteId) {
+                        return [null, null];
+                    }
+
+                    const website = await this.webSitesService.getAsync(webSiteId);
+                    if (!website?.name) {
+                        return [null, null];
+                    }
+
+                    return [webSiteId, website.name];
                 }
             })();
+
+            if (!webSiteId || !identifier) {
+                throw new Error("Login failed.");
+            }
 
             const token = await this.generateAccessTokenAsync(
                 user.userId,
                 user.role,
                 user.email,
                 user.name,
-                identifier
-            );
+                webSiteId);
             const refreshToken = await this.generateRefreshTokenAsync(user.userId);
 
             const tokenInfo = await this.validateAsync<(LoginUser & Token)>(token);
@@ -51,10 +64,11 @@ export class AuthService implements IAuthService {
                     token,
                     refreshToken,
                     userId: user.userId,
+                    identifier,
                     role: Number(user.role),
                     email: user.email,
                     name: user.name,
-                    identifier,
+                    webSiteId,
                     exp: tokenInfo.exp,
                     iat: tokenInfo.iat,
                     avatar: user.avatar
@@ -74,31 +88,30 @@ export class AuthService implements IAuthService {
      * @param token token
      * @param identifier identifier
      */
-    public async refresh(token: string, identifier: string): Promise<Token & LoginUser> {
+    public async refresh(token: string, webSiteId: string): Promise<Token & LoginUser> {
         try {
             const user = await this.validateAsync<{ userId: string }>(token);
             if (user) {
                 const newUser = await this.usersService.findByIdAsync(user.userId);
                 if (!newUser) throw new Error("useid not found");
 
-                const newIdentifier = await (async () => {
+                const [newWebSiteId, newIdentifier] = await (async () => {
                     if (newUser.role === RoleType.Admin) {
-                        const webSite = await this.webSitesService.getAsync(identifier);
+                        const webSite = await this.webSitesService.getAsync(webSiteId);
                         if (!webSite) {
-                            throw new Error(`Web site ${identifier} is not found.`);
+                            throw new Error(`Web site ${webSiteId} is not found.`);
                         }
-
-                        return webSite.webSiteId;
+                        return [webSite.webSiteId, webSite.name];
                     }
                     else {
                         // if include identifier that user can login.
-                        if (newUser.identifiers.includes(identifier)) {
-                            const webSite = await this.webSitesService.getAsync(identifier);
+                        if (newUser.webSiteIds.includes(webSiteId)) {
+                            const webSite = await this.webSitesService.getAsync(webSiteId);
                             if (!webSite) {
-                                throw new Error(`Web site ${identifier} is not found.`);
+                                throw new Error(`Web site ${webSiteId} is not found.`);
                             }
 
-                            return webSite.webSiteId;
+                            return [webSite.webSiteId, webSite.name];
                         }
                     }
                     throw new Error("identifier is not found or user has no role.");
@@ -109,7 +122,7 @@ export class AuthService implements IAuthService {
                     newUser.role,
                     newUser.email,
                     newUser.name,
-                    newIdentifier
+                    newWebSiteId
                 );
                 const tokenInfo = await this.validateAsync<(LoginUser & Token)>(newToken);
                 const refreshToken = await this.generateRefreshTokenAsync(user.userId);
@@ -121,6 +134,7 @@ export class AuthService implements IAuthService {
                         role: Number(newUser.role),
                         email: newUser.email,
                         name: newUser.name,
+                        webSiteId: newWebSiteId,
                         identifier: newIdentifier,
                         exp: tokenInfo.exp,
                         iat: tokenInfo.iat,

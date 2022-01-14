@@ -53,7 +53,7 @@ export class UsersService {
                 name: user.name,
                 role: user.role,
                 userId: user.userId,
-                identifiers: user.identifiers
+                webSiteIds: user.webSiteIds
             });
             await this.fetchUesrsAsync();
         }
@@ -72,7 +72,7 @@ export class UsersService {
                 isActive: user.isActive,
                 name: user.name,
                 role: user.role,
-                identifiers: user.identifiers,
+                webSiteIds: user.webSiteIds,
                 password: user.password
             });
             await this.fetchUesrsAsync();

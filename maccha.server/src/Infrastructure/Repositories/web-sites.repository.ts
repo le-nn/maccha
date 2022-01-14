@@ -54,9 +54,9 @@ export class WebSitesRepository implements IWebSitesRepository {
      * @param webSiteId to find web site id
      * @returns web site
      */
-    public async getAsync(identifier: string): Promise<WebSite> {
+    public async getAsync(webSiteId: string): Promise<WebSite> {
         try {
-            const created = await this.webSites.findOne({ webSiteId: identifier });
+            const created = await this.webSites.findOne({ webSiteId: webSiteId });
             if (created) {
                 return new WebSite(
                     created.webSiteId ?? "",
@@ -70,7 +70,7 @@ export class WebSitesRepository implements IWebSitesRepository {
         catch (ex: any) {
             console.error("error traced in websites repository", ex.message);
         }
-        throw new Error(`web site identifier [${identifier}] is not exists.`);
+        throw new Error(`web site webSiteId [${webSiteId}] is not exists.`);
     }
 
     /**

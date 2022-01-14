@@ -51,8 +51,8 @@ export default () => {
                 "",
                 RoleType.Subscribe,
                 true,
-                authStore.state.loginInfo?.identifier ?
-                    [authStore.state.loginInfo.identifier] :
+                authStore.state.loginInfo?.webSiteId ?
+                    [authStore.state.loginInfo.webSiteId] :
                     [],
                 ""
             ),
@@ -64,7 +64,7 @@ export default () => {
                 isActive: user.isActive,
                 name: user.name,
                 role: user.role,
-                identifiers: user.identifiers,
+                webSiteIds: user.webSiteIds,
                 password: user.password ?? ""
             });
         }
@@ -168,9 +168,9 @@ export default () => {
                                                             <Chip color="primary" label="管理者"></Chip>
                                                         </Box>
                                                         :
-                                                        user.identifiers.slice(0, 6).map(identifier => (
-                                                            <Box padding="4px" key={identifier}>
-                                                                <Chip color="primary" label={identifier}></Chip>
+                                                        user.webSiteIds.slice(0, 6).map(webSiteId => (
+                                                            <Box padding="4px" key={webSiteId}>
+                                                                <Chip color="primary" label={webSiteId}></Chip>
                                                             </Box>
                                                         ))
                                                 }

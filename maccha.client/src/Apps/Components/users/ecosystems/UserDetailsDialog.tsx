@@ -204,9 +204,9 @@ function UserDetailDialog(props: DialogContentProp<DialogUser, DialogUser | unde
                             <Typography style={{ marginTop: "24px" }}>許可するサイト</Typography>
                             <Select fullWidth
                                 multiple
-                                value={user.identifiers}
+                                value={user.webSiteIds}
                                 onChange={e => {
-                                    setUser({ ...user, ...{ identifiers: e.target.value as any } });
+                                    setUser({ ...user, ...{ webSiteIds: e.target.value as any } });
                                     setCanClose(true);
                                 }}
                                 renderValue={(selected: any) => (
@@ -226,7 +226,7 @@ function UserDetailDialog(props: DialogContentProp<DialogUser, DialogUser | unde
                                     webSiteManagementsService.webSites.map(
                                         (site, key) => (
                                             <MenuItem key={key} value={site.webSiteId}>
-                                                <Checkbox color="primary" checked={user.identifiers.includes(site.webSiteId)} ></Checkbox>
+                                                <Checkbox color="primary" checked={user.webSiteIds.includes(site.webSiteId)} ></Checkbox>
                                                 <ListItemText>{site.name} - {site.displayName}</ListItemText>
                                             </MenuItem>
                                         )

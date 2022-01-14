@@ -238,7 +238,7 @@ export class UsersRepository implements IUsersRepository {
                 avatar: ""
             }));
 
-            await Promise.all(params.identifiers.map(async i => {
+            await Promise.all(params.webSiteIds.map(async i => {
                 const site = (await this.webSites.findOne({ webSiteId: i }));
                 if (site && site.webSiteId) {
                     await this.userWebSites.manager.save(

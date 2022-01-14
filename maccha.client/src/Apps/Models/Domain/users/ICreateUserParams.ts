@@ -1,7 +1,7 @@
-import { RoleType } from "..";
+import { RoleType } from "../auth/role";
 
 export interface ICreateUserParams {
-    identifiers: string[];
+    webSiteIds: string[];
     name: string;
     email: string;
     role: RoleType;

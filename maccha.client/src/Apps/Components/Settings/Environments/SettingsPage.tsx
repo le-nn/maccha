@@ -45,7 +45,7 @@ export default observer(() => {
 
     const store = useStore(AuthStore);
     const avatar = useObserver(AuthStore, s => s.loginInfo?.avatar ?? "");
-    const identifier = useObserver(AuthStore, s => s.loginInfo?.identifier);
+    const identifier = useObserver(AuthStore, s => s.loginInfo?.webSiteId);
 
     useEffect(() => {
         const info = store.state.loginInfo;
@@ -54,7 +54,7 @@ export default observer(() => {
         }
 
         usersService.selectUserAsync(info.userId);
-        webSiteManagementsService.selectWebSiteAsync(info.identifier);
+        webSiteManagementsService.selectWebSiteAsync(info.webSiteId);
     }, []);
 
     async function handleChangeWebSiteIdentifier(webSite: WebSite) {

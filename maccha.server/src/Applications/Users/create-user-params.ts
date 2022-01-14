@@ -20,7 +20,7 @@ export class CreateUserParams implements ICreateUserParams {
         password!: string;
 
     @ArrayMinSize(0)
-        identifiers!: string[];
+    webSiteIds!: string[];
 
     @IsNumber()
         role!: RoleType;

@@ -70,7 +70,7 @@ export class UsersService {
             name: params.name,
             password: await hash(params.password, 10),
             role: params.role,
-            identifiers: params.identifiers,
+            webSiteIds: params.webSiteIds,
             isActive: params.isActive
         });
     }

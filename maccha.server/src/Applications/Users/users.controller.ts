@@ -44,7 +44,7 @@ export class UsersController {
             role: user.role,
             userId: user.userId,
             isActive: user.isActive,
-            identifiers: user.identifiers,
+            webSiteIds: user.webSiteIds,
             avatar: user.avatar
         });
     }
@@ -84,7 +84,7 @@ export class UsersController {
             role: user.role,
             userId: user.userId,
             isActive: user.isActive,
-            identifiers: user.identifiers,
+            webSiteIds: user.webSiteIds,
             avatar: user.avatar
         }));
     }
@@ -122,7 +122,7 @@ export class UsersController {
             throw new NotFoundException(`${loginUser.userId} is not found.`);
         }
 
-        if ((user.role === RoleType.Admin) || user.identifiers.filter(x => params.identifiers.filter(y => y === x).length)) {
+        if ((user.role === RoleType.Admin) || user.webSiteIds.filter(x => params.webSiteIds.filter(y => y === x).length)) {
             const created = await this.usersService.createAsync(params);
             return new UserResponse({
                 email: created.email,
@@ -130,7 +130,7 @@ export class UsersController {
                 role: created.role,
                 userId: created.userId,
                 isActive: created.isActive,
-                identifiers: created.identifiers,
+                webSiteIds: created.webSiteIds,
                 avatar: created.avatar
             });
         }
@@ -156,7 +156,7 @@ export class UsersController {
             role: created.role,
             userId: created.userId,
             isActive: created.isActive,
-            identifiers: created.identifiers,
+            webSiteIds: created.webSiteIds,
             avatar: created.avatar
         });
     }
@@ -183,7 +183,7 @@ export class UsersController {
 
         if (
             (loginUser.role === RoleType.Admin) ||
-            changeUser.identifiers.filter(x => user.identifiers.filter(y => y === x).length).length
+            changeUser.webSiteIds.filter(x => user.webSiteIds.filter(y => y === x).length).length
         ) {
             const created = await this.usersService.UpdateAsync(params);
 
@@ -194,7 +194,7 @@ export class UsersController {
                     role: created.role,
                     userId: created.userId,
                     isActive: created.isActive,
-                    identifiers: created.identifiers,
+                    webSiteIds: created.webSiteIds,
                     avatar: created.avatar
                 });
             }
@@ -229,7 +229,7 @@ export class UsersController {
             role: user.role,
             userId: user.userId,
             isActive: user.isActive,
-            identifiers: user.identifiers,
+            webSiteIds: user.webSiteIds,
             avatar: user.avatar
         });
     }

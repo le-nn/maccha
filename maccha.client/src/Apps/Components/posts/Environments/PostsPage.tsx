@@ -47,11 +47,16 @@ export default () => {
 
     const { t } = useTranslation();
 
-    const postDisabled = useObserver(AuthStore, s => ![
-        ...roles.posts.create,
-        ...roles.posts.editOther,
-        ...roles.posts.editOther
+    const postTypeEdit = useObserver(AuthStore, s => [
+        ...roles.postTypes.create,
+        ...roles.postTypes.edit,
+        ...roles.postTypes.remove
     ].includes(s.loginInfo?.role ?? RoleType.None));
+    console.log(postTypeEdit);
+    const postCreate = useObserver(AuthStore, s => [
+        ...roles.posts.create,
+    ].includes(s.loginInfo?.role ?? RoleType.None));
+
     const identifier = useObserver(AuthStore, s => s.loginInfo?.identifier);
     const postTypesDisble = useObserver(AuthStore, s => !(roles.postTypes.create.includes(s.loginInfo?.role ?? RoleType.None)));
     useEffect(() => {
@@ -166,7 +171,7 @@ export default () => {
                                                     selected={postManagementsService.selected?.taxonomy.name === t.taxonomy.name}
                                                     onClick={() => onPostTypeListClicked(i)}
                                                     onOptionClicked={e => onPostTypeMenu(e, t)}
-                                                    optionEnabled={postDisabled}
+                                                    optionEnabled={postTypeEdit}
                                                     text={t.taxonomy.displayName}
                                                 />
                                             )
@@ -207,7 +212,7 @@ export default () => {
                         >
                             <PostListPanel />
                             <Fab
-                                disabled={!services.postManagementsService.selected || postDisabled}
+                                disabled={!services.postManagementsService.selected || !postCreate}
                                 style={{
                                     position: "absolute",
                                     zIndex: 9999,

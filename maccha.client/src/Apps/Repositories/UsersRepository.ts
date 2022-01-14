@@ -85,7 +85,7 @@ export class UsersRepository {
             user.email,
             user.role,
             user.isActive,
-            user.identifiers,
+            user.webSiteIds,
             user.avatar
         );
     }

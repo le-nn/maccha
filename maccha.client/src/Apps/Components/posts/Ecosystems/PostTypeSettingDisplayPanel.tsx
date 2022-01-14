@@ -21,7 +21,7 @@ export const PostTypeSettingPanel = (props: PostTypeSettingPanelProps) => {
     const { postType } = props;
     const history = useAppNavigate();
     const editPostTypeEnabled = useObserver(AuthStore, s => roles.postTypes.edit.includes(s.loginInfo?.role ?? RoleType.None));
-
+    const auth = useObserver(AuthStore);
 
     const handleEdit = () => {
         history(`/posts/${postType.taxonomy.name}/edit`);
@@ -53,7 +53,7 @@ export const PostTypeSettingPanel = (props: PostTypeSettingPanelProps) => {
                         <IconButton
                             color="primary"
                             size="small"
-                            onClick={_ => copyToClipBoard(`${axios.defaults.baseURL}contents/${props.postType.taxonomy.name}`)}
+                            onClick={_ => copyToClipBoard(`${axios.defaults.baseURL}public/${auth.loginInfo?.identifier}/contents/${props.postType.taxonomy.name}`)}
                         >
                             <FileCopy fontSize="small" />
                         </IconButton>

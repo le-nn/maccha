@@ -42,7 +42,7 @@ export class User {
     /**
      * identifiers
      */
-    public readonly identifiers: string[];
+    public readonly webSiteIds: string[];
 
     /**
      * constructor
@@ -70,7 +70,7 @@ export class User {
         this.email = email;
         this.password = password;
         this.role = role;
-        this.identifiers = identifiers;
+        this.webSiteIds = identifiers;
         this.avatar = avatar;
     }
 }

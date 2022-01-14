@@ -73,7 +73,7 @@ export class AuthStore extends Store<AuthStoreState> {
         }
     }
 
-    public async refreshAsync(identifier?: string) {
+    public async refreshAsync(webSiteId?: string) {
         if (!this.state.loginInfo) {
             throw new Error("Login info is not set.");
         }
@@ -81,7 +81,7 @@ export class AuthStore extends Store<AuthStoreState> {
         try {
             const loginInfo = await this.repository.refresh(
                 this.state.loginInfo.refreshToken,
-                identifier ?? this.state.loginInfo.identifier);
+                webSiteId ?? this.state.loginInfo.webSiteId);
             this.repository.saveToLocalStorage(loginInfo);
             setToken(loginInfo.token);
             this.mutate(new Login(loginInfo));

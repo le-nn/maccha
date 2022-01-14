@@ -9,6 +9,7 @@ export class LoginInfoResponse implements LoginUser {
     public readonly iat: number = 0;
     public readonly exp: number = 0;
     public readonly identifier: string = "";
+    public readonly webSiteId: string = "";
     public readonly avatar: string = "";
     constructor(params: LoginUser) {
         Object.assign(this, params);

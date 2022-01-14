@@ -1,5 +1,5 @@
 import React, { ReactNode, useContext, useEffect, useState } from "react";
-import { Avatar, Box, Grow, ListItemText, MenuItem, Select, ThemeProvider, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Avatar, Box, Button, Grow, ListItemText, MenuItem, Select, ThemeProvider, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { lightTheme } from "./theme";
 import { useTranslation } from "react-i18next";
 import { AppRouterProvider, Route, useAppLocation, useAppNavigate } from "Libs/Routing/RouterConfig";
@@ -17,6 +17,7 @@ import { Provider } from "relux.js";
 import { observer } from "mobx-react";
 import { WebSite } from "./Models/Domain/sites/web-site";
 import { AuthStore } from "./Models/Stores/Auth/AuthStore";
+import { t } from "i18next";
 
 const bootstrap = async (auth: AuthStore) => {
     await auth.refreshAsync();
@@ -173,6 +174,11 @@ const NavigationHeader = observer(({
         }
     };
 
+    const logout = () => {
+        dispach(s => s.logout());
+        window.location.reload();
+    };
+
     if (!user) {
         return <>NO User</>;
     }
@@ -211,7 +217,7 @@ const NavigationHeader = observer(({
             {(open) && <Box px={2} >
                 <Select
                     variant="outlined"
-                    value={user.identifier}
+                    value={user.webSiteId}
                     color="primary"
                     label="ログイン中のサイト"
                     fullWidth
@@ -231,6 +237,12 @@ const NavigationHeader = observer(({
                         ))
                     }
                 </Select>
+
+                <Box p={2}>
+                    <Button onClick={logout} fullWidth>
+                        {t("ログアウト")}
+                    </Button>
+                </Box>
             </Box>
             }
         </Box>

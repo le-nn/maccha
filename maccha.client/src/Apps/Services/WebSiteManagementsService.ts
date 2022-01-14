@@ -75,9 +75,9 @@ export class WebSiteManagementsService {
         await this.saveWebSiteAsync(this.selected);
     }
 
-    public async selectWebSiteAsync(identifier: string) {
+    public async selectWebSiteAsync(webSiteId: string) {
         try {
-            const webSite = await this.repository.fetchWebSiteAync(identifier);
+            const webSite = await this.repository.fetchWebSiteAync(webSiteId);
             this._selected = webSite;
         }
         catch {

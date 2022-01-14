@@ -9,5 +9,5 @@ export interface ICreateUserParams {
     password: string;
     role: RoleType;
     isActive: boolean;
-    identifiers: string[]
+    webSiteIds: string[]
 }

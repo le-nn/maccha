@@ -30,7 +30,7 @@ export interface IUser {
     /**
      * web sites
      */
-    readonly identifiers: string[];
+    readonly webSiteIds: string[];
 
     /**
      * avata iamage url.
