@@ -44,6 +44,8 @@ export const ContactContentDetailPanel = () => {
     return (
         <Box
             width="100%"
+            height={"100%"}
+            sx={{ overflowY: "auto" }}
             p={2}
         >
             <Box p={2}>
@@ -70,9 +72,13 @@ export const ContactContentDetailPanel = () => {
                             mt={2}
                             sx={{
                                 borderRadius: "8px",
-                                background: theme.palette.background.default
+                                background: theme.palette.background.default,
+                                overflow: "auto",
+                                maxHeight: "800px"
                             }}>
-                            <Typography>{f.value}</Typography>
+                            <Typography
+                                sx={{ whiteSpace: "pre" }}
+                            >{f.value}</Typography>
                         </Box>
                     </Box>)}
             </Box>

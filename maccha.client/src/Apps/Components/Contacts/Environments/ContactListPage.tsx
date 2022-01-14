@@ -64,7 +64,7 @@ export default () => {
                                                 height: "100%",
                                             }}
                                         >
-                                            <Grid xs={8} item sx={{ display: "flex" }}>
+                                            <Grid xs={8} item sx={{ display: "flex", height: "100%" }}>
                                                 <ContactContentDetailPanel />
                                                 <Divider orientation="vertical" flexItem />
                                             </Grid>
