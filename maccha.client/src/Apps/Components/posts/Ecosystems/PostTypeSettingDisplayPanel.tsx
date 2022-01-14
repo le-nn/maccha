@@ -31,6 +31,8 @@ export const PostTypeSettingPanel = (props: PostTypeSettingPanelProps) => {
         navigator.clipboard?.writeText(text);
     };
 
+    const contentUrl = `${axios.defaults.baseURL}public/${auth.loginInfo?.identifier}/contents/${props.postType.taxonomy.name}`;
+
     return (
         <Box p={2}>
             <Box display="flex" width="100%" alignItems="center">
@@ -53,13 +55,13 @@ export const PostTypeSettingPanel = (props: PostTypeSettingPanelProps) => {
                         <IconButton
                             color="primary"
                             size="small"
-                            onClick={_ => copyToClipBoard(`${axios.defaults.baseURL}public/${auth.loginInfo?.identifier}/contents/${props.postType.taxonomy.name}`)}
+                            onClick={_ => copyToClipBoard(contentUrl)}
                         >
                             <FileCopy fontSize="small" />
                         </IconButton>
                     }
                 </Box>
-                <Typography style={{ wordBreak: "break-all" }}>{axios.defaults.baseURL}contents/{props.postType.taxonomy.name}</Typography>
+                <Typography style={{ wordBreak: "break-all" }}>{contentUrl}</Typography>
             </Box>
 
             <Box mt={1}>

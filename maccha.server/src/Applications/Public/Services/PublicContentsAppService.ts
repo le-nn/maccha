@@ -26,7 +26,7 @@ export class PublicContentsAppService {
             throw new NotFoundException(`identifier "${identifier}" is not found.`);
         }
 
-        const taxonomyId = await this.taxonomiesService.getIdByNameAsync(taxonomy, identifier);
+        const taxonomyId = await this.taxonomiesService.getIdByNameAsync(taxonomy, webSiteId);
         if (!taxonomyId) {
             throw new BadRequestException("Taxonomy is not found.");
         }

@@ -7,7 +7,7 @@ export class LoginInfo implements LoginUser, Token {
     public readonly refreshToken = "";
     public readonly email = "";
     public readonly role: RoleType = 0;
-   // public readonly identifier: string = "";
+    public readonly identifier: string = "";
     public readonly webSiteId: string = "";
     public readonly name = "";
     public readonly iat = 0;

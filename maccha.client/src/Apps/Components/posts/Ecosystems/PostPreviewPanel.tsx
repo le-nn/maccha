@@ -17,6 +17,7 @@ import { Scheme } from "../../../Models/Domain/Contents/Entities/Scheme";
 import { SchemeEditorProps } from "../FieldEditors/SchemeEditorProps";
 import { axios } from "../../../Repositories/config";
 import { makeStyles } from "@mui/styles";
+import { DateTime } from "luxon";
 
 export function PostPreviewPanel() {
     const { postEditService, postManagementsService } = services;
@@ -46,7 +47,7 @@ export function PostPreviewPanel() {
                             mb={20}
                             width="100%"
                         >
-                            <Typography color="textSecondary">{(content.publishIn ?? content.createdAt).toFormat("y.M.d")}</Typography>
+                            <Typography color="textSecondary">{DateTime.fromISO(content.publishIn ?? content.createdAt).toFormat("y.M.d")}</Typography>
                             <Typography variant="h1" style={{ marginTop: "16px" }}>{content.title}</Typography>
 
                             {content.thumbnail && <Box mt={3} width="100%">
