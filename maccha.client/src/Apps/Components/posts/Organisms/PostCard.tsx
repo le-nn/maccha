@@ -37,6 +37,33 @@ export const PostCard = (props: PostCardProps) => {
     return (
         <Card css={classes.card} elevation={5}>
             <Box display="flex" flexDirection="column" height="100%">
+                <Box
+                    height="148px"
+                    width="100%"
+                    sx={{
+                        background: theme.palette.primary.light,
+                    }}
+                >
+                    {
+                        content.thumbnail ?
+                            <img
+                                alt={content.title}
+                                src={axios.defaults.baseURL + content.thumbnail}
+                                height="148px" style={{
+                                    objectFit: "cover",
+                                }}
+                            />
+                            :
+                            <Box sx={{
+                                height: "100%",
+                                width: "100%",
+                                backgroundColor: theme.palette.background.paper,
+                                opacity: "0.66"
+                            }}>
+                            </Box>
+                    }
+                </Box>
+
                 <Box css={classes.profile}>
                     <Avatar
                         src={axios.defaults.baseURL + avatar}
@@ -55,15 +82,6 @@ export const PostCard = (props: PostCardProps) => {
                         {props.content.createdBy.name}
                     </Typography>
                 </Box>
-
-                <img
-                    alt={content.title}
-                    src={content.thumbnail ? axios.defaults.baseURL + content.thumbnail : ""}
-                    height="148px" style={{
-                        objectFit: "cover",
-                        background: "rgba(127, 127, 127, 0.1"
-                    }}
-                />
 
                 <Box p={2} flex="1 1 auto" zIndex="1" display="flex" flexDirection="column">
                     <Box position="relative" display="flex" width="100%">
