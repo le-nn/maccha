@@ -20,7 +20,9 @@ interface PostTypeSettingPanelProps {
 export const PostTypeSettingPanel = (props: PostTypeSettingPanelProps) => {
     const { postType } = props;
     const history = useAppNavigate();
-    const editPostTypeEnabled = useObserver(AuthStore, s => roles.postTypes.edit.includes(s.loginInfo?.role ?? RoleType.None));
+    const editPostTypeEnabled = useObserver(
+        AuthStore,
+        s => roles.postTypes.edit.includes(s.loginInfo?.role ?? RoleType.None));
     const auth = useObserver(AuthStore);
 
     const handleEdit = () => {

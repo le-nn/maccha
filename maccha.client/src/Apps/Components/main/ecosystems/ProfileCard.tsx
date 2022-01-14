@@ -38,7 +38,7 @@ export default () => {
         }
     };
 
-    return useObserver(() => {
+    return (() => {
         const loginInfo = useObserver(AuthStore, s => s.loginInfo);
         return (
             <Box

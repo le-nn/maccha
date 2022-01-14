@@ -219,7 +219,6 @@ const NavigationHeader = observer(({
                     variant="outlined"
                     value={user.webSiteId}
                     color="primary"
-                    label="ログイン中のサイト"
                     fullWidth
                 >
                     {

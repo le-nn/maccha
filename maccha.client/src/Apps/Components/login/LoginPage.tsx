@@ -87,7 +87,8 @@ export default function LoginPage() {
                                     <VpnKey />
                                 </InputAdornment>
                             ),
-                        }} />
+                        }}
+                    />
 
                     <Box mt={5}>
                         <Button
@@ -100,12 +101,19 @@ export default function LoginPage() {
                         >
                             {t("サインイン")}
                         </Button>
-
                     </Box>
                     <Box height={"80px"}>
                         {
                             isShowError && (
-                                <Alert severity="error" style={{ marginRight: "8px", marginLeft: "8px", marginTop: "24px", color: theme.palette.error.dark }}>
+                                <Alert
+                                    severity="error"
+                                    style={{
+                                        marginRight: "8px",
+                                        marginLeft: "8px",
+                                        marginTop: "24px",
+                                        color: theme.palette.error.dark
+                                    }}
+                                >
                                     <AlertTitle>ログインできませんでした。</AlertTitle>
                                     ユーザー名とパスワードを確認してください
                                 </Alert>
