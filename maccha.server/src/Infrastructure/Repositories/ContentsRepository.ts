@@ -138,8 +138,7 @@ LIMIT ${params.fetch} OFFSET ${params.offset}
             ];
         }
         catch (ex: any) {
-            console.log(ex);
-            throw new Error(`Cannot to search contents. `);
+            throw new Error(`Cannot to search contents. ${ex.message} `);
         }
     }
 
