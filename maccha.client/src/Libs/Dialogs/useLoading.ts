@@ -12,7 +12,7 @@ interface LoadingHandler {
 }
 
 export const useLoading = (): LoadingHandler => {
-    const context = useContext(DialogContext);
+    const context = useContext(DialogContext).handlers;
     if (!context) {
         throw new Error("DialogProvider is not registered.");
     }

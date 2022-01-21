@@ -13,15 +13,19 @@ interface DialogHandler {
 }
 
 export const useDialog = (): DialogHandler => {
-    const context = useContext(DialogContext);
+    const context = useContext(DialogContext).handlers;
     if (!context) {
         throw new Error("DialogProvider is not registered.");
     }
 
     return {
-        showAsync: <TResult = any>(renderer: DialogRenderer<TResult>) => {
+        showAsync: <TResult = any>(renderer: DialogRenderer<TResult>, options?: DialogOption) => {
             if (!renderer) {
                 throw new Error("renderer is undefined.");
+            }
+
+            if (options) {
+                context.setDialogOption(options);
             }
 
             return new Promise<TResult>(

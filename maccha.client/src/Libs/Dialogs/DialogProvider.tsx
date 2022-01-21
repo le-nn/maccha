@@ -1,28 +1,42 @@
 import { Backdrop, CircularProgress, Dialog, DialogProps, Grow, Snackbar, SnackbarOrigin, SnackbarProps, useTheme } from "@mui/material";
 import { TransitionHandlerProps, TransitionProps } from "@mui/material/transitions";
-import React, { memo, useContext, useState } from "react";
+import { color } from "@mui/system";
+import React, { memo, useContext, useRef, useState } from "react";
 
-export const DialogContext = React.createContext({
-    closeDialog: () => { },
-    openDialog: (target: React.ReactNode) => { },
-    setDialogOption: (option: DialogOption) => { },
-    closeSnackbar: () => {
-    },
-    openSnackbar: (message: string, option?: OpenNotifyOption) => {
-    },
-    setSnackbarOption: (option: SnackbarOption) => {
-    },
-    setIsLoading: (isLoading: boolean) => { },
-});
+const handlersRef = {
+    handlers: {
+        closeDialog: () => {
+            console.log("DialogProvider context is not loaded.");
+        },
+        openDialog: (target: React.ReactNode) => {
+            console.log("DialogProvider context is not loaded.");
+        },
+        setDialogOption: (option: DialogOption) => {
+            console.log("DialogProvider context is not loaded.");
+        },
+        closeSnackbar: () => {
+            console.log("DialogProvider context is not loaded.");
+        },
+        openSnackbar: (message: string, option?: OpenNotifyOption) => {
+            console.log("DialogProvider context is not loaded.");
+        },
+        setSnackbarOption: (option: SnackbarProps) => {
+            console.log("DialogProvider context is not loaded.");
+        },
+        setIsLoading: (isLoading: boolean) => {
+            console.log("DialogProvider context is not loaded.");
+        },
+    }
+};
+
+export const DialogContext = React.createContext(handlersRef);
 
 export type DialogOption = Omit<DialogProps, "open">;
-
-export type SnackbarOption = Omit<SnackbarProps, "open" | "autoHideDuration" | "color" | "onClose">;
 
 export interface OpenNotifyOption {
     target?: React.ReactNode;
     color?: string;
-    autoHideDuration?: number;
+    autoHideDuration?: number|null;
     anchorOrigin?: SnackbarOrigin;
 }
 
@@ -32,6 +46,16 @@ interface DialogProvider {
 }
 
 export const DialogProvider = (props: DialogProvider) => {
+    const [handlerRef] = useState(() => ({ ...handlersRef }));
+    return (
+        <DialogContext.Provider value={handlerRef}>
+            <Main {...props} />
+            <Memo> {props.children}</Memo>
+        </DialogContext.Provider>
+    );
+};
+
+const Main = (props: DialogProvider) => {
     const [isOpen, setIsOpen] = useState(false);
     const [notifyMessage, setNotifyMessage] = useState("");
     const [isNotifyOpen, setIsNotifyOpen] = useState(false);
@@ -45,9 +69,10 @@ export const DialogProvider = (props: DialogProvider) => {
     const [isLoading, setIsLoading] = useState(false);
 
     const theme = useTheme();
-
+    const handlerRef = useContext(DialogContext);
     const { keepMounted } = props;
-    const handler = {
+
+    handlerRef.handlers = {
         closeDialog: () => {
             setIsOpen(false);
             setDialogRenderTarget(null);
@@ -75,17 +100,19 @@ export const DialogProvider = (props: DialogProvider) => {
                     vertical: option?.anchorOrigin?.vertical ?? "top",
                 },
                 color: theme.palette.primary.main,
-                autoHideDuration: option?.autoHideDuration ?? 3000,
+                autoHideDuration: option?.autoHideDuration === undefined ? 3000 : option.autoHideDuration,
             });
 
             setNotifyMessage(message);
             setIsNotifyOpen(true);
         },
-        setSnackbarOption: (option: SnackbarOption) => {
+        setSnackbarOption: (option: SnackbarProps) => {
             setNotifyOption(option);
         },
         setIsLoading(value: boolean) {
-            setIsLoading(value);
+            if (isLoading !== value) {
+                setIsLoading(value);
+            }
         }
     };
 
@@ -103,9 +130,7 @@ export const DialogProvider = (props: DialogProvider) => {
     };
 
     return (
-        <DialogContext.Provider value={handler}>
-            <Memo> {props.children}</Memo>
-
+        <>
             <Dialog
                 {...dialogOption}
                 TransitionComponent={dialogOption?.TransitionComponent ?? Grow}
@@ -114,10 +139,9 @@ export const DialogProvider = (props: DialogProvider) => {
             >
                 {dialogRenderTarget}
             </Dialog>
-
             <Snackbar
                 {...notifyOption}
-                open={isNotifyOpen}
+                open={isNotifyOpen && !!notifyMessage}
                 onClose={handleNotifyClose}
                 message={notifyMessage}
                 action={notifyRenderTarget}
@@ -126,11 +150,10 @@ export const DialogProvider = (props: DialogProvider) => {
                     onExit: handleTransitionExit
                 }}
             />
-
             <Backdrop open={isLoading} style={{ zIndex: 9999, width: "100vw", height: "100vh" }} >
                 <CircularProgress size={52} color="primary" />
             </Backdrop>
-        </DialogContext.Provider>
+        </>
     );
 };
 

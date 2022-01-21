@@ -1,5 +1,5 @@
 import { Box, DialogProps, Typography, DialogContent, DialogActions, Button, TextField, TextFieldProps } from "@mui/material";
-import React, { useState } from "react";
+import React, { ReactNode, useState, useEffect } from "react";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { DialogContext, DialogOption } from "./DialogProvider";
@@ -27,7 +27,7 @@ export const useIntupDialog = () => {
     const { showAsync, close, setOption } = useDialog();
     const { t } = useTranslation();
 
-    const showMessageAsync = async (message: string, subMessage?: string, options?: InputDialogOption): Promise<string | null> => {
+    const showMessageAsync = async (message: string, subMessage?: string | ReactNode, options?: InputDialogOption): Promise<string | null> => {
         return await showAsync<string | null>(close => {
             return React.createElement(() => {
                 const [text, setText] = useState(options?.defaultText ?? "");
@@ -40,23 +40,29 @@ export const useIntupDialog = () => {
                     close(null);
                 };
 
+                useEffect(() => {
+                    if (options) {
+                        setOption(options);
+                    }
+                }, [options]);
+
                 return (
                     <>
                         <DialogContent>
                             <Box>
                                 <Box p={3} pb={0}>
-                                    <Typography>{message}</Typography>
+                                    <Typography variant="h5">{message}</Typography>
                                 </Box>
                                 {
-                                    !!subMessage && <Box px={3}>
-                                        <Typography>{message}</Typography>
+                                    !!subMessage && <Box px={3} mt={2}  >
+                                        <Typography variant="body2">{subMessage}</Typography>
                                     </Box>
                                 }
                                 <Box p={3}>
                                     <TextField
                                         {...options?.textFieldProps}
-                                        value={text}
                                         onChange={e => setText(e.target.value)}
+                                        fullWidth={options?.fullWidth ?? true}
                                     />
                                 </Box>
                             </Box>

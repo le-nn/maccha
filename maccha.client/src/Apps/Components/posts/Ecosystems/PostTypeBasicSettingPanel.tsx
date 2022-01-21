@@ -13,6 +13,8 @@ import { Taxonomy } from "../../../Models/Domain/Contents/Entities/Taxonomy";
 import { axios } from "../../../Repositories/config";
 import { FileCopy } from "@mui/icons-material";
 import { css } from "@emotion/react";
+import { useObserver } from "react-relux";
+import { AuthStore } from "Apps/Models/Stores/Auth/AuthStore";
 
 interface PostTypeBasicSettingPanelProps {
     postType: PostType;
@@ -20,6 +22,8 @@ interface PostTypeBasicSettingPanelProps {
 }
 
 export function PostTypeBasicSettingPanel(props: PostTypeBasicSettingPanelProps) {
+    const auth = useObserver(AuthStore);
+
     function handlePostTypeParamsChanged(key: keyof Taxonomy, value: unknown) {
         props.onChange(
             props.postType.clone({
@@ -31,6 +35,8 @@ export function PostTypeBasicSettingPanel(props: PostTypeBasicSettingPanelProps)
     function copyToClipBoard(text: string) {
         navigator.clipboard?.writeText(text);
     }
+    
+    const contentUrl = `${axios.defaults.baseURL}public/${auth.loginInfo?.identifier}/contents/${props.postType.taxonomy.name}`;
 
     return (
         <>
@@ -75,10 +81,10 @@ export function PostTypeBasicSettingPanel(props: PostTypeBasicSettingPanelProps)
             >
                 <Typography variant="subtitle1" css={itemTitle}>エンドポイント名</Typography>
                 <Typography style={{ width: "100%", maxWidth: "100%", wordBreak: "break-all" }} >
-                    {axios.defaults.baseURL}contents/{props.postType.taxonomy.name}
+                    {contentUrl}
                 </Typography>
                 <FlexSpacer />
-                <IconButton color="primary" size="small" onClick={_ => copyToClipBoard(`${axios.defaults.baseURL}contents/${props.postType.taxonomy.name}`)}>
+                <IconButton color="primary" size="small" onClick={_ => copyToClipBoard(contentUrl)}>
                     <FileCopy fontSize="small" />
                 </IconButton>
             </Box>

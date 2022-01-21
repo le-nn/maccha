@@ -1,19 +1,19 @@
-import { DialogProps } from "@mui/material";
+import { DialogProps, SnackbarProps } from "@mui/material";
 import { useContext } from "react";
-import { DialogContext, SnackbarOption, OpenNotifyOption } from "./DialogProvider";
+import { DialogContext, DialogOption, OpenNotifyOption } from "./DialogProvider";
 
 type NotifybarRenderer
     = (close: () => void) => React.ReactNode;
 
 interface NotifybarHandler {
-    show: (message: string, options?: SnackbarOption)
+    show: (message: string, options?: OpenNotifyOption)
         => void;
     close: () => void;
-    setOption: (option: SnackbarOption) => void;
+    setOption: (option: SnackbarProps) => void;
 }
 
 export const useNotifybar = (): NotifybarHandler => {
-    const context = useContext(DialogContext);
+    const context = useContext(DialogContext).handlers;
     if (!context) {
         throw new Error("DialogProvider is not registered.");
     }
@@ -25,8 +25,8 @@ export const useNotifybar = (): NotifybarHandler => {
         close: () => {
             context.closeDialog();
         },
-        setOption: (option: SnackbarOption) => {
-            context.setDialogOption(option);
+        setOption: (option: SnackbarProps) => {
+            context.setSnackbarOption(option);
         }
     };
 };
