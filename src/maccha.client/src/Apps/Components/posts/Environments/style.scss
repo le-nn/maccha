@@ -1,0 +1,34 @@
+.post {
+    max-width: 100%;
+    width: 780px;
+
+    * {
+        font-family: "Noto Sans JP" !important;
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    h1 {
+        font-size: 3rem;
+        font-weight: 400;
+    }
+
+    h2 {
+        position: relative;
+        position: relative;
+        padding: 3% 1em;
+        border-top: solid 2px black;
+        border-bottom: solid 2px black;
+        font-size: 25px;
+        line-height: 30px;
+        margin-bottom: 38px;
+        padding-top: 10px;
+        padding-right: 20px;
+        padding-bottom: 10px;
+        padding-left: 20px;
+        text-align: center;
+        margin-top: 50px;
+    }
+}

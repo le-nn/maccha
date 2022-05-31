@@ -1,0 +1,98 @@
+{
+    "root": true,
+    "env": {
+        "node": true,
+        "es6": true,
+        "browser": true
+    },
+    "globals": {
+        "logger": true
+    },
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "parserOptions": {
+        "parser": "@typescript-eslint/parser",
+        "ecmaVersion": 2020,
+        "sourceType": "module"
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
+    ],
+    "rules": {
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/interface-name-prefix": "off",
+        "@typescript-eslint/no-empty-function": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "indent": [
+          "error",
+          4,
+          {
+            "SwitchCase": 1
+          }
+        ],
+        "brace-style": [
+          "error",
+          "stroustrup",
+          {
+            "allowSingleLine": true
+          }
+        ],
+        "constructor-super": "error",
+        "curly": [
+          "error",
+          "multi-line"
+        ],
+        "dot-notation": "error",
+        "eqeqeq": "error",
+        "linebreak-style": [
+          "error",
+          "windows"
+        ],
+        "space-before-function-paren": "off",
+        "semi": [
+          "error",
+          "always"
+        ],
+        "new-parens": "error",
+        "quotes": [
+          "error",
+          "double"
+        ],
+        "no-caller": "error",
+        "no-duplicate-case": "error",
+        "no-duplicate-imports": "error",
+        "no-empty": "error",
+        "no-eval": "error",
+        "no-extra-bind": "error",
+        "no-fallthrough": "error",
+        "no-new-func": "error",
+        "no-new-wrappers": "error",
+        "no-return-await": "off",
+        "no-sparse-arrays": "error",
+        "no-template-curly-in-string": "error",
+        "no-throw-literal": "error",
+        "no-trailing-spaces": "error",
+        "no-undef-init": "error",
+        "no-unsafe-finally": "error",
+        "no-unused-labels": "error",
+        "no-var": "off",
+        "object-shorthand": "error",
+        "prefer-const": "error",
+        "prefer-object-spread": "error",
+        "no-useless-constructor": "off",
+        "quote-props": [
+          "error",
+          "consistent-as-needed"
+        ],
+        "space-in-parens": "error",
+        "unicode-bom": [
+          "error",
+          "never"
+        ],
+        "use-isnan": "error"
+    }
+}
