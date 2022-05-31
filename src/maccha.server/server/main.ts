@@ -3,11 +3,9 @@ import path = require("path");
 import env = require("dotenv");
 import { TestPlugin } from "../src/Plugins";
 
-env.config({
-    path: "../"
-});
+env.config();
 
-async function bootstrap(): Promise<void> {
+const bootstrap = async (): Promise<void> => {
     const app = await createMacchaApiServer({
         assetsDir: path.join(process.cwd(), "public"),
         authorization: {
