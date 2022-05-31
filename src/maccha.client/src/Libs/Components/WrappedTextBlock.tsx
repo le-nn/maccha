@@ -1,16 +1,10 @@
 import React from "react";
-import { PropTypes, Typography, } from "@mui/material";
+import { Typography, PropTypes } from "@mui/material";
 import { Variant } from "@mui/material/styles/createTypography";
-
 
 interface WrappedTextBlockProps {
     row: number;
     children?: React.ReactNode;
-    align?: 'inherit'
-    | 'left'
-    | 'center'
-    | 'right'
-    | 'justify';
     color?:
     | "initial"
     | "inherit"
@@ -36,7 +30,7 @@ export function WrappedTextBlock(props: WrappedTextBlockProps) {
             WebkitBoxOrient: "vertical",
             WebkitLineClamp: props.row,
             overflow: "hidden",
-            wordBreak: "break-all",
+            wordBreak:"break-all",
             fontSize: props.fontSize ?? undefined
         }} {...props} >
             {props.children}

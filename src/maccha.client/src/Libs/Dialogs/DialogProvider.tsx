@@ -1,7 +1,7 @@
 import { Backdrop, CircularProgress, Dialog, DialogProps, Grow, Snackbar, SnackbarOrigin, SnackbarProps, useTheme } from "@mui/material";
 import { TransitionHandlerProps, TransitionProps } from "@mui/material/transitions";
 import { color } from "@mui/system";
-import React, { memo, useContext, useRef, useState } from "react";
+import React, { memo, useContext, useEffect, useRef, useState } from "react";
 
 const handlersRef = {
     handlers: {
@@ -36,7 +36,7 @@ export type DialogOption = Omit<DialogProps, "open">;
 export interface OpenNotifyOption {
     target?: React.ReactNode;
     color?: string;
-    autoHideDuration?: number|null;
+    autoHideDuration?: number | null;
     anchorOrigin?: SnackbarOrigin;
 }
 
@@ -50,7 +50,7 @@ export const DialogProvider = (props: DialogProvider) => {
     return (
         <DialogContext.Provider value={handlerRef}>
             <Main {...props} />
-            <Memo> {props.children}</Memo>
+            {props.children}
         </DialogContext.Provider>
     );
 };
@@ -110,9 +110,7 @@ const Main = (props: DialogProvider) => {
             setNotifyOption(option);
         },
         setIsLoading(value: boolean) {
-            if (isLoading !== value) {
-                setIsLoading(value);
-            }
+            setIsLoading(value);
         }
     };
 
@@ -156,5 +154,3 @@ const Main = (props: DialogProvider) => {
         </>
     );
 };
-
-const Memo = memo(({ children }: any) => <>{children}</>);

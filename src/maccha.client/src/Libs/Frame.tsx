@@ -1,6 +1,5 @@
-import React, { useState, useRef, useEffect, ReactNode } from "react";
-import { useTheme, Theme } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import React, { useState, useRef, useEffect } from "react";
+import { useTheme, Theme, css } from "@mui/material";
 import { fromEvent } from "rxjs";
 import { pairwise, map } from "rxjs/operators";
 import { Menu as MenuIcon } from "@mui/icons-material";
@@ -18,152 +17,92 @@ import {
 import { useLocation } from "@reach/router";
 import { useTranslation } from "react-i18next";
 import { Route } from "./Routing/RouterConfig";
-import { useOption } from "Apps/Hooks/useOption";
+import { Spacer } from "./Components";
 
-const closeWidth = 52;
-const drawerWidth = 320;
+const closeWidth = 60;
+const drawerWidth = 360;
 const AUTO_CLOSE_WIDTH = 1280;
 
 interface FrameProps {
-    menus?: Route[];
-    routePressed?: (route: Route) => void | Promise<void>;
     logo?: (isOpen: boolean) => React.ReactNode;
     commandBox?: (isOpen: boolean) => React.ReactNode;
     toolbarContent?: () => React.ReactNode;
     children: React.ReactNode;
+    navigation: (isOpen: boolean) => React.ReactNode;
 }
 
 const _window: Window | any = typeof window === "undefined" ? {} : window;
 
 export const Frame = (props: FrameProps) => {
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles(theme);
     const [mobileOpen, setMobileOpen] = React.useState(AUTO_CLOSE_WIDTH <= _window.innerWidth);
     const [t] = useTranslation();
 
-    const theme = useTheme();
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
 
-    useEffect(() => {
-        const disposable = fromEvent(_window, "resize").pipe(
-            map(() => _window.innerWidth),
-            pairwise(),
-        ).subscribe(e => {
-            const [beforeWidth, currentWidth] = e;
-
-            if (theme.breakpoints.values["lg"] < currentWidth) {
-                if (beforeWidth < currentWidth) {
-                    setMobileOpen(true);
-                }
+    typeof window !== "undefined" && fromEvent(_window, "resize").pipe(
+        map(() => _window.innerWidth),
+        pairwise(),
+    ).subscribe(e => {
+        const [beforeWidth, currentWidth] = e;
+        if (theme.breakpoints.values["lg"] < currentWidth) {
+            if (beforeWidth < currentWidth) {
+                setMobileOpen(true);
             }
-            else {
-                if (beforeWidth >= currentWidth) {
-                    setMobileOpen(false);
-                }
+        }
+        else {
+            if (beforeWidth >= currentWidth) {
+                setMobileOpen(false);
             }
-        });
-
-        return () => disposable.unsubscribe();
-    }, []);
-
-
-    const routePressed = (route: Route) => {
-        props.routePressed && props.routePressed(route);
-    };
+        }
+    });
 
     return (
-        <div className={classes.root}>
+        <div css={classes.root}>
             <Hidden xsUp implementation="js">
                 <Drawer
                     variant="temporary"
                     open={mobileOpen}
                     onClose={handleDrawerToggle}
-                    classes={{
-                        paper: classes.drawerPaperOpen,
-                    }}
+                    css={classes.drawerPaperOpen}
+                    elevation={5}
                     ModalProps={{
                         keepMounted: true, // Better open performance on mobile.
                     }}
                 >
-                    <nav className={classes.drawer}>
+                    <nav css={classes.drawer}>
                         <div style={{ width: drawerWidth }}>
-                            <div className={classes.toolbar} />
-                            <NavigationList
-                                menus={props.menus ?? []}
-                                routePressed={e => {
-                                    routePressed(e);
-                                }} />
+                            <div css={classes.toolbar} />
+                            {/* Navigation */}
+                            {props.navigation && props.navigation(mobileOpen)}
                         </div>
                     </nav>
                 </Drawer>
             </Hidden>
             <Hidden xsDown lgUp implementation="js">
-                <nav className={classes.mdDrawer}
+                <nav css={classes.mdDrawer}
                 >
                     <Drawer
-                        classes={{
-                            paper: mobileOpen ? classes.mdDrawerPaperOpen : classes.mdDrawerPaperClose,
-                        }}
+                        css={mobileOpen ? classes.mdDrawerPaperOpen : classes.mdDrawerPaperClose}
                         variant={mobileOpen ? "temporary" : "persistent"}
                         open
+                        elevation={5}
                         onClose={() => setMobileOpen(false)}
                     >
-                        <div style={{ width: drawerWidth }}>
-                            <IconButton
-                                color="inherit"
-                                aria-label="open drawer"
-                                onClick={handleDrawerToggle}
-                            >
-                                <MenuIcon />
-                            </IconButton>
-
-                            <Box display="flex"
-                                alignItems="center"
-                                justifyContent={mobileOpen ? "center" : "start"}
-                                p={1}>
-                                {props.logo && props.logo(mobileOpen)}
+                        <Box sx={{ width: drawerWidth, height: "100%", display: "flex", flexDirection: "column" }}>
+                            <Box>
+                                <IconButton
+                                    color="inherit"
+                                    aria-label="open drawer"
+                                    onClick={handleDrawerToggle}
+                                >
+                                    <MenuIcon />
+                                </IconButton>
                             </Box>
-
-                            <Box display="flex"
-                                alignItems="center"
-                                justifyContent="center"
-                                padding={mobileOpen ? "8px" : "0px"}
-                                mt={2}>
-                                {props.commandBox && props.commandBox(mobileOpen)}
-                            </Box>
-
-                            {/* Navigation */}
-                            <NavigationList
-                                menus={props.menus ?? []}
-                                routePressed={e => {
-                                    setMobileOpen(false);
-                                    routePressed(e);
-                                }} />
-                        </div>
-                    </Drawer>
-                </nav>
-            </Hidden>
-            <Hidden mdDown implementation="js">
-                <nav className={classes.drawer}
-                    style={{ width: mobileOpen ? drawerWidth : closeWidth }}
-                    aria-label="mailbox folders">
-                    <Drawer
-                        classes={{
-                            paper: mobileOpen ? classes.drawerPaperOpen : classes.drawerPaperClose
-                        }}
-                        variant="permanent"
-                        open
-                    >
-                        <div style={{ width: drawerWidth }}>
-                            <IconButton
-                                color="inherit"
-                                aria-label="open drawer"
-                                onClick={handleDrawerToggle}
-                            >
-                                <MenuIcon />
-                            </IconButton>
 
                             <Box display="flex"
                                 alignItems="center"
@@ -188,14 +127,58 @@ export const Frame = (props: FrameProps) => {
                             </Box>
 
                             {/* Navigation */}
-                            <NavigationList
-                                menus={props.menus ?? []}
-                                routePressed={routePressed} />
-                        </div>
+                            {props.navigation(mobileOpen)}
+                        </Box>
                     </Drawer>
                 </nav>
             </Hidden>
-            <main className={classes.content} >
+            <Hidden mdDown implementation="js">
+                <nav css={classes.drawer}
+                    style={{ width: mobileOpen ? drawerWidth : closeWidth }}
+                    aria-label="mailbox folders">
+                    <Drawer
+                        css={mobileOpen ? classes.drawerPaperOpen : classes.drawerPaperClose}
+                        variant="permanent"
+                        open
+                        elevation={5}
+                    >
+                        <Box sx={{ width: drawerWidth, height: "100%", display: "flex", flexDirection: "column" }}>
+                            <Box>
+                                <IconButton
+                                    onClick={handleDrawerToggle}
+                                >
+                                    <MenuIcon />
+                                </IconButton>
+                            </Box>
+
+                            <Box display="flex"
+                                alignItems="center"
+                                justifyContent={mobileOpen ? "center" : "start"}
+                                p={1}>
+                                {props.logo && props.logo(mobileOpen)}
+                            </Box>
+
+                            {/* Profile */}
+                            {/* <Box flex="1 1 auto" marginLeft="28px" width="calc(100% - 94px)">
+                                <Typography variant="caption" style={{ color: "rgb(168,168,168)" }} >
+                                    {mobileOpen ? t("管理者ツール") : ""}
+                                </Typography>
+                            </Box> */}
+
+                            <Box display="flex"
+                                alignItems="center"
+                                justifyContent="center"
+                                padding={mobileOpen ? "8px" : "0px"}
+                                mt={2}>
+                                {props.commandBox && props.commandBox(mobileOpen)}
+                            </Box>
+                            {/* Navigation */}
+                            {props.navigation(mobileOpen)}
+                        </Box>
+                    </Drawer>
+                </nav>
+            </Hidden>
+            <main css={classes.content} >
                 {props.children}
             </main>
         </div >
@@ -205,45 +188,44 @@ export const Frame = (props: FrameProps) => {
 type DrawerPropos = {
     menus: Route[];
     routePressed: (route: Route) => void | Promise<void>;
+    selectedPath?: string;
+    isOpen?: boolean;
 }
 
-const NavigationList = (props: DrawerPropos) => {
+export const NavigationList = (props: DrawerPropos) => {
     const location = useLocation();
     const theme = useTheme();
     const parent = useRef<HTMLDivElement>(null);
     const rectElement = useRef<HTMLDivElement>(null);
-    const routerOption = useOption();
 
     const [lastPeressed, setLastPressed] = useState(location.pathname);
     const [lastTop, setLastTop] = useState(-1);
     const [currentElement, setCurrentElement] = useState<HTMLDivElement | null>(null);
 
-    const isCurrentRoute = (path: string) => {
-        return lastPeressed === path.replace("*", "");
-    };
+    const { selectedPath } = props;
 
-    const [menus, setMenus] = useState<{
-        group: string;
-        routes: Route[];
-    }[]>([]);
+    const isCurrentRoute = (path: string) => {
+
+        return path === selectedPath;
+    };
 
     const routePressed = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, route: Route) => {
         props.routePressed(route);
     };
 
     useEffect(() => {
-        setLastPressed(location.pathname.replace(routerOption.pathPrefix, ""));
+        setLastPressed(location.pathname);
     }, [location.pathname]);
 
     useEffect(() => {
         if (currentElement) {
-            moveCaretPosition(currentElement, 6);
+            moveCaretPosition(currentElement, 10);
         }
     });
 
     useEffect(() => {
         if (currentElement) {
-            moveCaretPosition(currentElement, 6);
+            moveCaretPosition(currentElement, 10);
         }
     }, []);
 
@@ -266,75 +248,94 @@ const NavigationList = (props: DrawerPropos) => {
         setLastTop(rect.top);
     };
 
-    useEffect(() => {
-        const group = props.menus
-            .map(x => ({ ...x, group: x.group ?? "Menu" }))
-            .reduce((x, y) => ({
-                ...x,
-                [y.group]: [...(x[y.group] ?? []), y]
-            }) as any as { [key: string]: Route[] },
-                {} as { [key: string]: Route[] });
-
-        const m = Object.keys(group).map(k => ({
-            group: k,
-            routes: group[k],
-        }));
-        setMenus(m);
-    }, [props.menus]);
+    const router = props.menus.reduce((x, y) => ({
+        ...x,
+        [y.group ?? "menu||-1"]: [...(x[y.group ?? "-1|menu"] ?? []), y]
+    }), {} as { [key: string]: Route[] });
+    const routes = Object.keys(router).map(key => {
+        const [menu, spacer, sort] = key.split("|");
+        return ({
+            menu: menu,
+            order: Number(sort),
+            spacer: !!Number(spacer),
+            routes: router[key]
+        });
+    }).sort(x => x.order);
 
     return (
-        <div ref={parent}>
-            <List>
-                {menus.map(r => (
-                    <React.Fragment key={r.group}>
-                        <Typography
-                            style={{ marginLeft: "12px", marginBottom: "0", color: theme.palette.grey[500] }}
-                            variant="caption"
-                        >
-                            {r.group}
-                        </Typography>
-                        {
-                            r.routes.map(route => (
-                                <Box
-                                    key={route.path}
-                                    margin="auto"
-                                    height="44px"
-                                    display="flex"
-                                    bgcolor={isCurrentRoute(route.path) ? "rgba(127,127,127,0.08)" : ""}
-                                >
-                                    <ListItem button
-                                        ref={elem => isCurrentRoute(route.path) && setCurrentElement(elem)}
-                                        onClick={e => routePressed(e, route)}>
-                                        <ListItemIcon >
-                                            {route.icon()}
-                                        </ListItemIcon>
-                                        <ListItemText primary={route.title} />
-                                    </ListItem>
-                                </Box>
-                            ))
-                        }
+        <div
+            ref={parent}
+            css={css({
+                flex: "1 1 auto",
+            })}>
+            <List sx={{
+                display: "flex",
+                flexDirection: "column",
+                height: "100%"
+            }}>
+                {routes.map(menu =>
+                    <React.Fragment key={menu.menu}>
+                        {menu.spacer && <Spacer />}
+                        <Box key={menu.menu}>
+                            <Typography
+                                style={{ marginLeft: "12px", marginBottom: "0", color: theme.palette.grey[500] }}
+                                variant="caption"
+                                pl={props.isOpen ? 3 : 0}
+                            >
+                                {menu.menu}
+                            </Typography>
+                            {
+                                menu.routes.map(route =>
+                                    <React.Fragment key={route.path}>
+                                        <Box
+                                            key={route.path}
+                                            margin="auto"
+                                            height="58px"
+                                            display="flex"
+                                            bgcolor={isCurrentRoute(route.path) ? "rgba(127,127,127,0.04)" : ""}
+                                        >
+                                            <ListItem
+                                                button
+                                                ref={elem => isCurrentRoute(route.path) && setCurrentElement(elem)}
+                                                onClick={e => routePressed(e, route)}>
+                                                <Box
+                                                    display={"flex"}
+                                                    alignItems="center"
+                                                    color={theme.palette.grey[700]}
+                                                    pl={props.isOpen ? 3 : 0}
+                                                >
+                                                    {route.icon()}
+                                                    <Box sx={{ fontSize: "0.9rem" }} ml={5}>
+                                                        {route.title}
+                                                    </Box>
+                                                </Box>
+                                            </ListItem>
+                                        </Box>
+                                    </React.Fragment>
+                                )
+                            }
+                        </Box>
                     </React.Fragment>
-                ))}
+                )}
             </List>
             <div ref={rectElement} style={{
                 background: theme.palette.primary.main,
-                width: "6px",
-                transition: "all 0.3s",
-                position: "absolute"
+                width: "3px",
+                transition: "all 0.7s cubic-bezier(1, 0.37, 0.16, 0.97)",
+                position: "absolute",
+                borderRadius: "4px"
             }}></div>
         </div >
     );
 };
 
-const useStyles = makeStyles(
+const useStyles =
     (theme: Theme) => ({
-        root: {
+        root: css({
             display: "flex",
-            overflow: "hidden",
-            width: "100%",
-            height: "100%"
-        },
-        drawer: {
+            overflow: "hidden"
+        }),
+        drawer: css({
             [theme.breakpoints.up("sm")]: {
                 width: drawerWidth,
                 flexShrink: 0,
@@ -343,56 +344,69 @@ const useStyles = makeStyles(
                 easing: theme.transitions.easing.easeInOut,
                 duration: theme.transitions.duration.enteringScreen,
             }),
-        },
-        mdDrawer: {
-            width: "52px",
-        },
-        mdDrawerPaperOpen: {
-            overflow: "auto",
-            width: drawerWidth,
-            border: 0,
-        },
-        mdDrawerPaperClose: {
-            overflow: "auto",
-            width: "52px",
-            border: 0,
-        },
-        appBar: {
+        }),
+        mdDrawer: css({
+            width: "60px",
+        }),
+        mdDrawerPaperOpen: css({
+            '& .MuiDrawer-paper': {
+                overflow: "auto",
+                width: drawerWidth,
+                border: 0,
+            }
+        }),
+        mdDrawerPaperClose: css({
+            '& .MuiDrawer-paper': {
+                overflow: "auto",
+                width: "60px",
+                border: 0,
+            }
+        }),
+        appBar: css({
             zIndex: 9999,
-        },
-        toolbar: {
+        }),
+        toolbar: css({
             marginRight: "12px",
             marginLeft: "12px",
             height: 60
-        },
-        drawerPaperOpen: {
-            overflow: "auto",
-            width: drawerWidth,
-            border: 0,
-            transition: theme.transitions.create(["width"], {
-                easing: theme.transitions.easing.easeInOut,
-                duration: theme.transitions.duration.enteringScreen,
-            }) + "!important",
-        },
-        drawerPaperClose: {
-            overflow: "auto",
-            width: closeWidth,
-            border: 0,
-            transition: theme.transitions.create(
-                ["width"],
-                {
+        }),
+        drawerPaperOpen: css({
+            '& .MuiDrawer-paper': {
+                overflow: "auto",
+                overflowX: "hidden",
+                width: drawerWidth,
+                height: "100%",
+                border: 0,
+                transition: theme.transitions.create(["width"], {
                     easing: theme.transitions.easing.easeInOut,
                     duration: theme.transitions.duration.enteringScreen,
-                }) + "!important",
-        },
-        content: {
+                }),
+                background: theme.palette.background.paper,
+                boxShadow: theme.shadows[5]
+            }
+        }),
+        drawerPaperClose: css({
+            '& .MuiDrawer-paper': {
+                overflow: "auto",
+                overflowX: "hidden",
+                width: closeWidth,
+                height: "100%",
+                border: 0,
+                transition: theme.transitions.create(["width"], {
+                    easing: theme.transitions.easing.easeInOut,
+                    duration: theme.transitions.duration.enteringScreen,
+                }),
+                background: theme.palette.background.paper,
+                boxShadow: theme.shadows[5]
+            },
+        }),
+        content: css({
             flexGrow: 1,
             padding: theme.spacing(0),
             width: `calc(100vw - ${drawerWidth}px)`,
-        },
-        mainContainer: {
+        }),
+        mainContainer: css({
             height: "calc(100vh - 64px)",
             overflow: "hidden"
-        }
-    }),
-);
+        })
+    });

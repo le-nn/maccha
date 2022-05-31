@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Checkbox, useTheme } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { css, Checkbox, useTheme } from "@mui/material";
 
 interface PhotoGridViewProps {
     images: string[];
@@ -54,7 +53,7 @@ export function PhotoGridView(props: PhotoGridViewProps) {
 
         return (
             <div
-                className={classes.item}
+                css={classes.item}
                 style={{
                     height: "100%",
                 }}
@@ -64,7 +63,7 @@ export function PhotoGridView(props: PhotoGridViewProps) {
                 <img
                     alt={path}
                     height={itemHeight ?? 160}
-                    className={classes.img}
+                    css={classes.img}
                     src={props.baseUrl + path}
                     style={{
                         top: "50%",
@@ -73,7 +72,7 @@ export function PhotoGridView(props: PhotoGridViewProps) {
                         transform: isPointerEntered ? "scale(1.1)" : ""
                     }}
                 />
-                <div className={classes.button}
+                <div css={classes.button}
                     style={{
                         outlineWidth: selectedhash[path] ? "4px" : "0px",
                         outlineColor: `${theme.palette.primary.main}`,
@@ -92,7 +91,7 @@ export function PhotoGridView(props: PhotoGridViewProps) {
                     {
                         !props.hideCheckbox && !props.disableSelection && <Checkbox
                             color="primary"
-                            className={classes.checkbox}
+                            css={classes.checkbox}
                             checked={!!selectedhash[path]}
                             onClick={e => e.stopPropagation()}
                             onChange={e => {
@@ -111,12 +110,12 @@ export function PhotoGridView(props: PhotoGridViewProps) {
     }
 
     return (
-        <div className={classes.container} style={{ padding: `${props.span ?? 2}px` }}>
+        <div css={classes.container} style={{ padding: `${props.span ?? 2}px` }}>
             {
                 images.map(path => (
                     <div
                         key={path}
-                        className={classes.photo}
+                        css={classes.photo}
                         style={{
                             height: itemHeight ? `${itemHeight}px` : "120px",
                             padding: `${props.span ?? 2}px`,
@@ -138,25 +137,25 @@ export function PhotoGridView(props: PhotoGridViewProps) {
     );
 }
 
-const useStyle = makeStyles(() => ({
-    checkbox: {
+const useStyle = (() => ({
+    checkbox: css({
         position: "absolute",
         top: "0px",
         right: "0px"
-    },
-    container: {
+    }),
+    container: css({
         display: "flex",
         flexWrap: "wrap"
-    },
-    item: {
+    }),
+    item: css({
         position: "relative",
         overflow: "hidden",
-    },
-    photo: {
+    }),
+    photo: css({
         display: "block",
         flexGrow: 1
-    },
-    button: {
+    }),
+    button: css({
         "overflow": "hidden",
         "transition": "all 0.25s",
         "position": "absolute",
@@ -170,11 +169,11 @@ const useStyle = makeStyles(() => ({
             opacity: "1",
         },
         "cursor": "pointer"
-    },
-    img: {
+    }),
+    img: css({
         height: "100%",
         WebkitUserSelect: "none",
         transition: "transform 0.4s",
         minWidth: "100%"
-    }
-}));
+    })
+})) as any;

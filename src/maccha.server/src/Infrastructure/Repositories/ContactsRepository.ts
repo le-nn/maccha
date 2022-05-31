@@ -30,7 +30,7 @@ export class ContactsRepository implements IContactsRepository {
                     contactSettingId: settingId,
                 },
                 order: {
-                    contactedAt: "DESC"
+                    contactedAt: "DESC" as any,
                 }
             });
 

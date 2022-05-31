@@ -34,7 +34,7 @@ export class UsersRepository implements IUsersRepository {
 
                 const userWebSites = await this.userWebSites.find({
                     where: {
-                        identifier: In(identifiers)
+                        webSiteId: In(identifiers)
                     },
                     relations: ["webSite"]
                 });
@@ -117,7 +117,7 @@ export class UsersRepository implements IUsersRepository {
      */
     public async findByIdAsync(userId: string): Promise<User | undefined> {
         try {
-            const user = await this.users.findOne({ userId });
+            const user = await this.users.findOne({ where: { userId } });
             const webSites = await this.userWebSites.find({
                 relations: ["webSite"],
                 where: {
@@ -150,7 +150,7 @@ export class UsersRepository implements IUsersRepository {
      */
     public async findByEmailAsync(email: string): Promise<User | undefined> {
         try {
-            const user = await this.users.findOne({ email });
+            const user = await this.users.findOne({ where: { email: email } });
             if (!user) {
                 return undefined;
             }
@@ -188,19 +188,21 @@ export class UsersRepository implements IUsersRepository {
      */
     public async addWebSiteAsync(userId: string, identifier: string): Promise<void> {
         try {
-            const user = await this.users.findOne({ userId });
+            const user = await this.users.findOne({ where: { userId } });
             if (!user) {
                 throw new UnprocessableEntityException("user is not exists.");
             }
 
-            const site = await this.webSites.findOne({ webSiteId: identifier });
+            const site = await this.webSites.findOne({ where: { webSiteId: identifier } });
             if (!site) {
                 throw new UnprocessableEntityException("web site is not exists.");
             }
 
             const webSite = await this.userWebSites.findOne({
-                userId,
-                webSiteId: identifier
+                where: {
+                    userId,
+                    webSiteId: identifier
+                }
             });
             if (webSite) {
                 throw new UnprocessableEntityException("web site is already exists.");
@@ -224,7 +226,7 @@ export class UsersRepository implements IUsersRepository {
      */
     public async createAsync(params: ICreateUserParams): Promise<User> {
         try {
-            const email = await this.users.findOne({ email: params.email });
+            const email = await this.users.findOne({ where: { email: params.email } });
             if (email) {
                 throw new BadRequestException("specified email address already exists");
             }
@@ -239,7 +241,7 @@ export class UsersRepository implements IUsersRepository {
             }));
 
             await Promise.all(params.webSiteIds.map(async i => {
-                const site = (await this.webSites.findOne({ webSiteId: i }));
+                const site = (await this.webSites.findOne({ where: { webSiteId: i } }));
                 if (site && site.webSiteId) {
                     await this.userWebSites.manager.save(
                         new UserWebSiteEntity({
@@ -293,7 +295,7 @@ export class UsersRepository implements IUsersRepository {
                 )
             ).toPromise();
 
-            const created = await this.users.findOne(params.userId);
+            const created = await this.users.findOne({ where: { userId: params.userId } });
 
             if (created) {
                 return new User(
@@ -319,7 +321,7 @@ export class UsersRepository implements IUsersRepository {
 
     public async saveAvatarAsync(userId: string, url: string): Promise<User> {
         try {
-            const user = await this.users.findOne(userId);
+            const user = await this.users.findOne({ where: { userId: userId } });
             await this.users.update(
                 {
                     userId,
@@ -329,7 +331,7 @@ export class UsersRepository implements IUsersRepository {
                 }
             );
 
-            const created = await this.users.findOne(userId);
+            const created = await this.users.findOne({ where: { userId: userId } });
             if (created) {
                 return new User(
                     created.userId ?? "",

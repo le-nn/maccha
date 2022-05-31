@@ -31,7 +31,7 @@ export class PostTypesRepository implements IPostTypesRepository {
                     relations: ["taxonomy"]
                 })
             ).pipe(
-                mergeMap(m => from(this.schemes.find({ taxonomyId: m.taxonomyId })).pipe(
+                mergeMap(m => from(this.schemes.find({ where: { taxonomyId: m.taxonomyId } })).pipe(
                     map(
                         schemes => new PostType({
                             identifier,
@@ -69,7 +69,7 @@ export class PostTypesRepository implements IPostTypesRepository {
 
     public async createAsync(identifier: string, params: ICreatePostTypeParams): Promise<PostType> {
         try {
-            if (await this.taxonomies.findOne({ name: params.taxonomy.name, identifier })) {
+            if (await this.taxonomies.findOne({ where: { name: params.taxonomy.name, identifier } })) {
                 throw new Error(`taxonomy ${params.taxonomy.name} is already exists.`);
             }
 
@@ -153,7 +153,7 @@ export class PostTypesRepository implements IPostTypesRepository {
                     relations: ["taxonomy"]
                 })
             ).pipe(
-                mergeMap(m => from(this.schemes.find({ taxonomyId: m.taxonomyId })).pipe(
+                mergeMap(m => from(this.schemes.find({ where: { taxonomyId: m.taxonomyId } })).pipe(
                     map(
                         schemes => new PostType({
                             identifier: m.identifier,

@@ -20,8 +20,8 @@ export class TaxonomiesRepository implements ITaxonomiesRepository {
     public async findIdByNameAsync(name: string, identifier: string): Promise<string | null> {
         try {
             const taxonomy = await this.taxonomies.findOne({
-                where:{
-                    identifier:identifier,
+                where: {
+                    identifier: identifier,
                     name,
                 }
             });
@@ -41,7 +41,7 @@ export class TaxonomiesRepository implements ITaxonomiesRepository {
         taxonomyId?: string
     ): Promise<Taxonomy | null> {
         try {
-            const taxonomy = await this.taxonomies.findOne(taxonomyId);
+            const taxonomy = await this.taxonomies.findOne({ where: { taxonomyId } });
             if (!taxonomy || taxonomy.isDeleted) {
                 return null;
             }
@@ -76,8 +76,10 @@ export class TaxonomiesRepository implements ITaxonomiesRepository {
     ): Promise<Taxonomy[]> {
         try {
             const taxonomies = await this.taxonomies.find({
-                identifier,
-                isDeleted: false
+                where: {
+                    identifier,
+                    isDeleted: false
+                }
             });
             return taxonomies.map(taxonomy => new Taxonomy({
                 description: taxonomy.description,

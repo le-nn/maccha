@@ -1,7 +1,7 @@
-import React, { ReactNode, Suspense, useContext, useEffect, useState } from "react";
-import { Router, useLocation, navigate, NavigateFn, NavigateOptions } from "@reach/router";
-import loadable, { LoadableComponent } from "@loadable/component";
-import { css } from "@mui/styled-engine";
+import React, { ReactNode, useContext, useEffect, CSSProperties, useState, useRef } from "react";
+import { Router, useLocation, navigate, Redirect, } from "@reach/router";
+import loadable from "@loadable/component";
+import { css } from "@emotion/react";
 
 export {
     Route,
@@ -9,31 +9,14 @@ export {
     RouterConfig,
     useAppLocation,
     useAppNavigate,
-    AppRouterProvider
+    AppRouterProvider,
+    AppRoutes
 };
 
 const useAppLocation = () => useLocation();
-const useAppNavigate = (): NavigateFn => {
-    const option = useContext(RouterConfigContext);
-    if (option) {
-        // eslint-disable-next-line @typescript-eslint/ban-types
-        const n = async (to: string, options?: NavigateOptions<{}>) => {
-            const path = option.basepath + (to[0] === "/" ? to : "/" + to);
-            navigate(path.replace("*", ""), options);
-        };
-        return n as any;
-    }
+const useAppNavigate = () => navigate;
 
-    const n = async (to: string, options?: NavigateOptions<{}>) => {
-        navigate(to.replace("*", ""), options);
-    };
-    return n as any;
-};
-
-const RouterConfigContext = React.createContext<RouterConfig | null>(null);
-
-
-const ChildRouteContext = React.createContext<ChildRoute[] | undefined>([]);
+const RouterConfigContext = React.createContext<ChildRoute[] | undefined>([]);
 
 type LazyComponent = Promise<{ default: React.ComponentType<any>; }> | ReactNode;
 
@@ -46,9 +29,10 @@ interface ChildRoute {
 
 interface Route extends ChildRoute {
     path: string;
+    to: string;
     title: string;
     icon: () => React.ReactNode;
-    roles?: any[];
+    roles?: number[];
     children?: ChildRoute[];
     group?: string;
 }
@@ -60,7 +44,9 @@ interface RouterConfig {
 }
 
 interface AppRouterProps {
-    config: RouterConfig;
+    basepath: string;
+    homepath: string;
+    children?: ReactNode;
 }
 
 const getLoadableOrNode = (c: () => LazyComponent) => {
@@ -73,30 +59,51 @@ const getLoadableOrNode = (c: () => LazyComponent) => {
     }
 };
 
-const AppRouterProvider = ({ config }: AppRouterProps) => {
-    const { basepath, routes } = config;
+const AppRouterProvider = (config: AppRouterProps) => {
+    const { basepath, homepath, children } = config;
+    const navigate = useAppNavigate();
+    // useEffect(() => {
+    //     navigate(homepath);
+    // }, []);
+
     return (
-        <RouterConfigContext.Provider value={config}>
-            <Router
-                basepath={basepath}
-                css={css({
-                    height: "100%",
-                    width: "100%"
-                })}
-            >
-                {
-                    routes
-                        .map(route =>
-                            <ProjectRouteLazy
-                                routes={route.children}
-                                key={route.path}
-                                path={route.path}
-                                page={getLoadableOrNode(route.component)}
-                            />
-                        )
-                }
-            </Router >
-        </RouterConfigContext.Provider>
+        <Router
+            basepath={basepath}
+            style={{ height: "100%" }}
+        >
+            <Child path="/*" c={children} />
+        </Router >
+    );
+};
+
+const Child = ({ path, c }: { path: string, c: ReactNode }) => <>{c}</>;
+
+const AppRoutes = ({
+    routes,
+    className,
+    style
+}: {
+    routes: Route[],
+    className?: string,
+    style?: CSSProperties,
+}) => {
+    return (
+        <Router
+            className={className}
+            style={style}
+        >
+            {
+                routes
+                    .map(route =>
+                        <ProjectRouteLazy
+                            routes={route.children}
+                            key={route.path}
+                            path={route.path}
+                            page={getLoadableOrNode(route.component)}
+                        />
+                    )
+            }
+        </Router>
     );
 };
 
@@ -108,39 +115,43 @@ interface PageLazyProps {
 
 const ProjectRouteLazy = (props: PageLazyProps) => {
     return (
-        <ChildRouteContext.Provider value={props.routes}>
+        <RouterConfigContext.Provider value={props.routes}>
             <props.page />
-        </ChildRouteContext.Provider >
+        </RouterConfigContext.Provider >
     );
 };
 
 interface ChildRouterProps {
     additionalRoutes?: ChildRoute[];
+    className?: string;
+    style?: CSSProperties;
 }
 
 export const ChildRouter = (props: ChildRouterProps) => {
-    const context = useContext(ChildRouteContext);
+    const context = useContext(RouterConfigContext);
     const children = context ?? [];
+
     const routes = [...children, ...(props.additionalRoutes ?? [])];
+
     if (!routes.length) {
         return <></>;
     }
 
     return (
-        <ChildRouteContext.Provider value={routes}>
-            <Router css={css({
-                height: "100%",
-                width: "100%"
-            })}>
+        <RouterConfigContext.Provider value={routes}>
+            <Router
+                className={props.className}
+                style={props.style}
+            >
                 {routes.map(route =>
                     <ChildRoute
                         key={route.path}
                         path={route.path}
-                        page={<ChildRouteRenderer page={route.component} />}
+                        page={route.component}
                     />
                 )}
             </Router>
-        </ChildRouteContext.Provider>
+        </RouterConfigContext.Provider>
     );
 };
 
@@ -150,31 +161,34 @@ interface ChildRouteProps {
 }
 
 const ChildRoute = (props: ChildRouteProps) => {
-    return (
-        < >
-            {props.page}
-        </>
-    );
-};
-
-const getAsyncNodeOrNode = (c: () => LazyComponent) => {
-    const d = c();
-    if (d instanceof Promise) {
-        return d.then(p => <p.default />);
-    }
-    else {
-        return Promise.resolve(d);
-    }
-};
-
-const ChildRouteRenderer = (route: { page: () => LazyComponent }) => {
-    const [component, setComponent] = useState<any>(<></>);
+    const [component, setComponent] = useState(null);
+    const isMount = useRef(true);
 
     useEffect(() => {
-        getAsyncNodeOrNode(route.page).then(c => {
-            setComponent(c);
-        });
+        const page = props.page;
+        if (typeof page === "function") {
+            const componentOrPromise = page();
+            if (componentOrPromise instanceof Promise) {
+                componentOrPromise.then(p => {
+                    const PPP = p?.default;
+                    if (isMount.current && PPP)
+                        setComponent(<PPP /> as any);
+                });
+            }
+            else {
+                setComponent(componentOrPromise);
+            }
+        }
+
+        return () => {
+            isMount.current = false;
+            setComponent(null);
+        };
     }, []);
 
-    return <>{component}</>;
+    return (
+        <>
+            {component}
+        </>
+    );
 };

@@ -21,7 +21,9 @@ export class ContentsRepository implements IContentsRepository {
     async findByIdAsync(contentId: string): Promise<Content | null> {
         try {
             const content = await this.contents.findOne({
-                contentId
+                where: {
+                    contentId
+                }
             });
 
             if (!content) {
@@ -29,7 +31,9 @@ export class ContentsRepository implements IContentsRepository {
             }
 
             const fields = await this.fields.find({
-                contentId: content.contentId
+                where: {
+                    contentId: content.contentId
+                }
             });
 
             return new Content({
@@ -158,7 +162,11 @@ LIMIT ${params.fetch} OFFSET ${params.offset}
                 }
             );
 
-            const c = await this.contents.findOne(params.contentId);
+            const c = await this.contents.findOne({
+                where: {
+                    contentId: params.contentId
+                }
+            });
             if (!c) throw new Error("Cannot update content");
 
             await this.fields.delete({

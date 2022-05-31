@@ -18,7 +18,7 @@ export class WebSitesRepository implements IWebSitesRepository {
 
     public async getWebSiteIdAsync(identifier: string): Promise<string | null> {
         try {
-            const created = await this.webSites.findOne({ name: identifier });
+            const created = await this.webSites.findOne({ where: { name: identifier } });
             return created?.webSiteId ?? null;
         }
         catch {
@@ -56,7 +56,7 @@ export class WebSitesRepository implements IWebSitesRepository {
      */
     public async getAsync(webSiteId: string): Promise<WebSite> {
         try {
-            const created = await this.webSites.findOne({ webSiteId: webSiteId });
+            const created = await this.webSites.findOne({ where: { webSiteId: webSiteId } });
             if (created) {
                 return new WebSite(
                     created.webSiteId ?? "",
@@ -80,7 +80,7 @@ export class WebSitesRepository implements IWebSitesRepository {
      */
     public async createAsync(params: ICreateWebSiteParams): Promise<WebSite> {
         try {
-            const exists = await this.webSites.findOne({ name: params.name });
+            const exists = await this.webSites.findOne({ where: { name: params.name } });
             if (exists) throw new Error("web site name [" + params.name + "] is already exists.");
 
             const created = await this.webSites.save(new WebSiteEntity({
@@ -144,7 +144,7 @@ export class WebSitesRepository implements IWebSitesRepository {
      */
     public async deleteAsync(identifier: string): Promise<void> {
         try {
-            const exists = await this.webSites.findOne({ webSiteId: identifier });
+            const exists = await this.webSites.findOne({ where: { webSiteId: identifier } });
             if (!exists) {
                 throw new Error(identifier + " is not exists.");
             }

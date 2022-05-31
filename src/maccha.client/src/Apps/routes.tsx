@@ -18,6 +18,7 @@ export const routes = (option?: {
             component: () => import("Apps/Components/posts/Environments/PostPageRoot"),
             icon: () => <PostAdd />,
             path: "/posts/*",
+            to: "/app/posts",
             title: option?.t("投稿") ?? "Posts",
             children: [
                 {
@@ -44,6 +45,7 @@ export const routes = (option?: {
             roles: [RoleType.Edit, RoleType.Admin, RoleType.Post, RoleType.Subscribe]
         },
         {
+            to: "/app/media",
             path: "/media",
             title: "メディア",
             icon: () => <InsertPhoto />,
@@ -51,6 +53,7 @@ export const routes = (option?: {
             roles: [RoleType.Edit, RoleType.Admin, RoleType.Post, RoleType.Subscribe]
         },
         {
+            to: "/app/contacts",
             path: "/contacts/*",
             title: option?.t("お問い合わせ") ?? "",
             icon: () => <Mail />,
@@ -72,6 +75,7 @@ export const routes = (option?: {
             ]
         },
         {
+            to: "/app/settings",
             path: "/settings",
             title: "設定",
             icon: () => <Settings />,
@@ -79,6 +83,7 @@ export const routes = (option?: {
             roles: [RoleType.Edit, RoleType.Admin, RoleType.Post, RoleType.Subscribe]
         },
         {
+            to: "/app/user-managements",
             path: "/user-managements",
             title: "ユーザー管理",
             icon: () => <AccountBox />,
@@ -86,6 +91,7 @@ export const routes = (option?: {
             roles: [RoleType.Edit, RoleType.Admin]
         },
         {
+            to: "/app/web-site-managements",
             path: "/web-site-managements",
             title: "WEBサイト管理",
             icon: () => <Language />,
@@ -94,6 +100,7 @@ export const routes = (option?: {
             group: option?.t("管理")
         },
         {
+            to: "/app/api-reference",
             path: "/api-reference",
             title: "API定義",
             icon: () => <LiveHelp />,

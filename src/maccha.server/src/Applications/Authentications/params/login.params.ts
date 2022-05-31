@@ -8,10 +8,12 @@ export class LoginParams {
     @ApiProperty({ description: "メールアドレス" })
     @IsString()
     @MinLength(1)
-    @Matches(/^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$/, { message: "invalid email adress" })
-        email!: string;
+    @Matches(/^[A-Za-z0-9]{1}[A-Za-z0-9_.-]*@{1}[A-Za-z0-9_.-]{1,}\.[A-Za-z0-9]{1,}$/,
+        { message: "invalid email address format." }
+    )
+    email!: string;
 
     @ApiProperty({ description: "パスワード" })
     @IsString()
-        password!: string;
+    password!: string;
 }

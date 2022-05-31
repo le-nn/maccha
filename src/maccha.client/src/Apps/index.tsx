@@ -1,13 +1,13 @@
-import React, { ReactNode, useContext, useEffect, useState } from "react";
-import { Avatar, Box, Button, Grow, ListItemText, MenuItem, Select, ThemeProvider, Typography, useMediaQuery, useTheme } from "@mui/material";
+import React, { ReactNode, useContext, useEffect, useMemo, useState } from "react";
+import { Avatar, Box, Button, css, Grow, ListItemText, MenuItem, Select, ThemeProvider, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { lightTheme } from "./theme";
 import { useTranslation } from "react-i18next";
-import { AppRouterProvider, Route, useAppLocation, useAppNavigate } from "Libs/Routing/RouterConfig";
+import { AppRouterProvider, AppRoutes, Route, useAppLocation, useAppNavigate } from "Libs/Routing/RouterConfig";
 import "./i18n";
 import { routes } from "Apps/routes";
 import { services } from "./Services";
 import { axios, setUrl } from "./Repositories/config";
-import { Frame } from "Libs/Frame";
+import { Frame, NavigationList } from "Libs/Frame";
 import LoginPage from "Apps/Components/login/LoginPage";
 import { MacchaConfig, OptionProvider, useOption } from "./Hooks/useOption";
 import { DialogProvider } from "Libs/Dialogs/DialogProvider";
@@ -18,6 +18,7 @@ import { observer } from "mobx-react";
 import { WebSite } from "./Models/Domain/sites/web-site";
 import { AuthStore } from "./Models/Stores/Auth/AuthStore";
 import { t } from "i18next";
+import { useParams, useMatch } from "@reach/router";
 
 const bootstrap = async (auth: AuthStore) => {
     await auth.refreshAsync();
@@ -103,53 +104,74 @@ export const MacchaManager = (props: MacchaManagerProps) => {
     return (
         <StoreProvider provider={storeProvider}>
             <ThemeProvider theme={lightTheme}>
-                <DialogProvider>
-                    <OptionProvider option={option}>
-                        {loginPage ?
-                            loginPage
-                            :
-                            <Main />
-                        }
-                    </OptionProvider>
-                </DialogProvider>
+                <AppRouterProvider
+                    basepath={router.basepath}
+                    homepath={router.homepath}
+                >
+                    <DialogProvider>
+                        <OptionProvider option={option}>
+                            {loginPage ?
+                                loginPage
+                                :
+                                <Main />
+                            }
+                        </OptionProvider>
+                    </DialogProvider>
+                </AppRouterProvider>
             </ThemeProvider>
         </StoreProvider>
     );
 };
 
 const Main = () => {
-    const history = useAppNavigate();
     const location = useAppLocation();
     const { t } = useTranslation();
     const option = useOption();
-    const router = routes({
+    const router = useMemo(() => routes({
         t: t as any,
         pathPrefix: option.pathPrefix,
-    });
+    }), []);
     const role = useObserver(AuthStore, s => s.loginInfo?.role);
+    const navigate = useAppNavigate();
+    const routeMatch = useMatch("/app/:route/*");
 
-    const resolvePathPrefix = (path: string) => {
-        if (path.length > 0 && path[0] !== "/") {
-            return "/" + path;
-        }
-        return path;
+    const getPath = () => {
+        return "/" + routeMatch?.route;
     };
 
-    const routePressed = async (e: Route) => {
-        history(router.basepath + e.path);
+    const pressed = (route: Route) => {
+        navigate(route.to);
     };
 
-    return <Frame menus={router.routes.filter(x => x.roles?.includes(role))}
+    return <Frame
         commandBox={isOpene => <NavigationHeader
             open={isOpene}
         />}
-        routePressed={routePressed}>
+        logo={open => <div css={css`
+                font-size: 2.2rem;
+                font-family: emoji;
+                letter-spacing: 0.54rem;
+                color: #54686d;
+            `}>Maccha</div>}
+        navigation={() => <NavigationList
+            menus={[
+                ...router.routes.filter(x => x.roles?.includes(role as any) ?? true)
+            ]}
+            selectedPath={getPath()}
+            routePressed={pressed}
+        />}
+    >
         <Grow key={location.key} in>
             <Box sx={{ height: "100%" }}>
-                <AppRouterProvider config={router} />
+                <AppRoutes
+                    routes={router.routes}
+                    css={css({
+                        height: `100vh`
+                    })}
+                />
             </Box>
         </Grow>
-    </Frame>;
+    </Frame >;
 };
 
 const NavigationHeader = observer(({
@@ -161,6 +183,7 @@ const NavigationHeader = observer(({
     const user = useObserver(AuthStore, s => s.loginInfo);
     const dispach = useDispatch(AuthStore);
     const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
+    const { t } = useTranslation();
 
     const handleChangeWebSiteIdentifier = async (webSite: WebSite) => {
         try {

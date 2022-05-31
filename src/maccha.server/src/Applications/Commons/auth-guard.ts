@@ -3,6 +3,10 @@ import { AuthService } from "@/Models/Authentications/auth.service";
 import { Reflector } from "@nestjs/core";
 import { RoleType } from "@/Models/Users/role.enum";
 import { LoginUser } from "@/Models/Authentications/login-user";
+import { UsersService } from "@/Models/Users/users.service";
+import { UserEntity } from "@/Infrastructure/Database/Entities";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 
 export class AuthGuard implements CanActivate {
     constructor(
@@ -10,6 +14,7 @@ export class AuthGuard implements CanActivate {
         private reflector: Reflector
     ) {
     }
+
     public async canActivate(
         context: ExecutionContext,
     ): Promise<boolean> {

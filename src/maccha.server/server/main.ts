@@ -29,5 +29,5 @@ const bootstrap = async (): Promise<void> => {
 
     console.log("start espresso cms listen on " + (process.env.PORT || 8081));
     await app.listen(process.env.PORT || 8081);
-}
+};
 bootstrap();

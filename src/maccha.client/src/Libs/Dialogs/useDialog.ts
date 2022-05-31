@@ -6,7 +6,7 @@ type DialogRenderer<TResult>
     = (close: (result: TResult) => void) => React.ReactNode;
 
 interface DialogHandler {
-    showAsync: <TResult = any>(renderer: DialogRenderer<TResult>, options?: DialogOption)
+    showAsync: <TResult = void>(renderer: DialogRenderer<TResult>, options?: DialogOption)
         => Promise<TResult>;
     close: () => void;
     setOption: (option: DialogOption) => void;

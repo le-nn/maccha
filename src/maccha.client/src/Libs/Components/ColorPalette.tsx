@@ -1,4 +1,4 @@
-import { makeStyles } from "@mui/styles";
+import { css } from "@mui/material";
 import React, { useEffect } from "react";
 
 interface ColorPaletteProps {
@@ -28,8 +28,6 @@ const defaultColors = [
 const DefaultItemSize = 50;
 
 export function ColorPalette(props: ColorPaletteProps) {
-    const styles = useStyles();
-
     const colors = props.colors ?? defaultColors;
 
     useEffect(() => {
@@ -39,11 +37,11 @@ export function ColorPalette(props: ColorPaletteProps) {
     }, []);
 
     return (
-        <div className={styles.container}>
+        <div css={styles.container}>
             {
                 colors.map(
                     c => <div
-                        className={styles.item}
+                        css={styles.item}
                         key={c}
                         style={{ padding: props.itemSpace ?? 1 }}
                     >
@@ -64,17 +62,15 @@ export function ColorPalette(props: ColorPaletteProps) {
     );
 }
 
-const useStyles = makeStyles({
-    container: {
+const styles = ({
+    container:css( {
         display: "flex",
         flexWrap: "wrap",
-    },
-    active: {
-    },
-    item: {
+    }),
+    item: css({
         "cursor": "pointer",
         "&:hover": {
             filter: "brightness(0.9 )"
         }
-    }
+    })
 });

@@ -21,6 +21,7 @@ import express from "express";
 import path from "path";
 import { NotFoundExceptionFilter } from "./NotFoundFallback";
 import { MailService } from "./Infrastructure/Mail/MailServie";
+import { UserEntity } from "@/Infrastructure/Database/Entities";
 
 export interface Logger {
     /**
@@ -138,6 +139,7 @@ class AuthModule {
         return {
             module: AuthModule,
             imports: [
+                TypeOrmModule.forFeature([UserEntity]),
                 WebSitesModule,
                 UsersModule,
                 JwtModule.register({

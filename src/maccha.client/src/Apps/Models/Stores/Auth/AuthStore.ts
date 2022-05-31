@@ -18,7 +18,6 @@ class AuthStoreState extends State<AuthStoreState> {
 class Login extends Message<LoginInfo>{ }
 class Logout extends Message { }
 
-
 @store({ name: "AuthStore" })
 export class AuthStore extends Store<AuthStoreState> {
     constructor(

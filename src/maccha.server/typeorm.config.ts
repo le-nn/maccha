@@ -1,9 +1,9 @@
-import { ConnectionOptions } from "typeorm";
-import {Migrations} from "./src/Infrastructure/Database/Migrations";
+import { DataSourceOptions } from "typeorm";
+import { Migrations } from "./src/Infrastructure/Database/Migrations";
 import * as Entities from "./src/Infrastructure/Database/Entities";
 
-const config: ConnectionOptions = {
-    type: process.env.DB_TYPE as "mysql",
+const config: DataSourceOptions | any = {
+    type: "mysql",
     host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT),
     username: process.env.DB_USERNAME,

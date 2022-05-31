@@ -39,6 +39,8 @@ export class AuthenticationsController {
     @ApiCreatedResponse({ type: LoginResponse })
     @Post()
     public async login(@Body() loginInfo: LoginParams): Promise<(LoginResponse) | FailedResponse> {
+        console.log("#ssssssssss");
+
         const login = await this.authService.loginAsync(loginInfo.email, loginInfo.password);
         return new LoginResponse({
             userId: login.userId,
@@ -50,7 +52,7 @@ export class AuthenticationsController {
             exp: login.exp,
             iat: login.iat,
             webSiteId: login.webSiteId,
-            identifier:login.identifier,
+            identifier: login.identifier,
             avatar: login.avatar
         });
     }
@@ -75,7 +77,7 @@ export class AuthenticationsController {
             exp: login.exp,
             iat: login.iat,
             webSiteId: login.webSiteId,
-            identifier:login.identifier,
+            identifier: login.identifier,
             avatar: login.avatar
         });
     }
