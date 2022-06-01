@@ -35,7 +35,7 @@ export const PostCard = (props: PostCardProps) => {
     const postDisabled = useObserver(AuthStore, s => ![...roles.posts.removeOther, ...roles.posts.editOther].includes(s.loginInfo?.role ?? RoleType.None));
 
     return (
-        <Card css={classes.card} elevation={5}>
+        <Card css={classes.card}>
             <Box display="flex" flexDirection="column" height="100%">
                 <Box
                     height="148px"
@@ -163,7 +163,6 @@ export const PostCard = (props: PostCardProps) => {
 
                     <Box display="flex">
                         <DateTimeText
-                            isShowTime
                             color="textSecondary"
                             fontSize="12px"
                             date={DateTime.fromISO(props.content.publishIn || props.content.createdAt).toJSDate()}
@@ -179,8 +178,7 @@ const classes = {
     card: css({
         width: "100%",
         height: "348px",
-        borderRadius: "4px",
-        position: "relative"
+        position: "relative",
     }),
     img: css({
         width: "100%",

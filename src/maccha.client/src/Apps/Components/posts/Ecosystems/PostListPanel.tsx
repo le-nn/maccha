@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import {
     Avatar,
     Box,
+    Card,
     Checkbox,
+    css,
     Divider,
     Icon,
     IconButton,
@@ -104,30 +106,37 @@ export default observer(() => {
 
     return (
         <Box height="100%" display="flex" flexDirection="column">
-            <Box >
-                <Box
-                    p={2}
-                    display="flex"
-                    alignItems="center"
-                    flexWrap="wrap"
-                >
-                    <Typography>一覧</Typography>
+            <Box p={1.5}>
+                <Card >
+                    <Box
+                        p={2}
+                        display="flex"
+                        alignItems="center"
+                        flexWrap="wrap"
+                    >
+                        <Typography>一覧</Typography>
 
-                    <Box flex="1 1 auto" />
-                    <PostSearchPagingBar
-                        offset={services.postsService.searchOption.offset}
-                        count={services.postsService.hitCount}
-                        fetch={services.postsService.searchOption.fetch}
-                        onChange={e => handleChangePage(e)}
-                    />
-                </Box>
+                        <Box flex="1 1 auto" />
+                        <PostSearchPagingBar
+                            offset={services.postsService.searchOption.offset}
+                            count={services.postsService.hitCount}
+                            fetch={services.postsService.searchOption.fetch}
+                            onChange={e => handleChangePage(e)}
+                        />
+                    </Box>
 
-                <Box mx={2}>
-                    <Divider />
-                </Box>
+                    <Box mx={2}>
+                        <Divider />
+                    </Box>
+                </Card>
             </Box>
 
-            <Box display="flex" flex="1 1 auto" overflow="auto" p={1}>
+            <Box
+                display="flex"
+                flex="1 1 auto"
+                overflow="auto"
+                width="100%"
+            >
                 {
                     !services.postManagementsService.selected && <EmptyItemsPanel message={t("投稿がありません")} />
                 }
@@ -137,8 +146,16 @@ export default observer(() => {
                             <EmptyItemsPanel message={t("投稿がありません")} />
                             :
                             <ItemsWrapGrid
+                                css={css({
+                                })}
                                 segmentLength={280}
-                                items={services.postsService.posts.map(item => ({ id: item.contentId, content: item }))}
+                                space={12}
+                                items={
+                                    services
+                                        .postsService
+                                        .posts
+                                        .map(item => ({ id: item.contentId, content: item }))
+                                }
                                 itemSlot={item => <PostCard
                                     key={item.id}
                                     previewPressed={() => onPreviewPressed(item.content.contentId)}
@@ -274,7 +291,6 @@ const PostSearchView = (props: PostSearchViewProps) => {
                             </TableCell>
                             <TableCell>
                                 <DateTimeText
-                                    isShowTime
                                     color="textSecondary"
                                     fontSize="12px"
                                     date={DateTime.fromISO(c.publishIn ?? c.createdAt).toJSDate()}

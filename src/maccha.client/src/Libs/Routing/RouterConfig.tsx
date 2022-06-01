@@ -30,6 +30,7 @@ interface ChildRoute {
 interface Route extends ChildRoute {
     path: string;
     to: string;
+    name: string;
     title: string;
     icon: () => React.ReactNode;
     roles?: number[];

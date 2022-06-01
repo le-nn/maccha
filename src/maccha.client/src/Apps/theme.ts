@@ -1,4 +1,5 @@
 import { createTheme, ThemeOptions } from "@mui/material";
+import { TextFieldClassKey } from "@mui/material";
 import { mergeDeeply } from "../Libs/Utils/DeepMerge";
 
 const color = (() => {
@@ -64,40 +65,46 @@ const common: ThemeOptions = {
         "0px 11px 14px -7px rgba(0, 10, 60, 0.08), 0px 9px 44px 8px rgba(0, 10, 60, 0.04)",
         "0px 11px 15px -7px rgba(0, 10, 60, 0.08), 0px 9px 46px 8px rgba(0, 10, 60, 0.04)"
     ],
-    // overrides: {
-    //     MuiDrawer: {
-    //         paper: {
-    //             backgroundColor: "rgb(236, 236, 236)",
-    //         }
-    //     },
-    //     MuiInput: {
-    //         underline: {
-    //             "&:before": {
-    //                 borderBottom: "2px solid rgb(42, 42, 42)"
-    //             },
-    //             "&:hover:not(.Mui-disabled):before ": {
-    //                 borderBottom: "2px solid rgb(42, 42, 42, 0.54)",
-    //             }
-    //         },
-    //     },
-    //     MuiInputBase: {
-    //     },
-    //     MuiOutlinedInput: {
-    //         notchedOutline: {
-    //             borderWidth: "2px",
-    //             borderColor: "rgba(0, 0, 0, 0.54);"
-    //         }
-    //     },
-    //     MuiButton: {
-    //         root: {
-    //         }
-    //     },
-    //     MuiDivider: {
-    //         vertical: {
-    //             width: "2px"
-    //         }
-    //     }
-    // },
+    components: {
+        MuiTextField: {
+            styleOverrides: {
+                root: {
+                    "& .MuiOutlinedInput-root": {
+                        borderRadius: "10px",
+                    },
+                    "& .MuiOutlinedInput-input": {
+                        padding: "8px 20px",
+                    },
+                    "& .MuiOutlinedInput-notchedOutline": {
+                        borderWidth: "1.5px",
+                        borderColor: "rgba(0, 0, 0, 0.5)"
+                    }
+                },
+            },
+        },
+        MuiSelect: {
+            styleOverrides: {
+                outlined: {
+                    borderRadius: "10px",
+                    padding: "8px 14px",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                        borderWidth: "1.5px",
+                        borderColor: "rgba(0, 0, 0, 0.5)",
+                        borderRadius: "10px",
+                    },
+                },
+
+            },
+        },
+        MuiCard: {
+            styleOverrides: {
+                root: {
+                    borderRadius: "20px",
+                    boxShadow: "0px 5px 5px -3px rgba(0, 10, 60, 0.08), 0px 3px 14px 2px rgba(0, 10, 60, 0.04)",
+                }
+            }
+        }
+    },
     typography: {
         fontFamily: "Noto Sans JP, sans-serif",
         fontWeightRegular: 500,

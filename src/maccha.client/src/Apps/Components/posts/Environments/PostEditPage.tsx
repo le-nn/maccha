@@ -14,7 +14,7 @@ import { useParams } from "@reach/router";
 export default function PostEditPage() {
     const { postEditService } = services;
     const match = useParams<any>();
-    console.log(postEditService);
+
     useEffect(() => {
         setTimeout(async () => {
             postEditService.clear();

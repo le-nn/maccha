@@ -20,7 +20,7 @@ import { Route } from "./Routing/RouterConfig";
 import { Spacer } from "./Components";
 
 const closeWidth = 60;
-const drawerWidth = 360;
+const drawerWidth = 320;
 const AUTO_CLOSE_WIDTH = 1280;
 
 interface FrameProps {
@@ -132,7 +132,7 @@ export const Frame = (props: FrameProps) => {
                     </Drawer>
                 </nav>
             </Hidden>
-            <Hidden mdDown implementation="js">
+            <Hidden lgDown implementation="js">
                 <nav css={classes.drawer}
                     style={{ width: mobileOpen ? drawerWidth : closeWidth }}
                     aria-label="mailbox folders">
@@ -204,10 +204,7 @@ export const NavigationList = (props: DrawerPropos) => {
 
     const { selectedPath } = props;
 
-    const isCurrentRoute = (path: string) => {
-
-        return path === selectedPath;
-    };
+    const isCurrentRoute = (path: string) => path === selectedPath;
 
     const routePressed = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, route: Route) => {
         props.routePressed(route);
@@ -250,7 +247,7 @@ export const NavigationList = (props: DrawerPropos) => {
 
     const router = props.menus.reduce((x, y) => ({
         ...x,
-        [y.group ?? "menu||-1"]: [...(x[y.group ?? "-1|menu"] ?? []), y]
+        [y.group ?? "menu||-1"]: [...(x[y.group ?? "menu||-1"] ?? []), y]
     }), {} as { [key: string]: Route[] });
     const routes = Object.keys(router).map(key => {
         const [menu, spacer, sort] = key.split("|");
@@ -292,11 +289,11 @@ export const NavigationList = (props: DrawerPropos) => {
                                             margin="auto"
                                             height="58px"
                                             display="flex"
-                                            bgcolor={isCurrentRoute(route.path) ? "rgba(127,127,127,0.04)" : ""}
+                                            bgcolor={isCurrentRoute(route.name) ? "rgba(127,127,127,0.04)" : ""}
                                         >
                                             <ListItem
                                                 button
-                                                ref={elem => isCurrentRoute(route.path) && setCurrentElement(elem)}
+                                                ref={elem => isCurrentRoute(route.name) && setCurrentElement(elem)}
                                                 onClick={e => routePressed(e, route)}>
                                                 <Box
                                                     display={"flex"}
@@ -333,7 +330,8 @@ const useStyles =
     (theme: Theme) => ({
         root: css({
             display: "flex",
-            overflow: "hidden"
+            overflow: "hidden",
+            height: "100%"
         }),
         drawer: css({
             [theme.breakpoints.up("sm")]: {
@@ -382,7 +380,7 @@ const useStyles =
                     duration: theme.transitions.duration.enteringScreen,
                 }),
                 background: theme.palette.background.paper,
-                boxShadow: theme.shadows[5]
+                boxShadow: theme.shadows[8]
             }
         }),
         drawerPaperClose: css({
@@ -397,7 +395,7 @@ const useStyles =
                     duration: theme.transitions.duration.enteringScreen,
                 }),
                 background: theme.palette.background.paper,
-                boxShadow: theme.shadows[5]
+                boxShadow: theme.shadows[8]
             },
         }),
         content: css({

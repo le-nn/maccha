@@ -1,5 +1,6 @@
 import React, { useEffect, useState, ReactComponentElement, cloneElement } from "react";
-import { makeStyles, useTheme } from "@mui/material";
+import { css, useTheme } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 interface AngledImageProps {
     src: string;
@@ -8,7 +9,6 @@ interface AngledImageProps {
 }
 
 export function PostCardImage(props: AngledImageProps) {
-    const classes = useStyles();
     const theme = useTheme();
     const [isImgEnabled, setIsImgEnabled] = useState(!!props.src);
     return (
@@ -23,8 +23,11 @@ export function PostCardImage(props: AngledImageProps) {
                 isImgEnabled ?
                     <img
                         onError={() => setIsImgEnabled(false)}
-                        className={classes.img}
-                        src={props.src }
+                        css={css({
+                            width: "100%",
+                            objectFit: "cover"
+                        })}
+                        src={props.src}
                         alt={props.src}
                         style={{
                             width: props.width,
@@ -42,23 +45,15 @@ export function PostCardImage(props: AngledImageProps) {
                     }}></div>
             }
             <div
-                className={classes.skewBar}
+                css={css({
+                    width: "100%",
+                    height: "25%",
+                    background: "white",
+                    position: "absolute",
+                    bottom: "10%",
+                    transform: "translateY(100%) skewY(0deg)"
+                })}
             ></div>
         </div>
     );
 }
-
-const useStyles = makeStyles({
-    img: {
-        width: "100%",
-        objectFit: "cover"
-    },
-    skewBar: {
-        width: "100%",
-        height: "25%",
-        background: "white",
-        position: "absolute",
-        bottom: "10%",
-        transform: "translateY(100%) skewY(0deg)"
-    }
-});

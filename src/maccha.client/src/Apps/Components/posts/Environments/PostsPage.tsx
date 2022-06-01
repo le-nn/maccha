@@ -10,7 +10,8 @@ import {
     MenuItem,
     Fab,
     Typography,
-    useTheme
+    useTheme,
+    Card
 } from "@mui/material";
 import {
     Search,
@@ -134,75 +135,84 @@ export default () => {
                 }
 
                 return (
-                    <Box height="100%" display="flex">
-                        <Box p={0}
-                            width="200px"
-                            minWidth="200px"
-                            maxWidth="200px"
-                            overflow="auto"
-                            display="flex"
-                            flexDirection="column"
-                        >
-                            <Box mx="auto">
-                                <Button
-                                    disabled={postTypesDisble}
-                                    onClick={onAddPostTypeClicked}
-                                    color="primary"
-                                    variant="contained"
-                                    style={{
-                                        borderRadius: "18px",
-                                        margin: "8px", marginTop: "16px"
+                    <Box
+                        height="100%"
+                        display="flex"
+                        bgcolor={theme.palette.background.default}
+                        p={1.5}
+                    >
+                        <Box p={1.5} height="100%">
+                            <Card sx={{
+                                p: 0,
+                                width: "240px",
+                                minWidth: "240px",
+                                maxWidth: "240px",
+                                height: "100%",
+                                overflow: "auto",
+                                display: "flex",
+                                flexDirection: "column"
+                            }}
+                            >
+                                <Box mx="auto">
+                                    <Button
+                                        disabled={postTypesDisble}
+                                        onClick={onAddPostTypeClicked}
+                                        color="primary"
+                                        variant="contained"
+                                        style={{
+                                            borderRadius: "18px",
+                                            margin: "8px", marginTop: "16px"
+                                        }}
+                                    >
+                                        <Add />
+                                        {t("投稿タイプを追加")}
+                                    </Button>
+                                </Box>
+                                <List
+                                    css={postTypeBar}
+                                >
+                                    {
+                                        postManagementsService.postTypes.length === 0 ?
+                                            (<EmptyItemsPanel message={t("投稿タイプが\nありません")} />)
+                                            : postManagementsService.postTypes.map(
+                                                (t, i) => (
+                                                    <RoundedListItem
+                                                        key={t.taxonomy.name}
+                                                        selected={postManagementsService.selected?.taxonomy.name === t.taxonomy.name}
+                                                        onClick={() => onPostTypeListClicked(i)}
+                                                        onOptionClicked={e => onPostTypeMenu(e, t)}
+                                                        optionEnabled={postTypeEdit}
+                                                        text={t.taxonomy.displayName}
+                                                    />
+                                                )
+                                            )
+                                    }
+                                </List>
+
+                                <Menu
+                                    id="long-menu"
+                                    anchorEl={anchorEl}
+                                    keepMounted
+                                    open={!!anchorEl}
+                                    onClose={handleCloseMenu}
+                                    PaperProps={{
+                                        style: {
+                                            maxHeight: 48 * 4.5,
+                                            width: "20ch",
+                                        },
                                     }}
                                 >
-                                    <Add />
-                                    {t("投稿タイプを追加")}
-                                </Button>
-                            </Box>
-                            <List
-                                css={postTypeBar}
-                            >
-                                {
-                                    postManagementsService.postTypes.length === 0 ?
-                                        (<EmptyItemsPanel message={t("投稿タイプが\nありません")} />)
-                                        : postManagementsService.postTypes.map(
-                                            (t, i) => (
-                                                <RoundedListItem
-                                                    key={t.taxonomy.name}
-                                                    selected={postManagementsService.selected?.taxonomy.name === t.taxonomy.name}
-                                                    onClick={() => onPostTypeListClicked(i)}
-                                                    onOptionClicked={e => onPostTypeMenu(e, t)}
-                                                    optionEnabled={postTypeEdit}
-                                                    text={t.taxonomy.displayName}
-                                                />
-                                            )
-                                        )
-                                }
-                            </List>
+                                    <MenuItem onClick={() => onEditClicked()}>
+                                        編集
+                                    </MenuItem>
+                                    <Divider />
+                                    <MenuItem onClick={onRemovePostTypeClicked}>
+                                        削除
+                                    </MenuItem>
+                                </Menu>
+                            </Card >
 
-                            <Menu
-                                id="long-menu"
-                                anchorEl={anchorEl}
-                                keepMounted
-                                open={!!anchorEl}
-                                onClose={handleCloseMenu}
-                                PaperProps={{
-                                    style: {
-                                        maxHeight: 48 * 4.5,
-                                        width: "20ch",
-                                    },
-                                }}
-                            >
-                                <MenuItem onClick={() => onEditClicked()}>
-                                    編集
-                                </MenuItem>
-                                <Divider />
-                                <MenuItem onClick={onRemovePostTypeClicked}>
-                                    削除
-                                </MenuItem>
-                            </Menu>
-                        </Box >
-
-                        <Divider orientation="vertical" />
+                        </Box>
 
                         <Box
                             flex="1 1 auto"
@@ -224,8 +234,6 @@ export default () => {
                                 <Add />
                             </Fab>
                         </Box>
-
-                        <Divider orientation="vertical" />
 
                         <Box minWidth="220px" maxWidth="220px" height="100%" overflow="auto">
                             {services.postManagementsService.selected &&

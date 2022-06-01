@@ -127,16 +127,18 @@ const Main = () => {
     const location = useAppLocation();
     const { t } = useTranslation();
     const option = useOption();
-    const router = useMemo(() => routes({
-        t: t as any,
-        pathPrefix: option.pathPrefix,
-    }), []);
     const role = useObserver(AuthStore, s => s.loginInfo?.role);
     const navigate = useAppNavigate();
     const routeMatch = useMatch("/app/:route/*");
 
+    const router = useMemo(() => routes({
+        t: t as any,
+        pathPrefix: option.pathPrefix,
+    }), [role]);
+
     const getPath = () => {
-        return "/" + routeMatch?.route;
+        console.log(routeMatch?.route);
+        return routeMatch?.route;
     };
 
     const pressed = (route: Route) => {
@@ -155,7 +157,9 @@ const Main = () => {
             `}>Maccha</div>}
         navigation={() => <NavigationList
             menus={[
-                ...router.routes.filter(x => x.roles?.includes(role as any) ?? true)
+                ...router
+                    .routes
+                    .filter(x => x.roles?.includes(role as any))
             ]}
             selectedPath={getPath()}
             routePressed={pressed}
@@ -166,7 +170,7 @@ const Main = () => {
                 <AppRoutes
                     routes={router.routes}
                     css={css({
-                        height: `100vh`
+                        height: `100%`
                     })}
                 />
             </Box>

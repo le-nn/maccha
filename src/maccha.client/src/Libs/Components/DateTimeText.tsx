@@ -1,11 +1,11 @@
 import React from "react";
 import { Variant } from "@mui/material/styles/createTypography";
-import { PropTypes, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 
 interface DateTimeTextProps {
     date?: Date;
     showTime?: boolean;
-    align?: PropTypes.Alignment;
+    align?: "center" | "left" | "right";
     color?:
     | "initial"
     | "inherit"
@@ -27,11 +27,11 @@ export function DateTimeText(props: DateTimeTextProps) {
     const { date, showTime } = props;
     return (
         <Typography {...props} style={{ fontSize: props.fontSize }}>
-            { date?.getFullYear()}
+            {date?.getFullYear()}
             < small > 年</small >
             {(date?.getMonth() ?? 0) + 1}
             <small>月</small>
-            { date?.getDate()}
+            {date?.getDate()}
             <small>日</small>
             {
                 showTime && (

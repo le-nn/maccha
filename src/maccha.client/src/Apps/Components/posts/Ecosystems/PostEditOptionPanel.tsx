@@ -18,9 +18,10 @@ import { StatusType } from "../../../Models/Domain/Contents/Enumes/StatusType";
 // } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import { axios } from "../../../Repositories/config";
-import {useParams} from "@reach/router";
+import { useParams } from "@reach/router";
 import { useAppNavigate } from "Libs/Routing/RouterConfig";
 import { Add } from "@mui/icons-material";
+import { useOption } from "Apps/Hooks/useOption";
 
 interface PostEditOptionPanelProps {
     contentEditContext: Content;
@@ -35,6 +36,8 @@ export function PostEditOptionPanel(props: PostEditOptionPanelProps) {
     const matches = useParams<{ taxonomy: string; }>();
     const history = useAppNavigate();
     const [isReservationed, setIsReservation] = useState(!!props.contentEditContext.publishIn);
+
+    const option = useOption();
 
     function setcontentEditContextParam(key: keyof Content, value: any) {
         services.postEditService.setContent(contentEditContext.clone({ [key]: value }));
@@ -60,7 +63,7 @@ export function PostEditOptionPanel(props: PostEditOptionPanelProps) {
 
         services.postEditService.saveAsync();
 
-        history("/posts/" + matches.taxonomy);
+        history(option.pathPrefix + "/posts/" + matches.taxonomy);
     }
 
     return (
@@ -208,7 +211,7 @@ export function PostEditOptionPanel(props: PostEditOptionPanelProps) {
                             height: "120px",
                             width: "100%"
                         }}>
-                        <Add/>
+                        <Add />
                     </Button>
                 </Box>
             </Box>

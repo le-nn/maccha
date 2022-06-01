@@ -19,6 +19,7 @@ export const routes = (option?: {
             icon: () => <PostAdd />,
             path: "/posts/*",
             to: "/app/posts",
+            name: "posts",
             title: option?.t("投稿") ?? "Posts",
             children: [
                 {
@@ -46,6 +47,7 @@ export const routes = (option?: {
         },
         {
             to: "/app/media",
+            name: "media",
             path: "/media",
             title: "メディア",
             icon: () => <InsertPhoto />,
@@ -55,6 +57,7 @@ export const routes = (option?: {
         {
             to: "/app/contacts",
             path: "/contacts/*",
+            name: "contacts",
             title: option?.t("お問い合わせ") ?? "",
             icon: () => <Mail />,
             component: () => import("Apps/Components/Contacts/Environments/ContactPageRoot"),
@@ -78,6 +81,7 @@ export const routes = (option?: {
             to: "/app/settings",
             path: "/settings",
             title: "設定",
+            name: "settings",
             icon: () => <Settings />,
             component: () => import("Apps/Components/Settings/Environments/SettingsPage"),
             roles: [RoleType.Edit, RoleType.Admin, RoleType.Post, RoleType.Subscribe]
@@ -86,6 +90,7 @@ export const routes = (option?: {
             to: "/app/user-managements",
             path: "/user-managements",
             title: "ユーザー管理",
+            name: "user-managements",
             icon: () => <AccountBox />,
             component: () => import("Apps/Components/users/UserPage"),
             roles: [RoleType.Edit, RoleType.Admin]
@@ -94,6 +99,7 @@ export const routes = (option?: {
             to: "/app/web-site-managements",
             path: "/web-site-managements",
             title: "WEBサイト管理",
+            name: "web-site-managements",
             icon: () => <Language />,
             component: () => import("Apps/Components/web-sites/WebSiteManagementsPage"),
             roles: [RoleType.Edit, RoleType.Admin],
@@ -103,6 +109,7 @@ export const routes = (option?: {
             to: "/app/api-reference",
             path: "/api-reference",
             title: "API定義",
+            name: "api-reference",
             icon: () => <LiveHelp />,
             component: () => import("Apps/Components/References/ApiReferencePage"),
             roles: [RoleType.Admin],
