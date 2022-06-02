@@ -107,28 +107,19 @@ export default observer(() => {
     return (
         <Box height="100%" display="flex" flexDirection="column">
             <Box p={1.5}>
-                <Card >
-                    <Box
-                        p={2}
-                        display="flex"
-                        alignItems="center"
-                        flexWrap="wrap"
-                    >
-                        <Typography>一覧</Typography>
-
-                        <Box flex="1 1 auto" />
-                        <PostSearchPagingBar
-                            offset={services.postsService.searchOption.offset}
-                            count={services.postsService.hitCount}
-                            fetch={services.postsService.searchOption.fetch}
-                            onChange={e => handleChangePage(e)}
-                        />
-                    </Box>
-
-                    <Box mx={2}>
-                        <Divider />
-                    </Box>
-                </Card>
+                <Box
+                    display="flex"
+                    alignItems="center"
+                    flexWrap="wrap"
+                >
+                    <Box flex="1 1 auto" />
+                    <PostSearchPagingBar
+                        offset={services.postsService.searchOption.offset}
+                        count={services.postsService.hitCount}
+                        fetch={services.postsService.searchOption.fetch}
+                        onChange={e => handleChangePage(e)}
+                    />
+                </Box>
             </Box>
 
             <Box
@@ -148,7 +139,7 @@ export default observer(() => {
                             <ItemsWrapGrid
                                 css={css({
                                 })}
-                                segmentLength={280}
+                                segmentLength={240}
                                 space={12}
                                 items={
                                     services

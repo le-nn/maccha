@@ -1,5 +1,6 @@
 import React from "react";
 import Pagination from "@mui/lab/Pagination";
+import { Stack } from "@mui/material";
 
 interface PostSearchPagingBarProps {
     count: number;
@@ -12,7 +13,8 @@ export function PostSearchPagingBar(props: PostSearchPagingBarProps) {
     const n = props.count / props.fetch;
     const count = Number.isInteger(n) ? n : Math.floor(props.count / props.fetch) + 1;
 
-    return <div>{props.count} 件中
+    return <Stack direction="row">
+        {props.count} 件中
         {
             Math.min(props.offset + 1, props.count)} - {Math.min(props.offset + props.fetch, props.count)
         }
@@ -24,5 +26,5 @@ export function PostSearchPagingBar(props: PostSearchPagingBarProps) {
                 offset: (v - 1) * props.fetch,
                 fetch: props.fetch
             })} />
-    </div>;
+    </Stack>;
 }
