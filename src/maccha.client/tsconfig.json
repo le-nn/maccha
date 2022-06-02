@@ -6,7 +6,7 @@
         "noImplicitAny": true,
         "module": "ESNext",
         "target": "esnext",
-        "jsx": "react",
+        "jsx": "react-jsx",
         "moduleResolution": "node",
         "noResolve": false,
         "esModuleInterop": true,
