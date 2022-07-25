@@ -8,7 +8,7 @@ import { schemeTypeDisplayNames } from "../../../Models/Domain/Contents/Entities
 import { axios } from "Apps/Repositories/config";
 import { FlexSpacer } from "../../commons";
 import { useAppNavigate } from "Libs/Routing/RouterConfig";
-import { useObserver } from "react-relux";
+import { useObserver } from "memento.react";
 import { AuthStore } from "Apps/Models/Stores/Auth/AuthStore";
 import { roles } from "Apps/roles";
 import { RoleType } from "Apps/Models";

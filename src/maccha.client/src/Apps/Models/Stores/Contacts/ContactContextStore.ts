@@ -1,6 +1,6 @@
 import { ContactContent } from "Apps/Models/Domain/Contacts/Contact";
 import { ContactsRepository } from "Apps/Repositories/ContactsRepository";
-import { Message, State, Store, store } from "relux.js";
+import { Message, State, FluxStore, meta } from "memento.core";
 import { ContactsStore } from "./ContactsStore";
 
 class ContactContentContextStoreState extends State<ContactContentContextStoreState>{
@@ -9,8 +9,8 @@ class ContactContentContextStoreState extends State<ContactContentContextStoreSt
 
 class ModifyContactContent extends Message<ContactContent | null> { }
 
-@store({ name: "ContactContentContextStore" })
-export class ContactContentContextStore extends Store<ContactContentContextStoreState> {
+@meta({ name: "ContactContentContextStore" })
+export class ContactContentContextStore extends FluxStore<ContactContentContextStoreState> {
     readonly repository = new ContactsRepository();
 
     constructor(

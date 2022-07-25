@@ -2,7 +2,7 @@ import { KeyboardReturnOutlined } from "@mui/icons-material";
 import { IContactSetting } from "Apps/Models/Domain/Contacts/ContactSettings";
 import { ContactSettingsRepository } from "Apps/Repositories/ContactSettingsRepository";
 import { services } from "Apps/Services";
-import { Message, State, Store, meta } from "relux.js";
+import { Message, State, FluxStore, meta } from "memento.core";
 import { AuthStore } from "../Auth/AuthStore";
 
 class ContactSettingContextState extends State<ContactSettingContextState>{
@@ -15,7 +15,7 @@ class InitSetting extends Message<string> { }
 class SetIsNew extends Message<boolean>{ }
 
 @meta({ name: "ContactSettingContextStore" })
-export class ContactSettingContextStore extends Store<ContactSettingContextState> {
+export class ContactSettingContextStore extends FluxStore<ContactSettingContextState> {
     readonly repository = new ContactSettingsRepository();
 
     constructor(private readonly authStore: AuthStore) {

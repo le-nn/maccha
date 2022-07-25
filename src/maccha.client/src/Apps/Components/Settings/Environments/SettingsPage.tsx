@@ -22,7 +22,7 @@ import { User } from "../../../Models/Domain/users/user";
 import { showFilePickerAsync } from "../Ecosystems/showFilePickerAsync";
 import { axios } from "../../../Repositories/config";
 import { AccountCircle, Edit, Save, ViewModule } from "@mui/icons-material";
-import { useStore, useObserver } from "react-relux";
+import { useStore, useObserver } from "memento.react";
 import { AuthStore } from "Apps/Models/Stores/Auth/AuthStore";
 
 interface TabPanelProps {

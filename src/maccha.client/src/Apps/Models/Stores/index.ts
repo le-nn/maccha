@@ -1,6 +1,6 @@
 import { AuthRepository } from "Apps/Repositories/AuthRepository";
 import { MediaRepositry } from "Apps/Repositories/MediaRepository";
-import { createProvider } from "relux.js";
+import { createProvider } from "memento.core";
 import { AuthStore } from "./Auth/AuthStore";
 import { ContactContentContextStore } from "./Contacts/ContactContextStore";
 import { ContactSettingContextStore } from "./Contacts/ContactSettingContextStore";

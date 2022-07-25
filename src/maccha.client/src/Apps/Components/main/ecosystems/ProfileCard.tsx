@@ -13,7 +13,7 @@ import { services } from "../../../Services";
 import { WebSite } from "../../../Models/Domain/sites/web-site";
 import ProfileImage from "../../commons/ProfileImage";
 import { axios } from "../../../Repositories/config";
-import { useDispatch, useObserver } from "react-relux";
+import { useDispatch, useObserver } from "memento.react";
 import { AuthStore } from "Apps/Models/Stores/Auth/AuthStore";
 
 export default () => {

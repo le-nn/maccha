@@ -33,7 +33,7 @@ import { useOption } from "Apps/Hooks/useOption";
 import { EmptyItemsPanel } from "Apps/Components/commons/EmptyItemsPanel";
 import { useTranslation } from "react-i18next";
 import { AuthStore } from "Apps/Models/Stores/Auth/AuthStore";
-import { useObserver } from "react-relux";
+import { useObserver } from "memento.react";
 import { DateTime } from "luxon";
 
 export default observer(() => {

@@ -7,7 +7,7 @@ import { ContactSettingContextStore } from "Apps/Models/Stores/Contacts/ContactS
 import { useIntupDialog } from "Libs/Dialogs/useInputDialog";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch, useObserver } from "react-relux";
+import { useDispatch, useObserver } from "memento.react";
 
 export const ContactSettingEmailPanel = () => {
     const dispatch = useDispatch(ContactSettingContextStore);

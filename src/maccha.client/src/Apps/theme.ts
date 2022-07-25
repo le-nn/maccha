@@ -100,7 +100,7 @@ const common: ThemeOptions = {
         MuiCard: {
             styleOverrides: {
                 root: {
-                    borderRadius: "20px",
+                    borderRadius: "32px",
                     boxShadow:  "0px 6px 6px -3px rgba(0, 10, 60, 0.08), 0px 4px 18px 3px rgba(0, 10, 60, 0.04)",
                 }
             }

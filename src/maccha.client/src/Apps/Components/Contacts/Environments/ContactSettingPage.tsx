@@ -4,7 +4,7 @@ import { useMatch } from "@reach/router";
 import { ContactsStore } from "Apps/Models/Stores/Contacts/ContactsStore";
 import { IContactSetting } from "Apps/Models/Domain/Contacts/ContactSettings";
 import { services } from "Apps/Services";
-import { useDispatch, useObserver } from "react-relux";
+import { useDispatch, useObserver } from "memento.react";
 import { ContactSettingContextStore } from "Apps/Models/Stores/Contacts/ContactSettingContextStore";
 import { useLoading } from "Libs/Dialogs/useLoading";
 import { useOption } from "Apps/Hooks/useOption";

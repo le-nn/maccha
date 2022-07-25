@@ -2,7 +2,7 @@ import { Typography, useTheme } from "@mui/material";
 import { Box, Backdrop } from "@mui/material";
 import { ContactContentContextStore } from "Apps/Models/Stores/Contacts/ContactContextStore";
 import React, { useEffect } from "react";
-import { useDispatch, useObserver } from "react-relux";
+import { useDispatch, useObserver } from "memento.react";
 import { DateTime } from "luxon";
 import { FlexSpacer } from "Apps/Components/commons";
 import { useTranslation } from "react-i18next";

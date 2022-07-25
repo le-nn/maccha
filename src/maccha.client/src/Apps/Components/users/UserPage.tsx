@@ -27,7 +27,7 @@ import { User } from "../../Models/Domain/users/user";
 import { RoleType, displayRoles } from "../../Models";
 import { axios } from "../../Repositories/config";
 import { makeStyles } from "@mui/styles";
-import { useStore } from "react-relux";
+import { useStore } from "memento.react";
 import { AuthStore } from "Apps/Models/Stores/Auth/AuthStore";
 
 export default () => {

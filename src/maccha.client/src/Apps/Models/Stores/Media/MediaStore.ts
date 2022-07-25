@@ -1,12 +1,12 @@
 import { MediaRepositry } from "Apps/Repositories/MediaRepository";
-import { Message, State, Store, store } from "relux.js";
+import { Message, State, FluxStore, meta } from "memento.core";
 
 class MediaStoreState extends State<MediaStoreState> {
 
 }
 
-@store({ name: "MediaStore" })
-export class MediaStore extends Store<MediaStoreState> {
+@meta({ name: "MediaStore" })
+export class MediaStore extends FluxStore<MediaStoreState> {
     constructor(
         private readonly repository: MediaRepositry
     ) {

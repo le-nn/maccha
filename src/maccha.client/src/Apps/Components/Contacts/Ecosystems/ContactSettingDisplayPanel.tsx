@@ -1,6 +1,6 @@
 import { Backdrop, Box, Card, CircularProgress, Typography } from "@mui/material";
 import { ContactSettingContextStore } from "Apps/Models/Stores/Contacts/ContactSettingContextStore";
-import { useDispatch, useObserver } from "react-relux";
+import { useDispatch, useObserver } from "memento.react";
 import React, { useEffect } from "react";
 import { ContactSettingsStore } from "Apps/Models/Stores/Contacts/ContactSettingsStore";
 import { axios } from "Apps/Repositories/config";

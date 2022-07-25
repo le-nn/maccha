@@ -1,6 +1,6 @@
 import { List, Box, ListItem, Button, ListItemText, Typography, useTheme, Menu, MenuItem, Divider } from "@mui/material";
 import { ContactSettingsStore } from "Apps/Models/Stores/Contacts/ContactSettingsStore";
-import { useObserver, useDispatch } from "react-relux";
+import { useObserver, useDispatch } from "memento.react";
 import React, { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useAppNavigate } from "Libs/Routing/RouterConfig";

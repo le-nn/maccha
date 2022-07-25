@@ -10,7 +10,7 @@ import { ContactsStore } from "Apps/Models/Stores/Contacts/ContactsStore";
 import { DateTime } from "luxon";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch, useObserver, useStore } from "react-relux";
+import { useDispatch, useObserver, useStore } from "memento.react";
 
 export const ContactListPanel = () => {
     const selectedId = useObserver(ContactsStore, s => s.selectedId);

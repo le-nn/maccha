@@ -5,7 +5,7 @@ import { CardContent, Card, Typography, Hidden, Button, CardActions, TextField, 
 import { Alert, AlertTitle } from "@mui/lab";
 import { AccountCircle, VpnKey } from "@mui/icons-material";
 import { useOption } from "Apps/Hooks/useOption";
-import { useDispatch, useObserver, useStore } from "react-relux";
+import { useDispatch, useObserver, useStore } from "memento.react";
 import { AuthStore } from "Apps/Models/Stores/Auth/AuthStore";
 import { useTranslation } from "react-i18next";
 
@@ -54,6 +54,7 @@ export default function LoginPage() {
             display={"flex"}
             justifyContent={"center"}
             alignItems={"center"}
+            bgcolor={theme.palette.background.default}
         >
             <Card elevation={3} sx={{ maxWidth: "380px" }}>
                 <Box p={5}>

@@ -12,8 +12,8 @@ import LoginPage from "Apps/Components/login/LoginPage";
 import { MacchaConfig, OptionProvider, useOption } from "./Hooks/useOption";
 import { DialogProvider } from "Libs/Dialogs/DialogProvider";
 import { build } from "./Models/Stores";
-import { StoreProvider, useDispatch, useObserver } from "react-relux";
-import { Provider } from "relux.js";
+import { StoreProvider, useDispatch, useObserver } from "memento.react";
+import { Provider } from "memento.core";
 import { observer } from "mobx-react";
 import { WebSite } from "./Models/Domain/sites/web-site";
 import { AuthStore } from "./Models/Stores/Auth/AuthStore";
@@ -130,6 +130,7 @@ const Main = () => {
     const role = useObserver(AuthStore, s => s.loginInfo?.role);
     const navigate = useAppNavigate();
     const routeMatch = useMatch("/app/:route/*");
+    const theme = useTheme();
 
     const router = useMemo(() => routes({
         t: t as any,
@@ -166,7 +167,7 @@ const Main = () => {
         />}
     >
         <Grow key={location.key} in>
-            <Box sx={{ height: "100%" }}>
+            <Box sx={{ height: "100%", bgcolor: theme.palette.background.default }}>
                 <AppRoutes
                     routes={router.routes}
                     css={css({

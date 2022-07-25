@@ -16,7 +16,7 @@ import { axios } from "../../../Repositories/config";
 import { postStatusTypeDisplay } from "Apps/Models/Domain/posts/entities/PostStatusType";
 import { css } from "@mui/styled-engine";
 import { AuthStore } from "Apps/Models/Stores/Auth/AuthStore";
-import { useObserver } from "react-relux";
+import { useObserver } from "memento.react";
 import { roles } from "Apps/roles";
 import { DateTime } from "luxon";
 

@@ -13,7 +13,7 @@ import { Taxonomy } from "../../../Models/Domain/Contents/Entities/Taxonomy";
 import { axios } from "../../../Repositories/config";
 import { FileCopy } from "@mui/icons-material";
 import { css } from "@emotion/react";
-import { useObserver } from "react-relux";
+import { useObserver } from "memento.react";
 import { AuthStore } from "Apps/Models/Stores/Auth/AuthStore";
 
 interface PostTypeBasicSettingPanelProps {

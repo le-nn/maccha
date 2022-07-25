@@ -13,7 +13,7 @@ import { services } from "../../../Services";
 import { WebSite } from "../../../Models/Domain/sites/web-site";
 import { displayRoles, RoleType } from "../../../Models/Domain/auth/role";
 import { ColorPalette } from "../../commons";
-import { useObserver } from "react-relux";
+import { useObserver } from "memento.react";
 import { AuthStore } from "Apps/Models/Stores/Auth/AuthStore";
 import { roles } from "Apps/roles";
 

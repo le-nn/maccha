@@ -1,6 +1,6 @@
 import { IContactSetting } from "Apps/Models/Domain/Contacts/ContactSettings";
 import { ContactSettingsRepository } from "Apps/Repositories/ContactSettingsRepository";
-import { Message, State, Store, store } from "relux.js";
+import { Message, State, FluxStore, meta } from "memento.core";
 
 class ContactSettingsState extends State<ContactSettingsState>{
     contactSettings: { contactSettingId: string, name: string }[] = [];
@@ -10,8 +10,8 @@ class ContactSettingsState extends State<ContactSettingsState>{
 class ModifyContactSettings extends Message<{ contactSettingId: string, name: string }[]> { }
 class SetSelectedSettingId extends Message<{ id: string | null }> { }
 
-@store({ name: "ContactSettingsStore" })
-export class ContactSettingsStore extends Store<ContactSettingsState> {
+@meta({ name: "ContactSettingsStore" })
+export class ContactSettingsStore extends FluxStore<ContactSettingsState> {
     readonly repository = new ContactSettingsRepository();
 
     constructor() {

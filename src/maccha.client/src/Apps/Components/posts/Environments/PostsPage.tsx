@@ -30,7 +30,7 @@ import { RoleType } from "Apps/Models";
 import { EmptyItemsPanel } from "Apps/Components/commons/EmptyItemsPanel";
 import { useTranslation } from "react-i18next";
 import { RoundedListItem } from "Apps/Components/commons/RoundedListItem";
-import { useObserver } from "react-relux";
+import { useObserver } from "memento.react";
 import { AuthStore } from "Apps/Models/Stores/Auth/AuthStore";
 import { roles } from "Apps/roles";
 

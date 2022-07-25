@@ -1,7 +1,7 @@
 import { LoginInfo } from "Apps/Models/Domain/auth/login-info";
 import { AuthRepository } from "Apps/Repositories/AuthRepository";
 import { setToken } from "Apps/Repositories/config";
-import { Message, State, Store, store } from "relux.js";
+import { Message, State, FluxStore, meta } from "memento.core";
 
 class AuthStoreState extends State<AuthStoreState> {
     /**
@@ -18,8 +18,8 @@ class AuthStoreState extends State<AuthStoreState> {
 class Login extends Message<LoginInfo>{ }
 class Logout extends Message { }
 
-@store({ name: "AuthStore" })
-export class AuthStore extends Store<AuthStoreState> {
+@meta({ name: "AuthStore" })
+export class AuthStore extends FluxStore<AuthStoreState> {
     constructor(
         private readonly repository: AuthRepository
     ) {

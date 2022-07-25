@@ -9,7 +9,7 @@ import { ContactSettingContextStore } from "Apps/Models/Stores/Contacts/ContactS
 import { ContactSettingsStore } from "Apps/Models/Stores/Contacts/ContactSettingsStore";
 import { ContactsStore } from "Apps/Models/Stores/Contacts/ContactsStore";
 import React, { useEffect } from "react";
-import { useDispatch, useObserver } from "react-relux";
+import { useDispatch, useObserver } from "memento.react";
 import { ContactContentDetailPanel } from "../Ecosystems/ContactContentDetailPanel";
 import { ContactListPanel } from "../Ecosystems/ContactListPanel";
 import { ContactSettingsList } from "../Ecosystems/ContactSettingsList";

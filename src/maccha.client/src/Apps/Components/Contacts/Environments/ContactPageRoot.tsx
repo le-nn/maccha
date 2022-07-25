@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { ChildRouter, useAppNavigate } from "Libs/Routing/RouterConfig";
 import { useParams } from "@reach/router";
-import { useDispatch } from "react-relux";
+import { useDispatch } from "memento.react";
 import { ContactSettingsStore } from "Apps/Models/Stores/Contacts/ContactSettingsStore";
 import { css } from "@mui/material";
 
