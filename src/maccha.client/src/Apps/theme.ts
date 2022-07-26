@@ -67,6 +67,13 @@ const common: ThemeOptions = {
         "0px 11px 15px -7px rgba(0, 10, 60, 0.12), 0px 9px 46px 8px rgba(0, 10, 60, 0.04)"
     ],
     components: {
+        MuiButton: {
+            styleOverrides: {
+                root: {
+                    borderRadius: "10px",
+                },
+            }
+        },
         MuiTextField: {
             styleOverrides: {
                 root: {
@@ -74,7 +81,7 @@ const common: ThemeOptions = {
                         borderRadius: "10px",
                     },
                     "& .MuiOutlinedInput-input": {
-                        padding: "8px 20px",
+                        padding: "4px 10px",
                     },
                     "& .MuiOutlinedInput-notchedOutline": {
                         borderWidth: "1.5px",
@@ -87,28 +94,28 @@ const common: ThemeOptions = {
             styleOverrides: {
                 outlined: {
                     borderRadius: "10px",
-                    padding: "8px 14px",
+                    padding: "4px 10px",
                     "& .MuiOutlinedInput-notchedOutline": {
                         borderWidth: "1.5px",
                         borderColor: "rgba(0, 0, 0, 0.5)",
-                        borderRadius: "10px",
+                        borderRadius: "18px",
                     },
-                },
+                }
 
             },
         },
         MuiCard: {
             styleOverrides: {
                 root: {
-                    borderRadius: "32px",
-                    boxShadow:  "0px 6px 6px -3px rgba(0, 10, 60, 0.08), 0px 4px 18px 3px rgba(0, 10, 60, 0.04)",
+                    borderRadius: "20px",
+                    boxShadow: "0px 6px 6px -3px rgba(0, 10, 60, 0.08), 0px 4px 18px 3px rgba(0, 10, 60, 0.04)",
                 }
             }
         },
-        MuiPaper:{
-            styleOverrides:{
-                root:{
-                    boxShadow:  "0px 6px 6px -3px rgba(0, 10, 60, 0.08), 0px 4px 18px 3px rgba(0, 10, 60, 0.04)",
+        MuiPaper: {
+            styleOverrides: {
+                root: {
+                    boxShadow: "0px 6px 6px -3px rgba(0, 10, 60, 0.08), 0px 4px 18px 3px rgba(0, 10, 60, 0.04)",
                 }
             }
         }

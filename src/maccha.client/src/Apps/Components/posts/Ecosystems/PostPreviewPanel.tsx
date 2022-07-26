@@ -21,6 +21,7 @@ import { DateTime } from "luxon";
 
 export function PostPreviewPanel() {
     const { postEditService, postManagementsService } = services;
+    const theme = useTheme();
 
     return <Observer>
         {
@@ -39,6 +40,10 @@ export function PostPreviewPanel() {
                         maxWidth="100%" width="780px"
                     >
                         <Box
+                            p={{ xs: 2, sm: 3, md: 4 }}
+                            borderRadius="24px"
+                            sx={{ boxShadow: theme.shadows[6] }}
+                            bgcolor={theme.palette.background.paper}
                             mt={3}
                             display="flex" mx="auto"
                             flexDirection="column"

@@ -36,4 +36,7 @@ const global = css`
 body{
     font-family: 'Noto Sans JP', sans-serif;
 }
+.MuiOutlinedInput-root {
+    border-radius:10px!important;
+}
 `;

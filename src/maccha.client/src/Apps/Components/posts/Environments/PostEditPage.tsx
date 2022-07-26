@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import {
     Divider,
-    Box, Typography
+    Box, Typography, useTheme
 } from "@mui/material";
 import { services } from "../../../Services";
 import { Observer } from "mobx-react";
@@ -14,6 +14,7 @@ import { useParams } from "@reach/router";
 export default function PostEditPage() {
     const { postEditService } = services;
     const match = useParams<any>();
+    const theme = useTheme();
 
     useEffect(() => {
         setTimeout(async () => {
@@ -81,11 +82,21 @@ export default function PostEditPage() {
                                             </Box>;
                                         }
 
-                                        return <Box key={scheme.schemeId} className="post" maxWidth="100%" width="780px" mt={2}>
+                                        return <Box
+                                            p={{ xs: 2, sm: 3, md: 4 }}
+                                            mt={{ xs: 2, sm: 3, md: 4 }}
+                                            sx={{ boxShadow: theme.shadows[6] }}
+                                            bgcolor={theme.palette.background.paper}
+                                            borderRadius="28px"
+                                            key={scheme.schemeId}
+                                            className="post"
+                                            maxWidth="100%"
+                                            width="780px"
+                                        >
                                             <Typography variant="h5" style={{ wordBreak: "break-all" }}>
                                                 {scheme.name} - {scheme.displayName}
                                             </Typography>
-                                            <Divider />
+                                            <Divider sx={{ mt: 2 }} />
                                             <Box mt={2} />
                                             <Typography color="textSecondary" variant="caption">
                                                 {scheme.description}
@@ -104,8 +115,9 @@ export default function PostEditPage() {
                                 )
                             }
                         </Box>
-                        <Divider orientation="vertical" />
-                        <Box p={2} minWidth="300px" maxWidth="300px" overflow="auto">
+                        <Box sx={{ boxShadow: theme.shadows[6] }}
+                            bgcolor={theme.palette.background.paper}
+                            p={2} minWidth="300px" maxWidth="300px" overflow="auto">
                             <PostEditOptionPanel
                                 contentEditContext={postEditService.content}
                             />

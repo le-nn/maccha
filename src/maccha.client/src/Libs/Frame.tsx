@@ -247,7 +247,7 @@ export const NavigationList = (props: DrawerPropos) => {
 
     const router = props.menus.reduce((x, y) => ({
         ...x,
-        [y.group ?? "menu||-1"]: [...(x[y.group ?? "menu||-1"] ?? []), y]
+        [y.group ?? "MENU||-1"]: [...(x[y.group ?? "MENU||-1"] ?? []), y]
     }), {} as { [key: string]: Route[] });
     const routes = Object.keys(router).map(key => {
         const [menu, spacer, sort] = key.split("|");

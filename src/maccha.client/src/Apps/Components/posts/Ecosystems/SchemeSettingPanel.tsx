@@ -186,17 +186,18 @@ export function SchemeSettingPanel(props: SchemeSettingPanelProps) {
 
     return (
         <>
+            <Typography mt={6} variant="h6" >APIスキーム</Typography>
+            <Typography color="textSecondary" variant="caption" >
+                管理するコンテンツのスキームを定義します。
+            </Typography>
+
             <Box
-                mt={6}
+                mt={2}
                 display="flex"
                 flexDirection="column"
                 maxWidth="960px"
                 width="100%"
             >
-                <Typography variant="h6" >APIスキーム</Typography>
-                <Typography color="textSecondary" variant="caption" >
-                    管理するコンテンツのスキームを定義します。
-                </Typography>
                 <SortableList
                     trigger={trigger}
                     useDragHandle
@@ -206,8 +207,8 @@ export function SchemeSettingPanel(props: SchemeSettingPanelProps) {
                     changeFieldTypeHandler={s => handleChangeFieldType(s)}
                     changeSchemeHandler={s => handleChangeScheme(s)}
                 />
-                <Box mt={3} />
-                <Button onClick={addScheme}>
+                <Box mt={2} />
+                <Button onClick={addScheme} variant="contained" sx={{ borderRadius: "32px", mx: "auto" }} >
                     <Add />
                     スキームを追加
                 </Button>
@@ -246,7 +247,7 @@ function SchemeItem(props: SchemeItemProps) {
     }
 
     return (
-        <Paper style={{ padding: "8px" }}>
+        <Paper style={{ padding: "8px", borderRadius: "20px" }}>
             <Box display="flex">
                 <DragHandle />
                 <Box flex="1 1 auto" overflow="hidden">

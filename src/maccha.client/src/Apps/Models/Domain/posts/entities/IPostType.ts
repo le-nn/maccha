@@ -1,3 +1,4 @@
+import { Category } from "../../Contents/Entities/Category";
 import { Taxonomy } from "../../Contents/Entities/Taxonomy";
 
 export interface IPostType {

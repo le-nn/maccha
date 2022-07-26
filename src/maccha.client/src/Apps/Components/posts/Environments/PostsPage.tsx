@@ -75,18 +75,18 @@ export default () => {
     const handleNewPost = () => {
         const selected = services.postManagementsService.selected;
         if (selected) {
-            history(`/posts/${selected.taxonomy.name}/new/edit`);
+            history(`./${selected.taxonomy.name}/new/edit`);
         }
     };
 
     const onAddPostTypeClicked = async () => {
-        history("/posts/new/edit");
+        history("../new/edit");
     };
 
     function onEditClicked() {
         if (postTypeContext) {
 
-            history(`/posts/${postTypeContext.taxonomy.name}/edit`);
+            history(`./${postTypeContext.taxonomy.name}/edit`);
         }
     }
 
@@ -94,7 +94,7 @@ export default () => {
         services.postManagementsService.selectFromIndex(index);
         const selected = services.postManagementsService.selected;
         if (selected) {
-            setTimeout(() => history(`/posts/${selected.taxonomy.name}`), 10);
+            setTimeout(() => history(`${selected.taxonomy.name}`), 10);
         }
     };
 
@@ -139,9 +139,8 @@ export default () => {
                         height="100%"
                         display="flex"
                         bgcolor={theme.palette.background.default}
-                        p={1.5}
                     >
-                        <Box p={1.5} height="100%">
+                        <Box p={3} height="100%">
                             <Card sx={{
                                 p: 0,
                                 width: "240px",
@@ -235,7 +234,10 @@ export default () => {
                             </Fab>
                         </Box>
 
-                        <Box minWidth="220px" maxWidth="220px" height="100%" overflow="auto">
+                        <Box minWidth="220px" maxWidth="220px" height="100%" overflow="auto"
+                            bgcolor={theme.palette.background.paper}
+                            sx={{ boxShadow: theme.shadows[6] }}
+                        >
                             {services.postManagementsService.selected &&
                                 <PostTypeSettingPanel
                                     postType={services.postManagementsService.selected}

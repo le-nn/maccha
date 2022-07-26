@@ -14,16 +14,17 @@ import { PostType } from "../../../Models/Domain/posts/entities/PostType";
 import { Taxonomy } from "../../../Models/Domain/Contents/Entities/Taxonomy";
 import { useAppNavigate } from "Libs/Routing/RouterConfig";
 import { useParams } from "@reach/router";
+import { CategorySettingArea } from "../Ecosystems/CategorySettingArea";
 
 export default observer(() => {
-    const [postType, setPostType] = useState(new PostType({
+    const [postType, setPostType] = useState(() => new PostType({
         taxonomy: new Taxonomy({
             description: "",
             name: "",
             displayName: "",
             identifier: "",
             schemes: [],
-            taxonomyId: ""
+            taxonomyId: "",
         })
     }));
     const [isNew, setIsNew] = useState(false);
@@ -56,17 +57,19 @@ export default observer(() => {
         if (isNew) {
             services.postManagementsService.createPostTypeAsync({
                 taxonomy: postType.taxonomy,
-                displayFormat: postType.displayFormat
+                displayFormat: postType.displayFormat,
+                categories: postType.categoryTree.all,
             });
         }
         else {
             services.postManagementsService.savePostTypeAsync({
                 postTypeId: postType.postTypeId,
                 taxonomy: postType.taxonomy,
-                displayFormat: postType.displayFormat
+                displayFormat: postType.displayFormat,
+                categories: postType.categoryTree.all,
             });
         }
-        history(`/posts/${services.postManagementsService.selected?.taxonomy.name}`);
+        history(`../${services.postManagementsService.selected?.taxonomy.name}`);
     }
 
     return <Box
@@ -80,6 +83,7 @@ export default observer(() => {
     >
         <Box
             mt={4}
+            ml={1}
             display="flex"
             alignItems="center"
             maxWidth="960px"
@@ -94,7 +98,16 @@ export default observer(() => {
                 setIsChanged(true);
             }}
         />
+
         <SchemeSettingPanel
+            postType={postType}
+            onChange={p => {
+                setPostType(p);
+                setIsChanged(true);
+            }}
+        />
+
+        <CategorySettingArea
             postType={postType}
             onChange={p => {
                 setPostType(p);

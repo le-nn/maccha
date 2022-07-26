@@ -93,14 +93,14 @@ export default observer(() => {
     function onEditPressed(post: Content) {
         const selected = services.postManagementsService.selected;
         if (selected) {
-            history(`/posts/${selected.taxonomy.name}/${post.contentId}/edit`);
+            history(`./${selected.taxonomy.name}/${post.contentId}/edit`);
         }
     }
 
     function onPreviewPressed(contentId: string) {
         const selected = services.postManagementsService.selected;
         if (selected) {
-            history(`/posts/${selected.taxonomy.name}/${contentId}`);
+            history(`./${selected.taxonomy.name}/${contentId}`);
         }
     }
 

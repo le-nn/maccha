@@ -26,7 +26,7 @@ export const PostTypeSettingPanel = (props: PostTypeSettingPanelProps) => {
     const auth = useObserver(AuthStore);
 
     const handleEdit = () => {
-        history(`/posts/${postType.taxonomy.name}/edit`);
+        history(`./${postType.taxonomy.name}/edit`);
     };
 
     const copyToClipBoard = (text: string) => {

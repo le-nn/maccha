@@ -7,6 +7,7 @@ import { ICreatePostTypeParams } from "../Models/Domain/posts/params/ICreatePost
 import { ISavePostTypeParams } from "../Models/Domain/posts/params/ISavePostTypeParams";
 import { Taxonomy } from "../Models/Domain/Contents/Entities/Taxonomy";
 import { Scheme } from "../Models/Domain/Contents/Entities/Scheme";
+import { CategoryTree } from "Apps/Models/Domain/Contents/Entities/CategoryTree";
 
 export class PostManagementsRepository {
     /**
@@ -64,6 +65,7 @@ export class PostManagementsRepository {
      */
     private postTypeToDomain(post: IPostType) {
         return new PostType({
+            categoryTree:new CategoryTree(post.categories),
             postTypeId: post.postTypeId,
             displayFormat: post.displayFormat,
             taxonomy: new Taxonomy({

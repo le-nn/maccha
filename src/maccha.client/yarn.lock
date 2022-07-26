@@ -9427,7 +9427,7 @@ memento.core@^1.0.3:
     injection-js "^2.4.0"
     reflect-metadata "^0.1.13"
 
-"memento.core@link:../core":
+"memento.core@link:../../../../AppData/Local/Yarn/Cache/v6/npm-memento-react-1.0.4-7e4c33126de11105e6848b816dd27612c250c740-integrity/node_modules/core":
   version "0.0.0"
   uid ""
 

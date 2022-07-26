@@ -1,3 +1,4 @@
+import { CategoryTree } from "../../Contents/Entities/CategoryTree";
 import { Taxonomy } from "../../Contents/Entities/Taxonomy";
 import { IPostType } from "./IPostType";
 
@@ -8,6 +9,7 @@ export class PostType implements IPostType {
     readonly postTypeId: string = "";
     readonly taxonomy: Taxonomy = new Taxonomy();
     readonly displayFormat: string = "card";
+    readonly categoryTree = new CategoryTree();
 
     constructor(value?: Partial<PostType>) {
         Object.assign(this, value);
