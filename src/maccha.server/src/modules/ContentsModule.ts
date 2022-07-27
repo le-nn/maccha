@@ -9,6 +9,8 @@ import { ContentsAppService } from "@/Applications/Contents/Services/ContentsApp
 import { TaxonomiesAppService } from "@/Applications/Contents/Services/TaxonomiesAppService";
 import { ContentsController } from "@/Applications/Contents/Controllers/ContentsController";
 import { TaxonomiesController } from "@/Applications/Contents/Controllers/TaxonomiesController";
+import { ContentCategoryEntity } from "@/Infrastructure/Database/Entities/ContentCategoryEntity";
+import { CategorySchemeEntity } from "@/Infrastructure/Database/Entities/CategorySchemeEntity";
 
 @Module({
     imports: [
@@ -16,7 +18,9 @@ import { TaxonomiesController } from "@/Applications/Contents/Controllers/Taxono
             SchemeEntity,
             ContentEntity,
             TaxonomyEntity,
-            FieldEntity
+            FieldEntity,
+            ContentCategoryEntity,
+            CategorySchemeEntity,
         ])
     ],
     controllers: [

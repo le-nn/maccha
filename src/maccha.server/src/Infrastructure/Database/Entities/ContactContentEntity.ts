@@ -2,7 +2,7 @@ import { DateTime } from "luxon";
 import { CreateDateColumn, Entity, Column, Index, PrimaryGeneratedColumn, UpdateDateColumn, OneToMany, JoinColumn } from "typeorm";
 
 /**
- * Taxonomy entity.
+ * Category content entity.
  */
 @Entity()
 export class ContactContentEntity {

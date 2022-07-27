@@ -9,7 +9,6 @@ export class PostType implements IPostType {
     readonly postTypeId: string = "";
     readonly taxonomy: Taxonomy = new Taxonomy();
     readonly displayFormat: string = "card";
-    readonly categoryTree = new CategoryTree();
 
     constructor(value?: Partial<PostType>) {
         Object.assign(this, value);

@@ -1,11 +1,11 @@
-import { Category } from "./Category";
+import { CategoryMeta } from "./CategoryMeta";
 import { CategoryNode } from "./CategoryNode";
 
 export class CategoryTree {
     private categoriesMap = new Map<number, CategoryNode>();
     private observers: (() => void)[] = [];
 
-    get all(): Category[] {
+    get all(): CategoryMeta[] {
         return Array.from(this.categoriesMap.values()).map(x => ({
             id: x.id,
             slug: x.slug,
@@ -20,7 +20,7 @@ export class CategoryTree {
             .filter(x => x.parentId === null);
     }
 
-    constructor(items?: Category[]) {
+    constructor(items?: CategoryMeta[]) {
         items?.forEach(x => {
             this.add(x);
         });
@@ -43,7 +43,7 @@ export class CategoryTree {
         };
     }
 
-    add(category: Category) {
+    add(category: CategoryMeta) {
         if (this.categoriesMap.has(category.id)) {
             throw new Error("Category " + category.id + " has already exists.");
         }

@@ -1,3 +1,4 @@
+import { CategoryTree } from "./CategoryTree";
 import { Scheme } from "./Scheme";
 
 /**
@@ -10,6 +11,7 @@ export class Taxonomy {
     readonly displayName: string = "";
     readonly identifier: string = "";
     readonly schemes: Scheme[] = [];
+    readonly categoryTree = new CategoryTree();
 
     constructor(value?: Partial<Taxonomy>) {
         Object.assign(this, value);
