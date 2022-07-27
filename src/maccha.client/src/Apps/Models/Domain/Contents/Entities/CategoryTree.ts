@@ -5,8 +5,6 @@ export class CategoryTree {
     private categoriesMap = new Map<number, CategoryNode>();
     private observers: (() => void)[] = [];
 
-    a = Math.random();
-
     get all(): Category[] {
         return Array.from(this.categoriesMap.values()).map(x => ({
             id: x.id,
