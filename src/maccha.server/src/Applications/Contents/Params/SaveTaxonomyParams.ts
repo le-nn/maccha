@@ -1,7 +1,9 @@
 import { i18n } from "@/Applications/Commons/i18n";
 import { ICreateTaxonomyParams, ISaveTaxonomyParams } from "@/Models/Contents/Params";
+import { ICreateCategoryParams } from "@/Models/Contents/Params/ICreateCategoryParams";
 import { ApiProperty } from "@nestjs/swagger";
 import { IsArray, IsString, MinLength, ValidateNested } from "class-validator";
+import { CreateCategoryParams } from "./CreateCategoryParams";
 import { CreateSchemeParams } from "./CreateSchemeParams";
 import { SaveSchemeParams } from "./SaveSchemeParams";
 
@@ -57,4 +59,14 @@ export class SaveTaxonomyParams implements ISaveTaxonomyParams {
     })
     @ValidateNested({ each: true })
     schemes!: SaveSchemeParams[];
+
+    @ApiProperty({
+        name: i18n({
+            en: "Categories.",
+            ja: "カテゴリ一覧."
+        }),
+        type: () => [CreateCategoryParams]
+    })
+    @ValidateNested({ each: true })
+    categorySchemes!: ICreateCategoryParams[];
 }

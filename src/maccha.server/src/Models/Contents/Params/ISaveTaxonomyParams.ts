@@ -1,3 +1,4 @@
+import { ICreateCategoryParams } from "./ICreateCategoryParams";
 import { ISaveSchemeParams } from "./ISaveSchemeParams";
 
 export interface ISaveTaxonomyParams {
@@ -6,4 +7,5 @@ export interface ISaveTaxonomyParams {
     displayName: string;
     description: string;
     schemes: ISaveSchemeParams[];
+    categorySchemes: ICreateCategoryParams[];
 }

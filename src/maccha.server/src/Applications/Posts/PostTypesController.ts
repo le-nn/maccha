@@ -1,5 +1,5 @@
 import { Controller, Post, Get, UseGuards, Query, Body, SetMetadata, Put, Param, Delete } from "@nestjs/common";
-import { ApiTags, ApiExcludeEndpoint,ApiBody, ApiOperation, ApiCreatedResponse, ApiResponse, ApiNoContentResponse, ApiParam } from "@nestjs/swagger";
+import { ApiTags, ApiExcludeEndpoint, ApiBody, ApiOperation, ApiCreatedResponse, ApiResponse, ApiNoContentResponse, ApiParam } from "@nestjs/swagger";
 import { FailedResponse } from "../Commons/failed-response";
 import { AuthGuard } from "../Commons/auth-guard";
 import { PostTypesService } from "@/Models/Posts/Services/PostTypesService";
@@ -46,7 +46,8 @@ export class PostTypesController {
                     name: p.taxonomy.name,
                     identifier: p.taxonomy.identifier,
                     displayName: p.taxonomy.displayName,
-                    schemes: p.taxonomy.schemes
+                    schemes: p.taxonomy.schemes,
+                    categorySchemes: p.taxonomy.categorySchemes,
                 }),
                 postTypeId: p.postTypeId,
                 identifier: p.identifier,
@@ -78,6 +79,9 @@ export class PostTypesController {
                 taxonomyId: p.taxonomy.taxonomyId,
                 name: p.taxonomy.name,
                 identifier: p.taxonomy.identifier,
+                categorySchemes: p.taxonomy.categorySchemes,
+                displayName: p.taxonomy.displayName,
+                schemes: []
             }),
             postTypeId: p.postTypeId,
             identifier: p.identifier,
@@ -108,6 +112,9 @@ export class PostTypesController {
                 taxonomyId: p.taxonomy.taxonomyId,
                 name: p.taxonomy.name,
                 identifier: p.taxonomy.identifier,
+                categorySchemes: p.taxonomy.categorySchemes,
+                displayName: p.taxonomy.displayName,
+                schemes: []
             }),
             postTypeId: p.postTypeId,
             identifier: p.identifier,

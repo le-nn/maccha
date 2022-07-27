@@ -1,4 +1,5 @@
 import { CategoryMeta } from "../Entities/CategoryMeta";
+import { ICreateCategoryParams } from "../Params/ICreateCategoryParams";
 
 export interface ICategorySchemeRepository {
     /**
@@ -14,6 +15,12 @@ export interface ICategorySchemeRepository {
      */
     saveAsync(
         taxomomyId: string,
-        categories: CategoryMeta[]
+        categories: ICreateCategoryParams[]
     ): Promise<CategoryMeta[]>;
+
+    /**
+     * Remove all categories that related in taxonomy.
+     * @param taxomomyId The taxonomy id to remove.
+     */
+    removeAsync(taxomomyId: string): Promise<void>;
 }

@@ -1,23 +1,17 @@
+import { RestaurantMenuRounded } from "@mui/icons-material";
 import { Category } from "./Category";
 import { CategoryNode } from "./CategoryNode";
 
 export class CategoryTree {
-    private categoriesMap = new Map<number, CategoryNode>();
+    private _categories: Category[] = [];
     private observers: (() => void)[] = [];
 
     get all(): Category[] {
-        return Array.from(this.categoriesMap.values()).map(x => ({
-            id: x.id,
-            slug: x.slug,
-            name: x.name,
-            order: x.order,
-            parentId: x.parentId,
-        }));
+        return this._categories;
     }
 
     get tree(): CategoryNode[] {
-        return Array.from(this.categoriesMap.values())
-            .filter(x => x.parentId === null);
+        return this.calcTree();
     }
 
     constructor(items?: Category[]) {
@@ -29,7 +23,7 @@ export class CategoryTree {
     getMaxId() {
         return Math.max(...[
             0,
-            ...Array.from(this.categoriesMap.values()).map(x => x.id)
+            ...this.all.map(x => x.id)
         ]);
     }
 
@@ -43,36 +37,50 @@ export class CategoryTree {
         };
     }
 
-    add(category: Category) {
-        if (this.categoriesMap.has(category.id)) {
-            throw new Error("Category " + category.id + " has already exists.");
-        }
-
-        const entity = {
-            ...category,
-            children: [],
-        };
-
-        this.categoriesMap.set(category.id, entity);
-        if (category.parentId !== null) {
-            const parent = this.categoriesMap.get(category.parentId);
-            if (!parent) {
-                throw new Error("parent category id " + category.parentId + " is not exists.");
+    calcTree() {
+        const categoriesMap = new Map<number, CategoryNode>();
+        for (const c of this._categories) {
+            if (categoriesMap.has(c.id)) {
+                throw new Error("Category " + c.id + " has already exists.");
             }
 
-            parent.children.push(entity);
+            const entity = {
+                ...c,
+                children: [],
+            };
+
+            categoriesMap.set(c.id, entity);
         }
 
+        for (const c of this._categories) {
+            if (c.parentId !== null) {
+                const target = categoriesMap.get(c.id);
+                const parent = categoriesMap.get(c.parentId);
+                if (parent && target) {
+                    parent.children.push(target);
+                }
+            }
+        }
+
+        return Array.from(categoriesMap.values()).filter(x => x.parentId === null);
+    }
+
+    add(category: Category) {
+        this._categories.push(category);
+        console.log(this.tree);
         for (const o of this.observers) {
             o();
         }
     }
 
-    mutate(id: number, mutaion: (category: CategoryNode) => CategoryNode) {
-        const c = this.categoriesMap.get(id);
+    mutate(id: number, mutaion: (category: Category) => Category) {
+        const c = this._categories.find(x => x.id === id);
         if (c) {
             const newc = mutaion(c);
-            this.categoriesMap.set(id, newc);
+            this._categories = [
+                ... this._categories.filter(x => x.id !== id),
+                newc
+            ];
 
             for (const o of this.observers) {
                 o();
@@ -81,22 +89,7 @@ export class CategoryTree {
     }
 
     remove(id: number) {
-        const category = this.categoriesMap.get(id);
-        if (!category) {
-            throw new Error(`Category ${id} is not exists.`);
-        }
-
-        this.categoriesMap.delete(id);
-
-        // remove from parent
-        if (category.parentId !== null) {
-            const parent = this.categoriesMap.get(category.parentId);
-            if (!parent) {
-                throw new Error("parent category id " + category.parentId + " is not exists.");
-            }
-
-            parent.children = parent.children.filter(x => x.id !== id);
-        }
+        this._categories = this._categories.filter(x => x.id !== id);
 
         // notify state changed
         for (const o of this.observers) {

@@ -15,7 +15,7 @@ export class SavePostTypeParams implements ISavePostTypeParams {
         })
     })
     @IsString()
-        displayFormat!: string;
+    displayFormat!: string;
 
     @ApiProperty({
         title: i18n({
@@ -24,7 +24,7 @@ export class SavePostTypeParams implements ISavePostTypeParams {
         })
     })
     @IsUUID()
-        postTypeId!: string;
+    postTypeId!: string;
 
     @ApiProperty({
         title: i18n({
@@ -33,5 +33,5 @@ export class SavePostTypeParams implements ISavePostTypeParams {
         })
     })
     @ValidateNested()
-        taxonomy!: SaveTaxonomyParams;
+    taxonomy!: SaveTaxonomyParams;
 }

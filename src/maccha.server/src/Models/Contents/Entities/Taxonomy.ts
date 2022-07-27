@@ -1,5 +1,16 @@
 import { DateTime } from "luxon";
+import { CategoryMeta } from "./CategoryMeta";
 import { Scheme } from "./Scheme";
+
+interface ITaxonomy {
+    taxonomyId: string;
+    name: string;
+    description: string;
+    displayName: string;
+    identifier: string;
+    schemes: Scheme[];
+    categorySchemes: CategoryMeta[];
+}
 
 /**
  * Express taxonomy entity.
@@ -11,7 +22,9 @@ export class Taxonomy {
     readonly displayName: string = "";
     readonly identifier: string = "";
     readonly schemes: Scheme[] = [];
-    constructor(value?: Partial<Taxonomy>) {
+    readonly categorySchemes: CategoryMeta[] = [];
+
+    constructor(value?: ITaxonomy) {
         Object.assign(this, value);
     }
 }

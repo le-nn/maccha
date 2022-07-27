@@ -14,6 +14,7 @@ import { PostType } from "../../../Models/Domain/posts/entities/PostType";
 import { Taxonomy } from "../../../Models/Domain/Contents/Entities/Taxonomy";
 import { useAppNavigate } from "Libs/Routing/RouterConfig";
 import { useParams } from "@reach/router";
+import { CategorySettingArea } from "../Ecosystems/CategorySettingArea";
 
 export default observer(() => {
     const [postType, setPostType] = useState(new PostType({
@@ -73,7 +74,7 @@ export default observer(() => {
                 displayFormat: postType.displayFormat
             });
         }
-        history(`/posts/${services.postManagementsService.selected?.taxonomy.name}`);
+        history(`../${services.postManagementsService.selected?.taxonomy.name}`);
     }
 
     return <Box
@@ -102,6 +103,14 @@ export default observer(() => {
             }}
         />
         <SchemeSettingPanel
+            postType={postType}
+            onChange={p => {
+                setPostType(p);
+                setIsChanged(true);
+            }}
+        />
+        
+        <CategorySettingArea
             postType={postType}
             onChange={p => {
                 setPostType(p);

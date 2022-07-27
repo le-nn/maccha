@@ -8,6 +8,23 @@ import { ISavePostTypeParams } from "../Models/Domain/posts/params/ISavePostType
 import { Taxonomy } from "../Models/Domain/Contents/Entities/Taxonomy";
 import { Scheme } from "../Models/Domain/Contents/Entities/Scheme";
 import { CategoryTree } from "Apps/Models/Domain/Contents/Entities/CategoryTree";
+import { Category } from "Apps/Models/Domain/Contents/Entities/Category";
+
+interface TaxonomyResponse {
+    taxonomyId: string;
+    name: string;
+    description: string;
+    displayName: string;
+    identifier: string;
+    schemes: Scheme[];
+    categorySchemes: Category[];
+}
+
+export interface IPostTypeResponse {
+    postTypeId: string;
+    displayFormat: string;
+    taxonomy: TaxonomyResponse;
+}
 
 export class PostManagementsRepository {
     /**
@@ -15,7 +32,7 @@ export class PostManagementsRepository {
      */
     public async fetchPostTypesAsync(): Promise<PostType[]> {
         try {
-            const response = await axios.get<IPostType[]>("/api/post-types");
+            const response = await axios.get<IPostTypeResponse[]>("/api/post-types");
             return response.data.map(p => this.postTypeToDomain(p));
         }
         catch (ex) {
@@ -50,7 +67,7 @@ export class PostManagementsRepository {
      */
     public async createPostType(postType: ICreatePostTypeParams): Promise<PostType> {
         try {
-            const response = await axios.post<IPostType>("/api/post-types", postType);
+            const response = await axios.post<IPostTypeResponse>("/api/post-types", postType);
             return this.postTypeToDomain(response.data);
         }
         catch (ex) {
@@ -63,12 +80,12 @@ export class PostManagementsRepository {
      * convert IUser to User instance.
      * ..param user user interface
      */
-    private postTypeToDomain(post: IPostType) {
+    private postTypeToDomain(post: IPostTypeResponse) {
         return new PostType({
-            categoryTree:new CategoryTree(post.categories),
             postTypeId: post.postTypeId,
             displayFormat: post.displayFormat,
             taxonomy: new Taxonomy({
+                categoryTree: new CategoryTree(post.taxonomy.categorySchemes),
                 description: post.taxonomy.description,
                 displayName: post.taxonomy.displayName,
                 name: post.taxonomy.name,
@@ -87,4 +104,14 @@ export class PostManagementsRepository {
             })
         });
     }
+}
+
+export interface ITaxonomy {
+    taxonomyId: string;
+    name: string;
+    description: string;
+    displayName: string;
+    identifier: string;
+    schemes: Scheme[];
+    categoryTree: Category[];
 }

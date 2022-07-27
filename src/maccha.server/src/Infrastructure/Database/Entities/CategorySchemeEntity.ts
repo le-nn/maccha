@@ -31,6 +31,6 @@ export class CategorySchemeEntity {
     @Column()
     order!: number;
 
-    @Column({ nullable: true })
+    @Column({ nullable: true, type: "int" })
     parentId!: number | null;
 }

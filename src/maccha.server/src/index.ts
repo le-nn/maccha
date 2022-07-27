@@ -5,7 +5,6 @@ import { ConnectionOptions, createConnection, MigrationInterface, QueryRunner } 
 import { MacchaModule } from "./modules/maccha.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { JwtModule } from "@nestjs/jwt";
-import { ServeStaticModule } from "@nestjs/serve-static";
 import { WebSitesModule } from "./modules/web-sites.module";
 import { UsersModule } from "./modules/users.module";
 import { AuthService } from "./Models/Authentications/auth.service";
@@ -16,7 +15,6 @@ import * as Entities from "@/Infrastructure/Database/Entities";
 import { Migrations as MacchaMigrations } from "./Infrastructure/Database/Migrations";
 import { AuthenticationsController } from "./Applications/Authentications/AuthenticationsController";
 import * as bodyParser from "body-parser";
-import { MediaModule } from "./modules/media.module";
 import express from "express";
 import path from "path";
 import { NotFoundExceptionFilter } from "./NotFoundFallback";

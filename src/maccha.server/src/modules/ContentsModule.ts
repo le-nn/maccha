@@ -11,6 +11,7 @@ import { ContentsController } from "@/Applications/Contents/Controllers/Contents
 import { TaxonomiesController } from "@/Applications/Contents/Controllers/TaxonomiesController";
 import { ContentCategoryEntity } from "@/Infrastructure/Database/Entities/ContentCategoryEntity";
 import { CategorySchemeEntity } from "@/Infrastructure/Database/Entities/CategorySchemeEntity";
+import { CategorySchemeRepository } from "@/Infrastructure/Repositories/CategorySchemeRepository";
 
 @Module({
     imports: [
@@ -21,7 +22,8 @@ import { CategorySchemeEntity } from "@/Infrastructure/Database/Entities/Categor
             FieldEntity,
             ContentCategoryEntity,
             CategorySchemeEntity,
-        ])
+        ]),
+        ContentsModule
     ],
     controllers: [
         ContentsController,
@@ -43,6 +45,10 @@ import { CategorySchemeEntity } from "@/Infrastructure/Database/Entities/Categor
             provide: "TaxonomiesRepository",
             useClass: TaxonomiesRepository
         },
+        {
+            provide: "CategorySchemeRepository",
+            useClass: CategorySchemeRepository
+        }
     ],
     exports: [
         TaxonomiesService,

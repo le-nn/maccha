@@ -1,18 +1,27 @@
+import { CategoryMeta } from "@/Models/Contents/Entities/CategoryMeta";
 import { Scheme } from "@/Models/Contents/Entities/Scheme";
 import { Taxonomy } from "@/Models/Contents/Entities/Taxonomy";
 import { ISaveTaxonomyParams } from "@/Models/Contents/Params";
 import { ICreateTaxonomyParams } from "@/Models/Contents/Params/ICreateTaxonomyParams";
 import { ITaxonomiesRepository } from "@/Models/Contents/Repositories";
+import { ICategorySchemeRepository } from "@/Models/Contents/Repositories/ICategorySchemeRepository";
+import { Inject } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { TaxonomyEntity } from "../Database/Entities";
+
+
+/****************************************************
+ * this file is not wors !!!!!!!!!!!!!!!!!!!!!!!!
+ ****************************************************/
 
 /**
  * Implements for TaxonomiesRepository.
  */
 export class TaxonomiesRepository implements ITaxonomiesRepository {
     constructor(
-        @InjectRepository(TaxonomyEntity) private readonly taxonomies: Repository<TaxonomyEntity>
+        @InjectRepository(TaxonomyEntity) private readonly taxonomies: Repository<TaxonomyEntity>,
+        @Inject("CategorySchemeRepository") private readonly categorySchemeRepository: ICategorySchemeRepository,
     ) {
 
     }
@@ -60,8 +69,9 @@ export class TaxonomiesRepository implements ITaxonomiesRepository {
                         schemeId: s.schemeId ?? "",
                         type: s.type,
                         metadata: s.metadata
-                    })
-                ) ?? []
+                    }),
+                ) ?? [],
+                categorySchemes: await this.categorySchemeRepository.fetchAllAsync(taxonomy.taxonomyId)
             });
         }
         catch (ex: any) {
@@ -81,12 +91,21 @@ export class TaxonomiesRepository implements ITaxonomiesRepository {
                     isDeleted: false
                 }
             });
+
+            const taxonomyAndCategoryMap = new Map<string, CategoryMeta[]>();
+            for (const t of taxonomies) {
+                const categories = await this.categorySchemeRepository.fetchAllAsync(t.taxonomyId);
+                taxonomyAndCategoryMap.set(t.taxonomyId, categories);
+            }
+
             return taxonomies.map(taxonomy => new Taxonomy({
                 description: taxonomy.description,
                 displayName: taxonomy.displayName,
                 taxonomyId: taxonomy.taxonomyId!,
                 name: taxonomy.name,
-                identifier: taxonomy.identifier
+                identifier: taxonomy.identifier,
+                categorySchemes: taxonomyAndCategoryMap.get(taxonomy.taxonomyId) ?? [],
+                schemes: []
             }));
         }
         catch (ex: any) {
@@ -107,6 +126,12 @@ export class TaxonomiesRepository implements ITaxonomiesRepository {
                     isDeleted: false
                 })
             );
+
+            await this.categorySchemeRepository.saveAsync(
+                taxonomy.taxonomyId,
+                params.categorySchemes
+            );
+
             return new Taxonomy({
                 description: taxonomy.description,
                 taxonomyId: taxonomy.taxonomyId,
@@ -122,7 +147,8 @@ export class TaxonomiesRepository implements ITaxonomiesRepository {
                         type: s.type,
                         metadata: s.type
                     })
-                ) ?? []
+                ) ?? [],
+                categorySchemes: []
             });
         }
         catch (ex: any) {
@@ -141,6 +167,8 @@ export class TaxonomiesRepository implements ITaxonomiesRepository {
                     isDeleted: true
                 }
             );
+
+            this.categorySchemeRepository.removeAsync(taxonomyId);
         }
         catch (ex: any) {
             console.error("Failed to data access.", ex.message);
@@ -164,12 +192,17 @@ export class TaxonomiesRepository implements ITaxonomiesRepository {
                     description: params.description,
                 }
             );
+
+            await this.categorySchemeRepository.saveAsync(params.taxonomyId, params.categorySchemes);
+
             return new Taxonomy({
                 taxonomyId: taxonomy.raw.taxonomyId,
                 displayName: taxonomy.raw.displayName,
                 name: taxonomy.raw.name,
                 description: taxonomy.raw.description,
                 identifier: taxonomy.raw.identifier,
+                categorySchemes: [],
+                schemes: []
             });
         }
         catch (ex: any) {

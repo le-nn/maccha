@@ -29,12 +29,12 @@ export const CategorySettingArea = (props: CategorySettingAreaProps) => {
                 <Grid item xs={12} sm={6}>
                     <CategorySettingPanel
                         onChange={() => props.onChange(props.postType)}
-                        categoryTree={props.postType.categoryTree!} />
+                        categoryTree={props.postType.taxonomy.categoryTree!} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <CategorySettingPreviewPanel
                         onChange={() => props.onChange(props.postType)}
-                        categoryTree={props.postType.categoryTree!} />
+                        categoryTree={props.postType.taxonomy.categoryTree!} />
                 </Grid>
             </Grid>
         </>

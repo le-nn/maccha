@@ -8,7 +8,7 @@ import { TaxonomiesService } from "@/Models/Contents/Services";
  */
 export class TaxonomiesAppService {
     constructor(
-        private readonly taxonomiesSeervice: TaxonomiesService
+        private readonly taxonomiesService: TaxonomiesService
     ) {
 
     }
@@ -18,7 +18,7 @@ export class TaxonomiesAppService {
      * @param loginUser Login user.
      */
     public async getAll(loginUser: LoginUser): Promise<Taxonomy[]> {
-        return await this.taxonomiesSeervice.getListAsync(undefined, loginUser.identifier);
+        return await this.taxonomiesService.getListAsync(undefined, loginUser.identifier);
     }
 
     /**
@@ -27,6 +27,6 @@ export class TaxonomiesAppService {
      * @param params Params to create taxonomy.
      */
     public async createAsync(loginUser: LoginUser, params: ICreateTaxonomyParams): Promise<Taxonomy> {
-        return await this.taxonomiesSeervice.createAsync(loginUser.identifier, params);
+        return await this.taxonomiesService.createAsync(loginUser.identifier, params);
     }
 }

@@ -30,6 +30,7 @@ export class PostTypesService {
      * @param params to create post type info.
      */
     public async createAsync(identifier: string, params: ICreatePostTypeParams): Promise<PostType> {
+        
         return await this.postTypesRepository.createAsync(identifier, params);
     }
 

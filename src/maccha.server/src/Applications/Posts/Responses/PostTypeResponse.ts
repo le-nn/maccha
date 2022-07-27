@@ -40,5 +40,4 @@ export class PostTypeResponse implements IPostType {
     constructor(value: IPostType) {
         Object.assign(this, value);
     }
-
 }

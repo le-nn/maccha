@@ -5,13 +5,18 @@ import { PostTypesRepository } from "@/Infrastructure/Repositories/PostTypesRepo
 import { PostTypesService } from "@/Models/Posts/Services/PostTypesService";
 import { PostTypesController } from "@/Applications/Posts/PostTypesController";
 import { SchemeEntity, TaxonomyEntity } from "@/Infrastructure/Database/Entities";
+import { CategorySchemeEntity } from "@/Infrastructure/Database/Entities/CategorySchemeEntity";
+import { ContentCategoryEntity } from "@/Infrastructure/Database/Entities/ContentCategoryEntity";
+import { CategorySchemeRepository } from "@/Infrastructure/Repositories/CategorySchemeRepository";
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([
             PostTypeEntity,
             TaxonomyEntity,
-            SchemeEntity
+            SchemeEntity,
+            ContentCategoryEntity,
+            CategorySchemeEntity,
         ])
     ],
     controllers: [PostTypesController],
@@ -21,6 +26,10 @@ import { SchemeEntity, TaxonomyEntity } from "@/Infrastructure/Database/Entities
             provide: "PostTypesRepository",
             useClass: PostTypesRepository
         },
+        {
+            provide: "CategorySchemeRepository",
+            useClass: CategorySchemeRepository
+        }
     ],
     exports: [
         PostTypesService
