@@ -25,11 +25,6 @@ export class AuthService implements IAuthService {
      */
     public async loginAsync(email: string, password: string): Promise<Token & LoginUser> {
         try {
-            console.log("---------------0");
-            for (const item of await this.usersService.getAll()) {
-                console.log(item);
-            }
-
             const user = await this.usersService.validateUser(email, password);
             const [webSiteId, identifier] = await (async (): Promise<[string, string] | [null, null]> => {
                 if (user.role === RoleType.Admin) {

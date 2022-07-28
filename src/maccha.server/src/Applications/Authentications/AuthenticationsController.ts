@@ -39,8 +39,6 @@ export class AuthenticationsController {
     @ApiCreatedResponse({ type: LoginResponse })
     @Post()
     public async login(@Body() loginInfo: LoginParams): Promise<(LoginResponse) | FailedResponse> {
-        console.log("#ssssssssss");
-
         const login = await this.authService.loginAsync(loginInfo.email, loginInfo.password);
         return new LoginResponse({
             userId: login.userId,
