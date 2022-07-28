@@ -7,7 +7,6 @@ export class MailService implements IMailService {
     transporter: Transporter;
 
     constructor(connectionString: string) {
-        console.log(connectionString);
         if (!connectionString) {
             throw new Error("connectionString is undefined.");
         }
