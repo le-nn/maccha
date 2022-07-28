@@ -111,6 +111,13 @@ export class PostTypesRepository implements IPostTypesRepository {
                 taxonomy: undefined as any,
             }));
 
+            // save category schemes
+            await this.categorySchemeRepository.saveAsync(
+                createdTaxonomy.taxonomyId,
+                params.taxonomy.categorySchemes
+            );
+
+
             if (params.taxonomy.schemes.length) {
                 const _ = await lastValueFrom(
                     from(
@@ -254,6 +261,7 @@ export class PostTypesRepository implements IPostTypesRepository {
                     displayFormat: params.displayFormat
                 }
             );
+
             await this.taxonomies.update(
                 {
                     taxonomyId: params.taxonomy.taxonomyId
@@ -273,27 +281,29 @@ export class PostTypesRepository implements IPostTypesRepository {
             //     taxonomyId: params.taxonomy.taxonomyId
             // });
 
-            await lastValueFrom(
-                from(params.taxonomy.schemes.map((s, i) => ({ ...s, sort: i })))
-                    .pipe(
-                        concatMap(
-                            s => from(
-                                this.schemes.save(
-                                    new SchemeEntity({
-                                        schemeId: s.schemeId,
-                                        sort: s.sort,
-                                        description: s.description,
-                                        displayName: s.displayName,
-                                        type: s.type,
-                                        name: s.name,
-                                        taxonomyId: params.taxonomy.taxonomyId,
-                                        metadata: s.metadata
-                                    })
+            if (params.taxonomy.schemes.length) {
+                await lastValueFrom(
+                    from(params.taxonomy.schemes.map((s, i) => ({ ...s, sort: i })))
+                        .pipe(
+                            concatMap(
+                                s => from(
+                                    this.schemes.save(
+                                        new SchemeEntity({
+                                            schemeId: s.schemeId,
+                                            sort: s.sort,
+                                            description: s.description,
+                                            displayName: s.displayName,
+                                            type: s.type,
+                                            name: s.name,
+                                            taxonomyId: params.taxonomy.taxonomyId,
+                                            metadata: s.metadata
+                                        })
+                                    )
                                 )
-                            )
-                        ),
-                    )
-            );
+                            ),
+                        )
+                );
+            }
 
             return new PostType({
                 taxonomy: new Taxonomy({

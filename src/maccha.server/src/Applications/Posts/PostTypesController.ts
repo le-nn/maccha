@@ -105,6 +105,7 @@ export class PostTypesController {
         @Body() params: SavePostTypeParams,
         @Claim() loginUser: LoginUser
     ): Promise<PostTypeResponse> {
+        console.log(params);
         const p = await this.postTypesService.saveAsync(loginUser, params);
         return new PostTypeResponse({
             taxonomy: new TaxonomyReponse({

@@ -21,7 +21,6 @@ export const CategorySettingPanel = ({ categoryTree, onChange }: CategorySetting
         const subscription = categoryTree.subscribe(() => {
             setCategories([...categoryTree.all]);
             onChange();
-            console.log(categoryTree);
         });
 
         return () => {

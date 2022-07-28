@@ -29,7 +29,7 @@ export class CategoryTree {
 
     subscribe(observer: () => void) {
         this.observers.push(observer);
-        //this.observers = [...this.observers, observer];
+        observer();
 
         // notify state changed
         return {
@@ -67,7 +67,6 @@ export class CategoryTree {
 
     add(category: Category) {
         this._categories.push(category);
-        console.log(this.tree);
         for (const o of this.observers) {
             o();
         }

@@ -1,5 +1,5 @@
-import { Migration1658975605765 } from "./1658975605765-Migration";
+import { Migration1658998956682 } from "./1658998956682-Migration";
 
 export const Migrations: Function[] = [
-    Migration1658975605765
+    Migration1658998956682
 ];

@@ -6,23 +6,60 @@ import { CategorySchemeEntity } from "../Database/Entities/CategorySchemeEntity"
 
 export class CategorySchemeRepository implements ICategorySchemeRepository {
 
-    constructor(@InjectRepository(CategorySchemeEntity) private readonly taxonomies: Repository<CategorySchemeEntity>) { }
+    constructor(
+        @InjectRepository(CategorySchemeEntity)
+        private readonly categrySchemes: Repository<CategorySchemeEntity>
+    ) { }
 
-    removeAsync(taxomomyId: string): Promise<void> {
-        throw new Error("Method not implemented.");
+    async removeAsync(taxonomyId: string): Promise<void> {
+        try {
+            await this.categrySchemes.delete({
+                taxonomyId: taxonomyId,
+            });
+        }
+        catch {
+            throw expect;
+        }
     }
+
     async fetchAllAsync(taxonomyId: string): Promise<CategoryMeta[]> {
-        return [
-            {
-                id:13,
-                name:"sefsefs",
-                order: 2,
-                parentId:234,
-                slug:"sesef"
-            }
-        ];
+        try {
+            const categorySchemes = await this.categrySchemes.findBy({ taxonomyId, });
+
+            return categorySchemes.map(c => ({
+                id: c.id,
+                name: c.name,
+                order: c.order,
+                parentId: c.parentId,
+                slug: c.slug
+            }));
+        }
+        catch (expect) {
+            throw expect;
+        }
     }
-    saveAsync(taxomomyId: string, categories: CategoryMeta[]): Promise<CategoryMeta[]> {
-        throw new Error("Method not implemented.");
+
+    async saveAsync(taxonomyId: string, categories: CategoryMeta[]): Promise<CategoryMeta[]> {
+        try {
+            await this.categrySchemes.delete({
+                taxonomyId: taxonomyId,
+            });
+
+            const items = await this.categrySchemes.insert(
+                categories.map(x => ({
+                    id: x.id,
+                    name: x.name,
+                    order: x.order,
+                    slug: x.slug,
+                    taxonomyId: taxonomyId,
+                    parentId: x.parentId,
+                }))
+            );
+
+            return [];
+        }
+        catch (expect) {
+            throw expect;
+        }
     }
 }
