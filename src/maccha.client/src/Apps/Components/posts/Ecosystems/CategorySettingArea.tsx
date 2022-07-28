@@ -12,7 +12,6 @@ interface CategorySettingAreaProps {
 
 export const CategorySettingArea = (props: CategorySettingAreaProps) => {
     const { t } = useTranslation();
-
     return (
         <>
             <Typography variant="h6" mt={6}>{t("カテゴリ設定")}</Typography>
@@ -28,12 +27,13 @@ export const CategorySettingArea = (props: CategorySettingAreaProps) => {
                 width="100%">
                 <Grid item xs={12} sm={6}>
                     <CategorySettingPanel
-                        onChange={() => props.onChange(props.postType)}
+                        onChange={() => {
+                            props.onChange(props.postType);
+                        }}
                         categoryTree={props.postType.taxonomy.categoryTree!} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <CategorySettingPreviewPanel
-                        onChange={() => props.onChange(props.postType)}
                         categoryTree={props.postType.taxonomy.categoryTree!} />
                 </Grid>
             </Grid>

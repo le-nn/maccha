@@ -21,9 +21,9 @@ export class ContentCategoryEntity {
 
     @Index()
     @Column("uuid")
-    contentId?: string;
+    contentId!: string;
 
     @Index()
-    @Column("uuid")
-    categorySchemeId?: string;
+    @Column()
+    categoryId!: number;
 }

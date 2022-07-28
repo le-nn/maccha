@@ -4,7 +4,7 @@ import { CategoryNode } from "./CategoryNode";
 
 export class CategoryTree {
     private _categories: Category[] = [];
-    private observers: (() => void)[] = [];
+    private _observers: (() => void)[] = [];
 
     get all(): Category[] {
         return this._categories;
@@ -20,20 +20,29 @@ export class CategoryTree {
         });
     }
 
-    getMaxId() {
-        return Math.max(...[
+    generateNextId() {
+        const max = Math.max(...[
             0,
-            ...this.all.map(x => x.id)
+            ...this._categories.map(x => x.id)
         ]);
+        const map = new Set(this._categories.map(x => x.id));
+        const getId = () => {
+            for (let i = 0; i <= max; i++) {
+                if (!map.has(i)) {
+                    return i;
+                }
+            }
+        };
+
+        return getId() ?? max + 1;
     }
 
     subscribe(observer: () => void) {
-        this.observers.push(observer);
-        //this.observers = [...this.observers, observer];
+        this._observers.push(observer);
 
         // notify state changed
         return {
-            dispose: () => this.observers = this.observers.filter(x => x !== observer)
+            dispose: () => this._observers = this._observers.filter(x => x !== observer)
         };
     }
 
@@ -67,8 +76,8 @@ export class CategoryTree {
 
     add(category: Category) {
         this._categories.push(category);
-        console.log(this.tree);
-        for (const o of this.observers) {
+        this._categories.sort((a, b) => a.id - b.id);
+        for (const o of this._observers) {
             o();
         }
     }
@@ -82,17 +91,23 @@ export class CategoryTree {
                 newc
             ];
 
-            for (const o of this.observers) {
+            console.log(this, newc, this._categories);
+
+            for (const o of this._observers) {
                 o();
             }
         }
+    }
+
+    get(id: number) {
+        return this._categories.find(x => x.id === id) ?? null;
     }
 
     remove(id: number) {
         this._categories = this._categories.filter(x => x.id !== id);
 
         // notify state changed
-        for (const o of this.observers) {
+        for (const o of this._observers) {
             o();
         }
     }

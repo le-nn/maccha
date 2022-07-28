@@ -9,17 +9,15 @@ import { useTranslation } from "react-i18next";
 
 interface CategorySettingPreviewPanelProps {
     categoryTree: CategoryTree;
-    onChange: () => void;
 }
 
-export const CategorySettingPreviewPanel = ({ categoryTree, onChange }: CategorySettingPreviewPanelProps) => {
+export const CategorySettingPreviewPanel = ({ categoryTree }: CategorySettingPreviewPanelProps) => {
     const [tree, setTree] = useState(() => categoryTree.tree);
     const { t } = useTranslation();
 
     useEffect(() => {
         const subscription = categoryTree.subscribe(() => {
             setTree(categoryTree.tree);
-            onChange();
         });
 
         return () => {
@@ -44,7 +42,7 @@ export const CategorySettingPreviewPanel = ({ categoryTree, onChange }: Category
                             <EmptyItemsPanel message={t("カテゴリがありません")} />
                         </Box>
                         :
-                        tree.map(t => <Box key={t.id}>
+                        tree.map(t => <Box key={t.id} mt={2}>
                             <Tree category={t} nest={0} />
                         </Box>)
 

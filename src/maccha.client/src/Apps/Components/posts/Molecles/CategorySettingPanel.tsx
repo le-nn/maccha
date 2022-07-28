@@ -1,5 +1,5 @@
-import { Add } from "@mui/icons-material";
-import { Box, Button, Divider, MenuItem, Paper, Select, Stack, TextField, Typography } from "@mui/material";
+import { Add, Delete, Edit } from "@mui/icons-material";
+import { Box, Button, Divider, IconButton, MenuItem, Paper, Select, Stack, TextField, Typography } from "@mui/material";
 import { EmptyItemsPanel } from "Apps/Components/commons/EmptyItemsPanel";
 import { Category } from "Apps/Models/Domain/Contents/Entities/Category";
 import { CategoryTree } from "Apps/Models/Domain/Contents/Entities/CategoryTree";
@@ -21,13 +21,13 @@ export const CategorySettingPanel = ({ categoryTree, onChange }: CategorySetting
         const subscription = categoryTree.subscribe(() => {
             setCategories([...categoryTree.all]);
             onChange();
-            console.log(categoryTree);
         });
 
         return () => {
             subscription.dispose();
         };
-    }, [categoryTree]);
+    }, [categoryTree, onChange, categories]);
+
 
     const { showAsync } = useDialog();
 
@@ -41,12 +41,33 @@ export const CategorySettingPanel = ({ categoryTree, onChange }: CategorySetting
 
         if (item) {
             categoryTree.add({
-                id: categoryTree.getMaxId() + 1,
+                id: categoryTree.generateNextId(),
                 name: item.name,
                 parentId: item.parentId,
                 order: item.order,
                 slug: item.slug,
             });
+        }
+    };
+
+    const handleRemove = (id: number) => {
+        categoryTree.remove(id);
+    };
+
+    const handleEdit = async (category: Category) => {
+        const entity = categoryTree.get(category.id);
+        if (entity) {
+            const edited = await showAsync<Omit<Category, "id"> | null>(close => (
+                <CategorySetttingDialog
+                    categories={categories}
+                    category={category}
+                    onOk={close}
+                />
+            ));
+
+            if (edited) {
+                categoryTree.mutate(category.id, c => ({ id: c.id, ...edited }));
+            }
         }
     };
 
@@ -61,19 +82,28 @@ export const CategorySettingPanel = ({ categoryTree, onChange }: CategorySetting
             <Typography>{t("編集")}</Typography>
             <Stack minHeight="200px" maxHeight="400px" sx={{ overflowY: "auto" }}>
                 {
-                    categories.length === 0 ?
+                    categoryTree.all.length === 0 ?
                         <Box py={3}>
                             <EmptyItemsPanel message={t("カテゴリがありません")} />
                         </Box>
                         :
                         categories.map(category => (
-                            <Stack direction="row" key={category.id}>
+                            <Stack direction="row" key={JSON.stringify(category)} width="100%">
                                 <Box>
                                     <Typography>{category.id}</Typography>
                                 </Box>
                                 <Box ml={1}>
                                     <Typography>{category.name}</Typography>
                                 </Box>
+
+                                <Spacer />
+
+                                <IconButton onClick={() => handleEdit(category)}>
+                                    <Edit />
+                                </IconButton>
+                                <IconButton onClick={() => handleRemove(category.id)}>
+                                    <Delete />
+                                </IconButton>
                             </Stack>
                         ))
                 }
@@ -109,7 +139,6 @@ const CategorySetttingDialog = ({
     return (
         <>
             <Stack p={{ sx: 2, sm: 3, md: 5 }}>
-
                 <Typography sx={{ mt: 3 }}>{t("カテゴリ名")}</Typography>
                 <TextField
                     sx={{ mt: 2 }}

@@ -1,8 +1,8 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 import { runInitialSeed } from "../Seeds";
 
-export class Migration1658975605765 implements MigrationInterface {
-    name = 'Migration1658975605765'
+export class Migration1659024576004 implements MigrationInterface {
+    name = 'Migration1659024576004';
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TABLE \`user_entity\` (\`userId\` varchar(36) NOT NULL, \`name\` varchar(128) NOT NULL, \`email\` varchar(256) NOT NULL, \`password\` varchar(256) NOT NULL, \`role\` bigint UNSIGNED NOT NULL, \`isActive\` tinyint NOT NULL, \`avatar\` varchar(255) NOT NULL, \`updatedAt\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`createdAt\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), INDEX \`IDX_3fe76ecf0f0ef036ff981e9f67\` (\`name\`), INDEX \`IDX_158f20832b16ead19dcd50c743\` (\`role\`), UNIQUE INDEX \`IDX_415c35b9b3b6fe45a3b065030f\` (\`email\`), PRIMARY KEY (\`userId\`)) ENGINE=InnoDB`);
@@ -18,7 +18,7 @@ export class Migration1658975605765 implements MigrationInterface {
         await queryRunner.query(`CREATE TABLE \`contact_content_field_entity\` (\`contactContentFieldId\` varchar(36) NOT NULL, \`name\` varchar(128) NOT NULL, \`value\` longtext NOT NULL, \`contactSettingId\` varchar(255) NOT NULL, \`contactContentId\` varchar(255) NOT NULL, INDEX \`IDX_04fca1af41b416e2f01c3fb217\` (\`contactSettingId\`), INDEX \`IDX_3bfc2900e6aedf4b4581a0cd6a\` (\`contactContentId\`), PRIMARY KEY (\`contactContentFieldId\`)) ENGINE=InnoDB`);
         await queryRunner.query(`CREATE TABLE \`contact_setting_entity\` (\`contactSettingId\` varchar(36) NOT NULL, \`name\` varchar(128) NOT NULL, \`schemes\` varchar(512) NOT NULL, \`identifier\` varchar(255) NOT NULL, INDEX \`IDX_36ead2ca0a0f7488dea65cab68\` (\`identifier\`), PRIMARY KEY (\`contactSettingId\`)) ENGINE=InnoDB`);
         await queryRunner.query(`CREATE TABLE \`category_scheme_entity\` (\`categorySchemeId\` varchar(36) NOT NULL, \`taxonomyId\` varchar(255) NOT NULL, \`id\` int NOT NULL, \`name\` varchar(64) NOT NULL, \`slug\` varchar(32) NOT NULL, \`order\` int NOT NULL, \`order2\` int NOT NULL, \`parentId\` int NULL, INDEX \`IDX_0a7aadfe205fef90204f382063\` (\`taxonomyId\`), PRIMARY KEY (\`categorySchemeId\`)) ENGINE=InnoDB`);
-        await queryRunner.query(`CREATE TABLE \`content_category_entity\` (\`contentCategoryId\` varchar(36) NOT NULL, \`taxonomyId\` varchar(255) NOT NULL, \`contentId\` varchar(255) NOT NULL, \`categorySchemeId\` varchar(255) NOT NULL, INDEX \`IDX_e61d16d79e256d6422d1011411\` (\`taxonomyId\`), INDEX \`IDX_798c6206a1d59db4d60ecef140\` (\`contentId\`), INDEX \`IDX_466fb0b99cc6eb524d29e3e5e3\` (\`categorySchemeId\`), PRIMARY KEY (\`contentCategoryId\`)) ENGINE=InnoDB`);
+        await queryRunner.query(`CREATE TABLE \`content_category_entity\` (\`contentCategoryId\` varchar(36) NOT NULL, \`taxonomyId\` varchar(255) NOT NULL, \`contentId\` varchar(255) NOT NULL, \`categoryId\` int NOT NULL, INDEX \`IDX_e61d16d79e256d6422d1011411\` (\`taxonomyId\`), INDEX \`IDX_798c6206a1d59db4d60ecef140\` (\`contentId\`), INDEX \`IDX_6bb2db28112ea83c6f160e7901\` (\`categoryId\`), PRIMARY KEY (\`contentCategoryId\`)) ENGINE=InnoDB`);
         await queryRunner.query(`ALTER TABLE \`user_web_site_entity\` ADD CONSTRAINT \`FK_a893ef903a0c6804f5ebf019337\` FOREIGN KEY (\`webSiteId\`) REFERENCES \`web_site_entity\`(\`webSiteId\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE \`post_type_entity\` ADD CONSTRAINT \`FK_4ad0a6c725ceace2c07c9df8ef4\` FOREIGN KEY (\`taxonomyId\`) REFERENCES \`taxonomy_entity\`(\`taxonomyId\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE \`scheme_entity\` ADD CONSTRAINT \`FK_d36a95e76aae66ffaf6067cfd9d\` FOREIGN KEY (\`taxonomyId\`) REFERENCES \`taxonomy_entity\`(\`taxonomyId\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
@@ -30,7 +30,7 @@ export class Migration1658975605765 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE \`scheme_entity\` DROP FOREIGN KEY \`FK_d36a95e76aae66ffaf6067cfd9d\``);
         await queryRunner.query(`ALTER TABLE \`post_type_entity\` DROP FOREIGN KEY \`FK_4ad0a6c725ceace2c07c9df8ef4\``);
         await queryRunner.query(`ALTER TABLE \`user_web_site_entity\` DROP FOREIGN KEY \`FK_a893ef903a0c6804f5ebf019337\``);
-        await queryRunner.query(`DROP INDEX \`IDX_466fb0b99cc6eb524d29e3e5e3\` ON \`content_category_entity\``);
+        await queryRunner.query(`DROP INDEX \`IDX_6bb2db28112ea83c6f160e7901\` ON \`content_category_entity\``);
         await queryRunner.query(`DROP INDEX \`IDX_798c6206a1d59db4d60ecef140\` ON \`content_category_entity\``);
         await queryRunner.query(`DROP INDEX \`IDX_e61d16d79e256d6422d1011411\` ON \`content_category_entity\``);
         await queryRunner.query(`DROP TABLE \`content_category_entity\``);
