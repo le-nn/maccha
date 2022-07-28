@@ -287,7 +287,7 @@ export const NavigationList = (props: DrawerPropos) => {
                                         <Box
                                             key={route.path}
                                             margin="auto"
-                                            height="58px"
+                                            height="48px"
                                             display="flex"
                                             bgcolor={isCurrentRoute(route.name) ? "rgba(127,127,127,0.04)" : ""}
                                         >
@@ -320,7 +320,8 @@ export const NavigationList = (props: DrawerPropos) => {
                 width: "3px",
                 transition: "all 0.7s cubic-bezier(1, 0.37, 0.16, 0.97)",
                 position: "absolute",
-                borderRadius: "4px"
+                borderRadius: "4px",
+                marginLeft:"4px",
             }}></div>
         </div >
     );
