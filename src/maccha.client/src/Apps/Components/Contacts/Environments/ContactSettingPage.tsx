@@ -28,7 +28,7 @@ export default () => {
     const { begin, end } = useLoading();
 
     const handleBack = () => {
-        navigate("contacts");
+        navigate("../../contacts");
     };
 
     const handleSave = async () => {

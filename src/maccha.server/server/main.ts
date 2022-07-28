@@ -24,7 +24,8 @@ const bootstrap = async (): Promise<void> => {
         pulugins: [
             TestPlugin
         ],
-        clientSpaPath: "/app"
+        clientSpaPath: "/app",
+        mailConnectionString: process.env.MAIL_CONNECTION_STRING
     });
 
     console.log("start espresso cms listen on " + (process.env.PORT || 8081));

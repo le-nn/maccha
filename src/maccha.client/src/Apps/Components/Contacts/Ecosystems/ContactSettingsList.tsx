@@ -42,7 +42,7 @@ export const ContactSettingsList = () => {
     };
 
     const createContactSetting = async () => {
-        await navigate("/contacts/new/edit");
+        await navigate("./contacts/new/edit");
     };
 
     const handleContactSettingClicked = (settingId: string) => {
@@ -56,7 +56,7 @@ export const ContactSettingsList = () => {
 
     const handleEdit = () => {
         const selected = selectedId.current;
-        navigate("/contacts/" + selected + "/edit");
+        navigate("./contacts/" + selected + "/edit");
         handleCloseMenu();
     };
 

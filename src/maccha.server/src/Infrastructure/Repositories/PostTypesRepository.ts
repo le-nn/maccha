@@ -90,7 +90,7 @@ export class PostTypesRepository implements IPostTypesRepository {
 
     public async createAsync(identifier: string, params: ICreatePostTypeParams): Promise<PostType> {
         try {
-            if (await this.taxonomies.findOne({ where: { name: params.taxonomy.name, identifier } })) {
+            if (await this.taxonomies.findOne({ where: { name: params.taxonomy.name, identifier, isDeleted: false } })) {
                 throw new Error(`taxonomy ${params.taxonomy.name} is already exists.`);
             }
 
@@ -111,26 +111,29 @@ export class PostTypesRepository implements IPostTypesRepository {
                 taxonomy: undefined as any,
             }));
 
-            const _ = await lastValueFrom(
-                from(
-                    params.taxonomy.schemes.map((s, i) => ({ ...s, sort: i }))).pipe(
-                        mergeMap(
-                            s => from(
-                                this.schemes.save(
-                                    new SchemeEntity({
-                                        metadata: s.metadata,
-                                        description: s.description,
-                                        displayName: s.displayName,
-                                        type: s.type,
-                                        name: s.name,
-                                        taxonomyId: createdTaxonomy.taxonomyId,
-                                        sort: s.sort
-                                    })
+            if (params.taxonomy.schemes.length) {
+                const _ = await lastValueFrom(
+                    from(
+                        params.taxonomy.schemes.map((s, i) => ({ ...s, sort: i }))).pipe(
+                            mergeMap(
+                                s => from(
+                                    this.schemes.save(
+                                        new SchemeEntity({
+                                            metadata: s.metadata,
+                                            description: s.description,
+                                            displayName: s.displayName,
+                                            type: s.type,
+                                            name: s.name,
+                                            taxonomyId: createdTaxonomy.taxonomyId,
+                                            sort: s.sort
+                                        })
+                                    )
                                 )
-                            )
-                        ),
-                    )
-            );
+                            ),
+                        )
+                );
+            }
+
             if (postType.postTypeId) {
                 const c = await this.findAsync(postType.postTypeId);
                 if (c) {
@@ -148,7 +151,15 @@ export class PostTypesRepository implements IPostTypesRepository {
 
     async deleteAsync(postTypeId: string): Promise<void> {
         try {
-            const postType = await this.postTypes.update(
+            const postType = await this.postTypes.findOneBy({
+                postTypeId,
+            });
+
+            if (!postType) {
+                return;
+            }
+
+            await this.postTypes.update(
                 {
                     postTypeId
                 },
@@ -156,6 +167,11 @@ export class PostTypesRepository implements IPostTypesRepository {
                     isDeleted: true
                 }
             );
+            this.taxonomies.update({
+                taxonomyId: postType.taxonomyId
+            }, {
+                isDeleted: true
+            });
         }
         catch (ex: any) {
             console.error("Failed to data access.", ex.message);

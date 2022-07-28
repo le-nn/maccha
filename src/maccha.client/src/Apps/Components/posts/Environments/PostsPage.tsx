@@ -45,6 +45,7 @@ export default () => {
     const [postTypeContext, setPostTypeContext] = useState<PostType | null>(null);
     const theme = useTheme();
     const routeMatch = useParams() ?? {};
+    const route = useAppLocation();
 
     const { t } = useTranslation();
 
@@ -80,15 +81,22 @@ export default () => {
     };
 
     const onAddPostTypeClicked = async () => {
-        history("../new/edit");
+        const paths = route.pathname.split("/");
+        console.log(paths);
+        if (paths[paths.length - 1] === "posts") {
+            history("./posts/new/edit");
+        }
+        else {
+            history("./new/edit");
+        }
     };
 
-    function onEditClicked() {
+    const onEditClicked = () => {
         if (postTypeContext) {
 
             history(`./${postTypeContext.taxonomy.name}/edit`);
         }
-    }
+    };
 
     const onPostTypeListClicked = (index: number) => {
         services.postManagementsService.selectFromIndex(index);

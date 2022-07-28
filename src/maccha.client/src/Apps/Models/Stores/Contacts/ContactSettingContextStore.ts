@@ -75,7 +75,12 @@ export class ContactSettingContextStore extends FluxStore<ContactSettingContextS
     }
 
     async initAsNewSetting() {
-        this.mutate(new InitSetting(this.authStore.state.loginInfo?.identifier ?? ""));
+        const websiteId = this.authStore.state.loginInfo?.webSiteId;
+        if (!websiteId) {
+            throw new Error("website is not selected");
+        }
+
+        this.mutate(new InitSetting(websiteId));
     }
 
     async modifySetting(setting: IContactSetting) {

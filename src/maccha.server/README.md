@@ -1,85 +1,86 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+# API Server of Maccha
 
-[travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
-[travis-url]: https://travis-ci.org/nestjs/nest
-[linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
-[linux-url]: https://travis-ci.org/nestjs/nest
+## CLI
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications, heavily inspired by <a href="https://angular.io" target="blank">Angular</a>.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/dm/@nestjs/core.svg" alt="NPM Downloads" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://api.travis-ci.org/nestjs/nest.svg?branch=master" alt="Travis" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://img.shields.io/travis/nestjs/nest/master.svg?label=linux" alt="Linux" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#5" alt="Coverage" /></a>
-<a href="https://gitter.im/nestjs/nestjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge"><img src="https://badges.gitter.im/nestjs/nestjs.svg" alt="Gitter" /></a>
-<a href="https://opencollective.com/nest#backer"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec"><img src="https://img.shields.io/badge/Donate-PayPal-dc3d53.svg"/></a>
-  <a href="https://twitter.com/nestframework"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Start developmet.
 
-## Description
-
-Maccha.js is a simple headless CMS for managements multiple website contents.
-blog posts, news, media, and more.
-
-## Installation
-
-
-```bash
-$ yarn install
+```
+yarn start:dev
 ```
 
-## Config Database
+Build server app.
 
-To running on MySQL you need to change authentication protcol
-
-```sql
-ALTER USER 'username'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password'
+```
+yarn build
 ```
 
-## Running the app
+Start built file.
 
-```bash
-# development
-$ yarn start
-
-# watch mode
-$ yarn start:dev
-
-# production mode
-$ yarn start:prod
+```
+yarn start
 ```
 
-## Test
+## Usage Example
 
-```bash
-# unit tests
-$ yarn test
+Here is example server. 
 
-# e2e tests
-$ yarn test:e2e
-
-# test coverage
-$ yarn test:cov
+```
+server/main.ts
 ```
 
-## Support
+```ts
+import { createMacchaApiServer } from "../src";
+import path = require("path");
+import env = require("dotenv");
+import { TestPlugin } from "../src/Plugins";
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+env.config();
 
-## Stay in touch
+const bootstrap = async (): Promise<void> => {
+    const app = await createMacchaApiServer({
+        assetsDir: path.join(process.cwd(), "public"),
+        authorization: {
+            expiresIn: process.env.EXPIRES_IN ?? "10m",
+            jwtKey: process.env.JWT_KEY ?? "hogehoge"
+        },
+        database: {
+            username: process.env.DB_USERNAME ?? "root",
+            password: process.env.DB_PASSWORD ?? "root",
+            database: process.env.DB_DATABASE ?? "maccha",
+            host: process.env.DB_HOST ?? "localhost",
+            port: Number(process.env.DB_PORT),
+            logging: false,
+            logger: process.env.LOGGER_TYPE as "simple-console"
+        },
+        pulugins: [
+            TestPlugin
+        ],
+        clientSpaPath: "/app"
+    });
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+    console.log("start espresso cms listen on " + (process.env.PORT || 8081));
+    await app.listen(process.env.PORT || 8081);
+};
+bootstrap();
 
-## License
+```
 
-Nest is [MIT licensed](LICENSE).
+## Migrations
+
+Execute the command following.
+
+```
+yarn migration:generate
+```
+
+and add generated Migration class to export in ```src/Infrastracture/Database/Migrations/index.ts```
+
+```ts
+imoprt { YourMigration } from "YourMigration"
+
+export const Migrations: Function[] = [
+    YourMigration,
+    ...,
+]
+
+```
