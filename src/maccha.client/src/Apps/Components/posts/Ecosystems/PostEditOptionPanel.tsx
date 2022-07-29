@@ -6,22 +6,17 @@ import {
 } from "@mui/material";
 import { services } from "../../../Services";
 import { confirmAsync } from "../../commons/confirmAsync";
-import { DateTime } from "luxon";
 import { showMediaSelectionDialog } from "./MediaSelectionDialog";
 import { postStatusTypes } from "../../../Models/Domain/posts/entities/PostStatusType";
 import { Content } from "../../../Models/Domain/Contents/Entities/Content";
 import { StatusType } from "../../../Models/Domain/Contents/Enumes/StatusType";
-// import {
-//     MuiPickersUtilsProvider,
-//     KeyboardTimePicker,
-//     KeyboardDatePicker,
-// } from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
 import { axios } from "../../../Repositories/config";
 import { useParams } from "@reach/router";
 import { useAppNavigate } from "Libs/Routing/RouterConfig";
 import { Add } from "@mui/icons-material";
 import { useOption } from "Apps/Hooks/useOption";
+import { PostCategorySetting } from "../Molecles/PostCategorySetting";
+import { useTranslation } from "react-i18next";
 
 interface PostEditOptionPanelProps {
     contentEditContext: Content;
@@ -36,6 +31,7 @@ export function PostEditOptionPanel(props: PostEditOptionPanelProps) {
     const matches = useParams<{ taxonomy: string; }>();
     const history = useAppNavigate();
     const [isReservationed, setIsReservation] = useState(!!props.contentEditContext.publishIn);
+    const { t } = useTranslation();
 
     const option = useOption();
 
@@ -66,6 +62,13 @@ export function PostEditOptionPanel(props: PostEditOptionPanelProps) {
         history(option.pathPrefix + "/posts/" + matches.taxonomy);
     }
 
+    const selected = services.postManagementsService.selected;
+    if (!selected) {
+        return <Box>
+            {t("投稿タイプが選択されていません")}
+        </Box>;
+    }
+
     return (
         <>
             <Box
@@ -87,7 +90,7 @@ export function PostEditOptionPanel(props: PostEditOptionPanelProps) {
                     color="primary"
                     variant="contained"
                 >
-                    投稿
+                    {t("投稿")}
                 </Button>
             </Box>
 
@@ -152,7 +155,7 @@ export function PostEditOptionPanel(props: PostEditOptionPanelProps) {
                 </Typography>
                 <TextField
                     onChange={e => setcontentEditContextParam("title", e.target.value)}
-                    placeholder="新しい投稿です"
+                    placeholder={t("新しい投稿です")}
                     fullWidth
                     value={contentEditContext.title}
                     color="primary"
@@ -162,7 +165,7 @@ export function PostEditOptionPanel(props: PostEditOptionPanelProps) {
             <Box width="100%" mt={2}>
                 <Box display="flex">
                     <Typography color="textSecondary" variant="overline">
-                        サムネイル
+                        {t("サムネイル")}
                     </Typography>
                     <Button
                         variant="text"
@@ -172,7 +175,7 @@ export function PostEditOptionPanel(props: PostEditOptionPanelProps) {
                         style={{ marginLeft: "auto" }}
                         onClick={() => setcontentEditContextParam("thumbnail", "")}
                     >
-                        クリア
+                        {t("Clear")}
                     </Button>
                 </Box>
                 <Box
@@ -222,7 +225,7 @@ export function PostEditOptionPanel(props: PostEditOptionPanelProps) {
                 </Typography>
                 <TextField
                     multiline
-                    rows={6}
+                    rows={4}
                     variant="filled"
                     hiddenLabel
                     fullWidth
@@ -237,12 +240,23 @@ export function PostEditOptionPanel(props: PostEditOptionPanelProps) {
                 </Typography>
                 <TextField
                     multiline
-                    rows={6}
+                    rows={4}
                     variant="filled"
                     hiddenLabel
                     fullWidth
                     value={contentEditContext.metadata}
                     onChange={e => setcontentEditContextParam("metadata", e.target.value)}
+                />
+            </Box>
+
+            <Box>
+                <Typography color="textSecondary" variant="overline">
+                    メタデータ
+                </Typography>
+                <PostCategorySetting
+                    categoryTree={ selected.taxonomy.categoryTree}
+                    value={contentEditContext.categoryIds}
+                    onChange={e => setcontentEditContextParam("categoryIds", e)}
                 />
             </Box>
         </>

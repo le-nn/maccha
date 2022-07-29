@@ -22,11 +22,12 @@ export const CategorySettingPanel = ({ categoryTree, onChange }: CategorySetting
             setCategories([...categoryTree.all]);
             onChange();
         });
+       // setCategories([...categoryTree.all]);
 
         return () => {
             subscription.dispose();
         };
-    }, [categoryTree, onChange, categories]);
+    }, [categoryTree, onChange, categories, setCategories]);
 
 
     const { showAsync } = useDialog();

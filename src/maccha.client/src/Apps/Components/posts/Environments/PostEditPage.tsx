@@ -117,7 +117,7 @@ export default function PostEditPage() {
                         </Box>
                         <Box sx={{ boxShadow: theme.shadows[6] }}
                             bgcolor={theme.palette.background.paper}
-                            p={2} minWidth="300px" maxWidth="300px" overflow="auto">
+                            p={2} minWidth="380px" maxWidth="380px" overflow="auto">
                             <PostEditOptionPanel
                                 contentEditContext={postEditService.content}
                             />

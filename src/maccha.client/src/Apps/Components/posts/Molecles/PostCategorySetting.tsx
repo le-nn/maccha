@@ -1,41 +1,47 @@
-import { CheckBox } from "@mui/icons-material";
-import { Box, Stack, Typography, Paper } from "@mui/material";
-import { EmptyItemsPanel } from "Apps/Components/commons/EmptyItemsPanel";
-import { Category } from "Apps/Models/Domain/Contents/Entities/Category";
-import { CategoryNode } from "Apps/Models/Domain/Contents/Entities/CategoryNode";
-import { CategoryTree } from "Apps/Models/Domain/Contents/Entities/CategoryTree";
 import React, { useEffect, useState } from "react";
+import { Box, Stack, Typography, Checkbox } from "@mui/material";
+import { CategoryTree } from "Apps/Models/Domain/Contents/Entities/CategoryTree";
+import { CategoryNode } from "Apps/Models/Domain/Contents/Entities/CategoryNode";
 import { useTranslation } from "react-i18next";
+import { EmptyItemsPanel } from "Apps/Components/commons/EmptyItemsPanel";
 
-interface CategorySettingPreviewPanelProps {
+interface PostCategorySettingProps {
     categoryTree: CategoryTree;
+    value: number[];
+    onChange: (categoryIds: number[]) => void;
 }
 
-export const CategorySettingPreviewPanel = ({ categoryTree }: CategorySettingPreviewPanelProps) => {
+export const PostCategorySetting = (props: PostCategorySettingProps) => {
+    const {
+        categoryTree,
+        onChange,
+        value
+    } = props;
+
     const [tree, setTree] = useState(() => categoryTree.tree);
     const { t } = useTranslation();
 
     useEffect(() => {
         const subscription = categoryTree.subscribe(() => {
-            setTree([...categoryTree.tree]);
+            setTree(categoryTree.tree);
         });
 
-     //   setTree([...categoryTree.tree]);
         return () => {
             subscription.dispose();
         };
     }, [categoryTree]);
 
+    const handleChecked = (id: number, v: boolean) => {
+        if (v) {
+            onChange([...value, id]);
+        }
+        else {
+            onChange([...value.filter(x => x !== id)]);
+        }
+    };
+
     return (
-        <Paper
-            elevation={6}
-            sx={{
-                height: "100%",
-                borderRadius: "20px",
-                width: "100%",
-                p: { xs: 2, sm: 4, md: 5 }
-            }}>
-            <Typography>{t("プレビュー")}</Typography>
+        <Box>
             <Stack minHeight="200px" maxHeight="436px" sx={{ overflowY: "auto" }}>
                 {
                     tree.length === 0 ?
@@ -44,21 +50,38 @@ export const CategorySettingPreviewPanel = ({ categoryTree }: CategorySettingPre
                         </Box>
                         :
                         tree.map(t => <Box key={t.id} mt={2}>
-                            <Tree category={t} nest={0} />
+                            <TreeNode
+                                onChange={handleChecked}
+                                category={t}
+                                nest={0}
+                                selectedIds={value}
+                            />
                         </Box>)
 
                 }
             </Stack>
-        </Paper >
+        </Box>
     );
 };
 
-const Tree = ({ category, nest }: { category: CategoryNode, nest: number }) => {
-    return < >
+const TreeNode = ({
+    category,
+    nest,
+    selectedIds,
+    onChange
+}: {
+    category: CategoryNode,
+    nest: number,
+    selectedIds: number[],
+    onChange: (id: number, cheched: boolean) => void,
+}) => {
+    return <>
         <Stack direction="row"
             ml={nest * 4}
         >
-            <CheckBox />
+            <Checkbox
+                onChange={(_, v) => onChange(category.id, v)}
+            />
             <Typography ml={2}>
                 {category.id}
             </Typography>
@@ -75,9 +98,12 @@ const Tree = ({ category, nest }: { category: CategoryNode, nest: number }) => {
             {
                 category.children.length !== 0 && <>
                     {category.children.map(item => (
-                        <Tree key={item.id}
+                        <TreeNode
+                            onChange={onChange}
+                            key={item.id}
                             category={item}
                             nest={nest + 1}
+                            selectedIds={selectedIds}
                         />
                     ))}
                 </>

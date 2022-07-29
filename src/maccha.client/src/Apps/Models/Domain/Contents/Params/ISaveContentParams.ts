@@ -9,4 +9,5 @@ export interface ISaveContentParams {
     metadata: string;
     updatedAt: DateTime;
     createdBy: string;
+    categoryIds: number[];
 }
