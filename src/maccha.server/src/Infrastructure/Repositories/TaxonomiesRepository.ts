@@ -192,7 +192,6 @@ export class TaxonomiesRepository implements ITaxonomiesRepository {
                     description: params.description,
                 }
             );
-
             await this.categorySchemeRepository.saveAsync(params.taxonomyId, params.categorySchemes);
 
             return new Taxonomy({

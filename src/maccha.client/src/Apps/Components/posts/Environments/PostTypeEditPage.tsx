@@ -56,8 +56,13 @@ export default observer(() => {
     function handleCreate() {
         if (isNew) {
             services.postManagementsService.createPostTypeAsync({
-                categories: postType.taxonomy.categoryTree.tree,
-                taxonomy: postType.taxonomy,
+                taxonomy:{
+                    categorySchemes: postType.taxonomy.categoryTree.all,
+                    description: postType.taxonomy.description,
+                    displayName: postType.taxonomy.displayName,
+                    name: postType.taxonomy.name,
+                    schemes: postType.taxonomy.schemes,
+                },
                 displayFormat: postType.displayFormat
             });
         }
@@ -65,11 +70,12 @@ export default observer(() => {
             services.postManagementsService.savePostTypeAsync({
                 postTypeId: postType.postTypeId,
                 taxonomy: {
-                    categories: postType.taxonomy.categoryTree.all,
+                    categorySchemes: postType.taxonomy.categoryTree.all,
                     description: postType.taxonomy.description,
                     displayName: postType.taxonomy.displayName,
                     name: postType.taxonomy.name,
                     taxonomyId: postType.taxonomy.taxonomyId,
+                    schemes: postType.taxonomy.schemes,
                 },
                 displayFormat: postType.displayFormat
             });
@@ -109,7 +115,7 @@ export default observer(() => {
                 setIsChanged(true);
             }}
         />
-        
+
         <CategorySettingArea
             postType={postType}
             onChange={p => {

@@ -1,3 +1,4 @@
+import { Category } from "../Entities/Category";
 import { ICreateSchemeParams } from "./ICreateSchemeParams";
 
 export interface ICreateTaxonomyParams {
@@ -5,4 +6,5 @@ export interface ICreateTaxonomyParams {
     description: string;
     displayName: string;
     schemes: ICreateSchemeParams[];
+    categorySchemes: Category[];
 }

@@ -8,8 +8,8 @@
     "license": "MIT",
     "private": false,
     "dependencies": {
-        "maccha-server": "./maccha.server",
-        "maccha-client": "./maccha.client",
-        "maccha-sdk": "./maccha.sdk"
+        "maccha-server": "./src/maccha.server",
+        "maccha-client": "./src/maccha.client",
+        "maccha-sdk": "./src/maccha.sdk"
     }
 }

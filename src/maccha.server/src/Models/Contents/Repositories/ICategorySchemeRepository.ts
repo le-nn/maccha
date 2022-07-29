@@ -14,13 +14,13 @@ export interface ICategorySchemeRepository {
      * @param params to create params.
      */
     saveAsync(
-        taxomomyId: string,
+        taxonomyId: string,
         categories: ICreateCategoryParams[]
     ): Promise<CategoryMeta[]>;
 
     /**
      * Remove all categories that related in taxonomy.
-     * @param taxomomyId The taxonomy id to remove.
+     * @param taxonomyId The taxonomy id to remove.
      */
-    removeAsync(taxomomyId: string): Promise<void>;
+    removeAsync(taxonomyId: string): Promise<void>;
 }
