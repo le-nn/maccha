@@ -72,4 +72,13 @@ export class SearchContentParams implements ISearchContentParams {
         })
     })
     fetch = 30;
+
+    @ApiProperty({
+        name: i18n({
+            en: "Category slags.",
+            ja: "カテゴリのスラッグ."
+        }),
+        type: () => [String]
+    })
+    categorySlags!: string[];
 }

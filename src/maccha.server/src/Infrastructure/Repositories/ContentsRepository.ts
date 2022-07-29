@@ -1,19 +1,25 @@
+import { CategoryMeta } from "@/Models/Contents/Entities/CategoryMeta";
+import { CategoryTree } from "@/Models/Contents/Entities/CategoryTree";
 import { Content } from "@/Models/Contents/Entities/Content";
 import { Field } from "@/Models/Contents/Entities/Field";
 import { ICreateContentParams } from "@/Models/Contents/Params/ICreateContentParams";
 import { ISaveContentParams } from "@/Models/Contents/Params/ISaveContentParams";
 import { ISearchContentParams } from "@/Models/Contents/Params/ISearchContentParams";
 import { IContentsRepository } from "@/Models/Contents/Repositories";
+import { ICategorySchemeRepository } from "@/Models/Contents/Repositories/ICategorySchemeRepository";
+import { Inject } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { from, lastValueFrom, of } from "rxjs";
 import { map, mergeMap, toArray } from "rxjs/operators";
 import { Repository, In } from "typeorm";
-import { ContentEntity, FieldEntity } from "../Database/Entities";
+import { ContentCategoryEntity, ContentEntity, FieldEntity } from "../Database/Entities";
 
 export class ContentsRepository implements IContentsRepository {
     constructor(
         @InjectRepository(ContentEntity) private readonly contents: Repository<ContentEntity>,
-        @InjectRepository(FieldEntity) private readonly fields: Repository<FieldEntity>
+        @InjectRepository(FieldEntity) private readonly fields: Repository<FieldEntity>,
+        @InjectRepository(ContentCategoryEntity) private readonly contentCategories: Repository<ContentCategoryEntity>,
+        @Inject("CategorySchemeRepository") private readonly categoryRepository: ICategorySchemeRepository,
     ) {
 
     }
@@ -58,6 +64,7 @@ export class ContentsRepository implements IContentsRepository {
                     schemeId: f.schemeId,
                     value: f.value
                 })),
+                categories: []
             });
         }
         catch {
@@ -93,6 +100,23 @@ LIMIT ${params.fetch} OFFSET ${params.offset}
                 return [rawData, count];
             });
 
+            const categorySchemes = await this.categoryRepository.fetchAllAsync(taxonomyId);
+            const tree = new CategoryTree(categorySchemes);
+
+            const getCategories = async (contentId: string) => {
+                const contentCategoryIds = await this.contentCategories.findBy({ taxonomyId, contentId });
+                const contentCategories = contentCategoryIds
+                    .map(c => tree.get(c.categoryId)!)
+                    .filter(x => !!x);
+                return contentCategories;
+            };
+
+            // const fetchCategories = async (): Promise<CategoryMeta[]> => (await this.contents.manager.connection.query(`
+            //     SELECT
+            // `)).map(c => ({
+
+            // }));
+
             const split = params.fields.split(",");
             const selects = split.length ? In(split) : undefined;
             const mapContent = async (c: any) => {
@@ -121,6 +145,7 @@ LIMIT ${params.fetch} OFFSET ${params.offset}
                             value: f.value
                         })
                     ),
+                    categories: await getCategories(c.contentId),
                     createdBy: {
                         name: c.name,
                         thumbnail: c.avatar,
@@ -148,7 +173,7 @@ LIMIT ${params.fetch} OFFSET ${params.offset}
 
     async saveAsync(identifier: string, params: ISaveContentParams): Promise<Content> {
         try {
-            const content = await this.contents.update(
+            await this.contents.update(
                 {
                     contentId: params.contentId,
                 },
@@ -167,11 +192,17 @@ LIMIT ${params.fetch} OFFSET ${params.offset}
                     contentId: params.contentId
                 }
             });
-            if (!c) throw new Error("Cannot update content");
+            if (!c) throw new Error("Failed update content");
 
             await this.fields.delete({
                 contentId: params.contentId
             });
+
+            await this.insertContentCategories(
+                c.taxonomyId,
+                c.contentId,
+                params.categoryIds
+            );
 
             for (const item of params.fields) {
                 await this.fields.insert(new FieldEntity({
@@ -205,15 +236,21 @@ LIMIT ${params.fetch} OFFSET ${params.offset}
                 taxonomyId: params.taxonomyId,
             }));
 
-            for (const item of params.fields) {
-                await this.fields.insert(new FieldEntity({
-                    contentId: content.contentId,
-                    name: item.name,
-                    value: item.value,
-                    schemeId: item.schemeId,
-                    taxonomyId: params.taxonomyId
-                }));
-            }
+            await this.insertContentCategories(
+                params.taxonomyId,
+                content.contentId,
+                params.categoryIds
+            );
+
+            await this.fields.insert(params.fields.map(item => new FieldEntity({
+                contentId: content.contentId,
+                name: item.name,
+                value: item.value,
+                schemeId: item.schemeId,
+                taxonomyId: params.taxonomyId
+            })));
+
+
         }
         catch {
             throw new Error("Cannot to create content.");
@@ -231,5 +268,21 @@ LIMIT ${params.fetch} OFFSET ${params.offset}
         catch {
             throw new Error("Error occurered");
         }
+    }
+
+    private async insertContentCategories(taxonomyId: string, contentId: string, categoryIds: number[]) {
+        await this.fields.delete({
+            contentId,
+        });
+
+        // TODO: Validation of category id and category id is in category schemes of taxonomy.
+        await this.contentCategories.insert(
+            Array.from(new Set(categoryIds)) // distinct
+                .map(c => ({
+                    contentId: contentId,
+                    categoryId: c,
+                    taxonomyId: taxonomyId,
+                }))
+        );
     }
 }

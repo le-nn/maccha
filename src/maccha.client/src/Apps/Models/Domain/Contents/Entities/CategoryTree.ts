@@ -11,7 +11,7 @@ export class CategoryTree {
     }
 
     get tree(): CategoryNode[] {
-        return this.calcTree();
+        return this.calcTree().tree;
     }
 
     constructor(items?: Category[]) {
@@ -71,7 +71,10 @@ export class CategoryTree {
             }
         }
 
-        return Array.from(categoriesMap.values()).filter(x => x.parentId === null);
+        return {
+            tree: Array.from(categoriesMap.values()).filter(x => x.parentId === null),
+            map: categoriesMap,
+        };
     }
 
     add(category: Category) {
@@ -91,8 +94,6 @@ export class CategoryTree {
                 newc
             ];
 
-            console.log(this, newc, this._categories);
-
             for (const o of this._observers) {
                 o();
             }
@@ -110,5 +111,43 @@ export class CategoryTree {
         for (const o of this._observers) {
             o();
         }
+    }
+
+    getAllChildren(targetId: number): number[] {
+        const map = this.calcTree().map;
+        const parent = map.get(targetId);
+
+        const ids = [];
+        if (parent) {
+            let items = parent.children;
+            while (items.length) {
+                const aggregate = [];
+                for (const item of items) {
+                    ids.push(item.id);
+
+                    // for next loop
+                    for (const child of item.children) {
+                        aggregate.push(child);
+                    }
+                }
+
+                items = aggregate;
+            }
+        }
+        return ids;
+    }
+
+    getAllParents(targetId: number): number[] {
+        const map = this.calcTree().map;
+        const parent = map.get(targetId);
+        const ids = [];
+        if (parent) {
+            let p = map.get(parent.parentId ?? -1);
+            while (p) {
+                ids.push(p.id);
+                p = map.get(p.parentId ?? -1);
+            }
+        }
+        return ids;
     }
 }

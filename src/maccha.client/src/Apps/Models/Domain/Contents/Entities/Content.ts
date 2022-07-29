@@ -32,7 +32,7 @@ export class Content {
         Object.assign(this, params);
     }
 
-    /**
+    /**image.png
      * clone with new params.
      * @param params new params.
      */

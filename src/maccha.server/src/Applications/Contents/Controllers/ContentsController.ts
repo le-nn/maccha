@@ -91,6 +91,7 @@ export class ContentsController {
                 orders: params.orders ?? "",
                 search: params.search ?? "",
                 fields: params.fields ?? "",
+                categorySlags: params.categorySlags ?? []
             });
         return {
             collection,

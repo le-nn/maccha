@@ -1,5 +1,6 @@
 import { DateTime } from "luxon";
 import { StatusType } from "../Enumes/StatusType";
+import { CategoryMeta } from "./CategoryMeta";
 import { Field } from "./Field";
 
 /**
@@ -19,6 +20,7 @@ export class Content {
     readonly createdBy = { name: "", thumbnail: "" };
     readonly identifier: string = "";
     readonly fields: Field[] = [];
+    readonly categories: CategoryMeta[] = [];
 
     /**
      * constructor

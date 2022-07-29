@@ -68,4 +68,13 @@ export class CreateContentParams {
         })
     })
     readonly fields!: CreateFieldParams[];
+    
+    @ApiProperty({
+        type: () => [CreateFieldParams],
+        name: i18n({
+            en: "Fields",
+            ja: "カテゴリーID"
+        })
+    })
+    readonly categoryIds!: number[];
 }

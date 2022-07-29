@@ -80,4 +80,13 @@ export class SaveContentParams {
     })
     @IsArray()
     fields!: CreateFieldParams[];
+
+    @ApiProperty({
+        name: i18n({
+            en: "Fields",
+            ja: "カテゴリID"
+        })
+    })
+    @IsArray()
+    categoryIds!: number[];
 }

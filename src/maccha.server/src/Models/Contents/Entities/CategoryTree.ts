@@ -2,22 +2,15 @@ import { CategoryMeta } from "./CategoryMeta";
 import { CategoryNode } from "./CategoryNode";
 
 export class CategoryTree {
-    private categoriesMap = new Map<number, CategoryNode>();
-    private observers: (() => void)[] = [];
+    private _categories: CategoryMeta[] = [];
+    private _observers: (() => void)[] = [];
 
     get all(): CategoryMeta[] {
-        return Array.from(this.categoriesMap.values()).map(x => ({
-            id: x.id,
-            slug: x.slug,
-            name: x.name,
-            order: x.order,
-            parentId: x.parentId,
-        }));
+        return this._categories;
     }
 
     get tree(): CategoryNode[] {
-        return Array.from(this.categoriesMap.values())
-            .filter(x => x.parentId === null);
+        return this.calcTree().tree;
     }
 
     constructor(items?: CategoryMeta[]) {
@@ -26,81 +19,134 @@ export class CategoryTree {
         });
     }
 
-    getMaxId() {
-        return Math.max(...[
+    generateNextId() {
+        const max = Math.max(...[
             0,
-            ...Array.from(this.categoriesMap.values()).map(x => x.id)
+            ...this._categories.map(x => x.id)
         ]);
+        const map = new Set(this._categories.map(x => x.id));
+        const getId = () => {
+            for (let i = 0; i <= max; i++) {
+                if (!map.has(i)) {
+                    return i;
+                }
+            }
+        };
+
+        return getId() ?? max + 1;
     }
 
     subscribe(observer: () => void) {
-        this.observers.push(observer);
-        //this.observers = [...this.observers, observer];
+        this._observers.push(observer);
 
         // notify state changed
         return {
-            dispose: () => this.observers = this.observers.filter(x => x !== observer)
+            dispose: () => this._observers = this._observers.filter(x => x !== observer)
+        };
+    }
+
+    calcTree() {
+        const categoriesMap = new Map<number, CategoryNode>();
+        for (const c of this._categories) {
+            if (categoriesMap.has(c.id)) {
+                throw new Error("CategoryMeta " + c.id + " has already exists.");
+            }
+
+            const entity = {
+                ...c,
+                children: [],
+            };
+
+            categoriesMap.set(c.id, entity);
+        }
+
+        for (const c of this._categories) {
+            if (c.parentId !== null) {
+                const target = categoriesMap.get(c.id);
+                const parent = categoriesMap.get(c.parentId);
+                if (parent && target) {
+                    parent.children.push(target);
+                }
+            }
+        }
+
+        return {
+            tree: Array.from(categoriesMap.values()).filter(x => x.parentId === null),
+            map: categoriesMap,
         };
     }
 
     add(category: CategoryMeta) {
-        if (this.categoriesMap.has(category.id)) {
-            throw new Error("Category " + category.id + " has already exists.");
-        }
-
-        const entity = {
-            ...category,
-            children: [],
-        };
-
-        this.categoriesMap.set(category.id, entity);
-        if (category.parentId !== null) {
-            const parent = this.categoriesMap.get(category.parentId);
-            if (!parent) {
-                throw new Error("parent category id " + category.parentId + " is not exists.");
-            }
-
-            parent.children.push(entity);
-        }
-
-        for (const o of this.observers) {
+        this._categories.push(category);
+        this._categories.sort((a, b) => a.id - b.id);
+        for (const o of this._observers) {
             o();
         }
     }
 
-    mutate(id: number, mutaion: (category: CategoryNode) => CategoryNode) {
-        const c = this.categoriesMap.get(id);
+    mutate(id: number, mutaion: (category: CategoryMeta) => CategoryMeta) {
+        const c = this._categories.find(x => x.id === id);
         if (c) {
             const newc = mutaion(c);
-            this.categoriesMap.set(id, newc);
+            this._categories = [
+                ... this._categories.filter(x => x.id !== id),
+                newc
+            ];
 
-            for (const o of this.observers) {
+            for (const o of this._observers) {
                 o();
             }
         }
     }
 
+    get(id: number) {
+        return this._categories.find(x => x.id === id) ?? null;
+    }
+
     remove(id: number) {
-        const category = this.categoriesMap.get(id);
-        if (!category) {
-            throw new Error(`Category ${id} is not exists.`);
-        }
-
-        this.categoriesMap.delete(id);
-
-        // remove from parent
-        if (category.parentId !== null) {
-            const parent = this.categoriesMap.get(category.parentId);
-            if (!parent) {
-                throw new Error("parent category id " + category.parentId + " is not exists.");
-            }
-
-            parent.children = parent.children.filter(x => x.id !== id);
-        }
+        this._categories = this._categories.filter(x => x.id !== id);
 
         // notify state changed
-        for (const o of this.observers) {
+        for (const o of this._observers) {
             o();
         }
+    }
+
+    getAllChildren(targetId: number): number[] {
+        const map = this.calcTree().map;
+        const parent = map.get(targetId);
+
+        const ids = [];
+        if (parent) {
+            let items = parent.children;
+            while (items.length) {
+                const aggregate = [];
+                for (const item of items) {
+                    ids.push(item.id);
+
+                    // for next loop
+                    for (const child of item.children) {
+                        aggregate.push(child);
+                    }
+                }
+
+                items = aggregate;
+            }
+        }
+        return ids;
+    }
+
+    getAllParents(targetId: number): number[] {
+        const map = this.calcTree().map;
+        const parent = map.get(targetId);
+        const ids = [];
+        if (parent) {
+            let p = map.get(parent.parentId ?? -1);
+            while (p) {
+                ids.push(p.id);
+                p = map.get(p.parentId ?? -1);
+            }
+        }
+        return ids;
     }
 }

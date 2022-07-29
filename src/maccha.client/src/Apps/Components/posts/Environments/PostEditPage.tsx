@@ -10,11 +10,14 @@ import { FieldEditor } from "../FieldEditors/FieldEditor";
 import "./style.scss";
 import { Field } from "../../../Models/Domain/Contents/Entities/Field";
 import { useParams } from "@reach/router";
+import { EmptyItemsPanel } from "Apps/Components/commons/EmptyItemsPanel";
+import { useTranslation } from "react-i18next";
 
 export default function PostEditPage() {
     const { postEditService } = services;
     const match = useParams<any>();
     const theme = useTheme();
+    const { t } = useTranslation();
 
     useEffect(() => {
         setTimeout(async () => {
@@ -71,48 +74,52 @@ export default function PostEditPage() {
                             flexDirection="column"
                         >
                             {
-                                services.postManagementsService.selected?.taxonomy.schemes.map(
-                                    scheme => {
-                                        const f = postEditService.content?.fields.find(s => s.schemeId === scheme.schemeId);
-                                        if (!f) {
-                                            return <Box key={scheme.schemeId} className="post" maxWidth="100%" width="780px" mt={2}>
-                                                <Typography color="error">{scheme.name} - {scheme.displayName} の読み込みに失敗しました</Typography>
+                                services.postManagementsService.selected?.taxonomy.schemes.length === 0
+                                    ? <EmptyItemsPanel
+                                        message={t("スキームが存在しません")}
+                                    />
+                                    : services.postManagementsService.selected?.taxonomy.schemes.map(
+                                        scheme => {
+                                            const f = postEditService.content?.fields.find(s => s.schemeId === scheme.schemeId);
+                                            if (!f) {
+                                                return <Box key={scheme.schemeId} className="post" maxWidth="100%" width="780px" mt={2}>
+                                                    <Typography color="error">{scheme.name} - {scheme.displayName} の読み込みに失敗しました</Typography>
+                                                    <Box mt={2} />
+                                                    <Divider />
+                                                </Box>;
+                                            }
+
+                                            return <Box
+                                                p={{ xs: 2, sm: 3, md: 4 }}
+                                                mt={{ xs: 2, sm: 3, md: 4 }}
+                                                sx={{ boxShadow: theme.shadows[6] }}
+                                                bgcolor={theme.palette.background.paper}
+                                                borderRadius="28px"
+                                                key={scheme.schemeId}
+                                                className="post"
+                                                maxWidth="100%"
+                                                width="780px"
+                                            >
+                                                <Typography variant="h5" style={{ wordBreak: "break-all" }}>
+                                                    {scheme.name} - {scheme.displayName}
+                                                </Typography>
+                                                <Divider sx={{ mt: 2 }} />
                                                 <Box mt={2} />
-                                                <Divider />
+                                                <Typography color="textSecondary" variant="caption">
+                                                    {scheme.description}
+                                                </Typography>
+                                                <Box mt={2} />
+                                                <FieldEditor
+                                                    onChange={e => handleChangeField(e)}
+                                                    field={{
+                                                        field: f,
+                                                        scheme
+                                                    }}
+                                                />
+                                                <Box mt={4} />
                                             </Box>;
                                         }
-
-                                        return <Box
-                                            p={{ xs: 2, sm: 3, md: 4 }}
-                                            mt={{ xs: 2, sm: 3, md: 4 }}
-                                            sx={{ boxShadow: theme.shadows[6] }}
-                                            bgcolor={theme.palette.background.paper}
-                                            borderRadius="28px"
-                                            key={scheme.schemeId}
-                                            className="post"
-                                            maxWidth="100%"
-                                            width="780px"
-                                        >
-                                            <Typography variant="h5" style={{ wordBreak: "break-all" }}>
-                                                {scheme.name} - {scheme.displayName}
-                                            </Typography>
-                                            <Divider sx={{ mt: 2 }} />
-                                            <Box mt={2} />
-                                            <Typography color="textSecondary" variant="caption">
-                                                {scheme.description}
-                                            </Typography>
-                                            <Box mt={2} />
-                                            <FieldEditor
-                                                onChange={e => handleChangeField(e)}
-                                                field={{
-                                                    field: f,
-                                                    scheme
-                                                }}
-                                            />
-                                            <Box mt={4} />
-                                        </Box>;
-                                    }
-                                )
+                                    )
                             }
                         </Box>
                         <Box sx={{ boxShadow: theme.shadows[6] }}

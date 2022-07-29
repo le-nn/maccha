@@ -83,6 +83,7 @@ export class PublicContentsController {
                 orders: params.orders ?? "",
                 search: params.search ?? "",
                 fields: params.fields ?? "",
+                categorySlags: params.categorySlags ?? [],
             });
 
         return {

@@ -32,7 +32,6 @@ export function PostEditOptionPanel(props: PostEditOptionPanelProps) {
     const history = useAppNavigate();
     const [isReservationed, setIsReservation] = useState(!!props.contentEditContext.publishIn);
     const { t } = useTranslation();
-
     const option = useOption();
 
     function setcontentEditContextParam(key: keyof Content, value: any) {
@@ -57,7 +56,7 @@ export function PostEditOptionPanel(props: PostEditOptionPanelProps) {
             setcontentEditContextParam("publishIn", null);
         }
 
-        services.postEditService.saveAsync();
+        await services.postEditService.saveAsync();
 
         history(option.pathPrefix + "/posts/" + matches.taxonomy);
     }
@@ -147,7 +146,6 @@ export function PostEditOptionPanel(props: PostEditOptionPanelProps) {
                     </Box>
                 )
             }
-
 
             <Box width="100%" mt={3}>
                 <Typography color="textSecondary" variant="overline">
@@ -251,10 +249,10 @@ export function PostEditOptionPanel(props: PostEditOptionPanelProps) {
 
             <Box>
                 <Typography color="textSecondary" variant="overline">
-                    メタデータ
+                    カテゴリ
                 </Typography>
                 <PostCategorySetting
-                    categoryTree={ selected.taxonomy.categoryTree}
+                    categoryTree={selected.taxonomy.categoryTree}
                     value={contentEditContext.categoryIds}
                     onChange={e => setcontentEditContextParam("categoryIds", e)}
                 />

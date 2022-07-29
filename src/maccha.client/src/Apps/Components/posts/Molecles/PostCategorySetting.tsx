@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Stack, Typography, Checkbox } from "@mui/material";
+import { Box, Stack, Typography, Checkbox, useTheme } from "@mui/material";
 import { CategoryTree } from "Apps/Models/Domain/Contents/Entities/CategoryTree";
 import { CategoryNode } from "Apps/Models/Domain/Contents/Entities/CategoryNode";
 import { useTranslation } from "react-i18next";
@@ -20,6 +20,7 @@ export const PostCategorySetting = (props: PostCategorySettingProps) => {
 
     const [tree, setTree] = useState(() => categoryTree.tree);
     const { t } = useTranslation();
+    const theme = useTheme();
 
     useEffect(() => {
         const subscription = categoryTree.subscribe(() => {
@@ -33,15 +34,17 @@ export const PostCategorySetting = (props: PostCategorySettingProps) => {
 
     const handleChecked = (id: number, v: boolean) => {
         if (v) {
-            onChange([...value, id]);
+            const children = categoryTree.getAllParents(id);
+            onChange(Array.from(new Set([...value, id, ...children])));
         }
         else {
-            onChange([...value.filter(x => x !== id)]);
+            const children = categoryTree.getAllChildren(id);
+            onChange([...value.filter(x => x !== id && !children.includes(x))]);
         }
     };
 
     return (
-        <Box>
+        <Box bgcolor={theme.palette.background.default} borderRadius="20px" overflow={"hidden"}>
             <Stack minHeight="200px" maxHeight="436px" sx={{ overflowY: "auto" }}>
                 {
                     tree.length === 0 ?
@@ -57,7 +60,6 @@ export const PostCategorySetting = (props: PostCategorySettingProps) => {
                                 selectedIds={value}
                             />
                         </Box>)
-
                 }
             </Stack>
         </Box>
@@ -80,6 +82,7 @@ const TreeNode = ({
             ml={nest * 4}
         >
             <Checkbox
+                checked={selectedIds.includes(category.id)}
                 onChange={(_, v) => onChange(category.id, v)}
             />
             <Typography ml={2}>

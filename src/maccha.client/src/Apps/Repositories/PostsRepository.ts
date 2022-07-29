@@ -111,7 +111,8 @@ export class PostsRepository {
                 name: f.name,
                 schemeId: f.schemeId,
                 value: f.value,
-            }))
+            })),
+            categoryIds: post.categoryIds,
         });
     }
 }

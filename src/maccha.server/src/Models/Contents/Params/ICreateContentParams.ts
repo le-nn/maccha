@@ -3,13 +3,14 @@ import { StatusType } from "../Enumes/StatusType";
 import { ICreateFieldParams } from "./ICreateFieldParams";
 
 export interface ICreateContentParams {
-    readonly status: StatusType;
-    readonly taxonomyId: string;
-    readonly title: string;
-    readonly fields: ICreateFieldParams[];
-    readonly thumbnail: string;
-    readonly publishIn: DateTime;
-    readonly description: string;
-    readonly userId: string;
-    readonly metadata: string;
+    status: StatusType;
+    taxonomyId: string;
+    title: string;
+    fields: ICreateFieldParams[];
+    thumbnail: string;
+    publishIn: DateTime;
+    description: string;
+    userId: string;
+    metadata: string;
+    categoryIds: number[];
 }

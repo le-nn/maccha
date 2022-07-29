@@ -138,7 +138,6 @@ const Main = () => {
     }), [role]);
 
     const getPath = () => {
-        console.log(routeMatch?.route);
         return routeMatch?.route;
     };
 

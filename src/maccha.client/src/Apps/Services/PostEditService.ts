@@ -59,6 +59,7 @@ export class PostsEditServic {
     }
 
     public async saveAsync() {
+        console.log(this.content);
         const content = this.content;
         if (content === null) {
             throw new Error("post is not selected or initialized.");
@@ -85,7 +86,8 @@ export class PostsEditServic {
                         status: content.status,
                         thumbnail: content.thumbnail,
                         title: content.title,
-                        metadata: content.metadata
+                        metadata: content.metadata,
+                        categoryIds: content.categoryIds,
                     })
                 );
             }
@@ -107,7 +109,8 @@ export class PostsEditServic {
                         status: content.status,
                         thumbnail: content.thumbnail,
                         title: content.title,
-                        metadata: content.metadata
+                        metadata: content.metadata,
+                        categoryIds: content.categoryIds,
                     })
                 );
             }

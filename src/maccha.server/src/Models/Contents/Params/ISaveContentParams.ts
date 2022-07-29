@@ -11,4 +11,5 @@ export interface ISaveContentParams {
     metadata: string;
     publishIn: DateTime;
     fields: ICreateFieldParams[];
+    categoryIds: number[];
 }

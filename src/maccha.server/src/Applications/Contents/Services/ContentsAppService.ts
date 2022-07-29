@@ -82,6 +82,7 @@ export class ContentsAppService {
                     title: params.title,
                     taxonomyId,
                     userId: loginUser.userId,
+                    categoryIds: params.categoryIds,
                 });
         }
 
@@ -116,7 +117,8 @@ export class ContentsAppService {
                     thumbnail: params.thumbnail,
                     status: params.status,
                     title: params.title,
-                    contentId: params.contentId
+                    contentId: params.contentId,
+                    categoryIds: params.categoryIds,
                 });
         }
 
