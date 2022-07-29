@@ -20,7 +20,7 @@ export const CategorySettingPreviewPanel = ({ categoryTree }: CategorySettingPre
             setTree([...categoryTree.tree]);
         });
 
-     //   setTree([...categoryTree.tree]);
+       setTree([...categoryTree.tree]);
         return () => {
             subscription.dispose();
         };
