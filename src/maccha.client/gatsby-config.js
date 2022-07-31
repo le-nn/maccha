@@ -16,6 +16,7 @@ module.exports = {
         `gatsby-plugin-resolve-src`,
         `gatsby-plugin-react-helmet`,
         `gatsby-plugin-typescript`,
+        `gatsby-plugin-typescript-checker`,
         `gatsby-plugin-material-ui`,
         `gatsby-plugin-sass`,
         `gatsby-plugin-webpack-bundle-analyser-v2`,
