@@ -39,6 +39,7 @@
         "gatsby-plugin-react-helmet": "^5.19.0",
         "gatsby-plugin-resolve-src": "^2.1.0",
         "gatsby-plugin-typescript": "^4.19.0",
+        "gatsby-plugin-typescript-checker": "^1.1.1",
         "i18next": "^21.8.14",
         "lint": "^0.7.0",
         "luxon": "3.0.1",
