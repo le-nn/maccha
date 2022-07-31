@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { showDialogAsync, DialogContentProp, DialogContentFrame } from "./showDialog";
 import { Box, Typography, Button, useTheme } from "@mui/material";
-import { lightTheme } from "../../Portal/theme";
 
 /**
  * Dialog that can confirm Ok or Cancel.
@@ -52,5 +51,5 @@ export async function confirmAsync(message: string, option?: Partial<ConfirmOpti
         ...option
     }) as ConfirmOption & { message: string; };
 
-    return await showDialogAsync(ConfirmDialog, merged, { theme: lightTheme });
+    return await showDialogAsync(ConfirmDialog, merged, { });
 }

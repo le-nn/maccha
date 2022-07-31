@@ -42,6 +42,17 @@ export class ContentsRepository implements IContentsRepository {
                 }
             });
 
+            const categorySchemes = await this.categoryRepository.fetchAllAsync(content.taxonomyId);
+            const tree = new CategoryTree(categorySchemes);
+
+            const getCategories = async () => {
+                const contentCategoryIds = await this.contentCategories.findBy({ taxonomyId: content.taxonomyId, contentId });
+                const contentCategories = contentCategoryIds
+                    .map(c => tree.get(c.categoryId)!)
+                    .filter(x => !!x);
+                return contentCategories;
+            };
+
             return new Content({
                 contentId: content.contentId,
                 createdAt: content.createdAt,
@@ -64,7 +75,7 @@ export class ContentsRepository implements IContentsRepository {
                     schemeId: f.schemeId,
                     value: f.value
                 })),
-                categories: []
+                categories: await getCategories(),
             });
         }
         catch {
@@ -74,22 +85,35 @@ export class ContentsRepository implements IContentsRepository {
 
     async searchAsync(taxonomyId: string, params: ISearchContentParams): Promise<[Content[], number]> {
         try {
+            const ids = params.categorySlugs?.length
+                ? await this.categoryRepository.slugsToIds(taxonomyId, params.categorySlugs)
+                : [];
+
             const [rows, count] = await this.contents.manager.transaction(async connection => {
                 const filterSql = "";// buildFilterSql(parseFilterQuery());
                 const fieldSql = `
 SELECT DISTINCT \`contentId\` as \`fieldContentId\` FROM \`field_entity\`
 WHERE \`taxonomyId\`='${taxonomyId}' ${filterSql ? "AND" + filterSql : ""}
-                `;
+`;
 
                 const userSql = `
 INNER JOIN (SELECT \`userId\`,\`name\`,\`avatar\` FROM maccha.\`user_entity\`) 
 AS B ON B.\`userId\`=\`content_entity\`.\`createdBy\`
-                `;
+`;
+
+                const categoryQuery = () => `
+INNER JOIN (
+    SELECT DISTINCT(\`contentId\`) FROM \`content_category_entity\`
+     WHERE \`taxonomyId\`='${taxonomyId}' AND \`categoryId\` IN (${ids.join(",")})
+    )  AS C
+     ON C.contentId=maccha.content_entity.contentId
+`;
 
                 const sql = `
 SELECT SQL_CALC_FOUND_ROWS * FROM \`content_entity\` 
 ${filterSql ? "INNER" : "LEFT OUTER"} JOIN(${fieldSql}) AS A ON A.\`fieldContentId\`=\`content_entity\`.\`contentId\`
 ${userSql}
+${params.categorySlugs?.length ? categoryQuery() : ""}
 WHERE \`taxonomyId\`='${taxonomyId}' 
 ORDER BY \`createdAt\` DESC 
 LIMIT ${params.fetch} OFFSET ${params.offset}
@@ -154,7 +178,7 @@ LIMIT ${params.fetch} OFFSET ${params.offset}
             };
 
             // fetch fields
-            const fields = await lastValueFrom(
+            const contents = await lastValueFrom(
                 from(rows).pipe(
                     map(c => from(mapContent(c))),
                     mergeMap(x => x),
@@ -162,7 +186,7 @@ LIMIT ${params.fetch} OFFSET ${params.offset}
                 ));
 
             return [
-                fields,
+                contents.sort((x, y) => x.createdAt < y.createdAt ? 1 : -1),
                 count
             ];
         }
@@ -224,7 +248,7 @@ LIMIT ${params.fetch} OFFSET ${params.offset}
 
     async createAsync(identifier: string, params: ICreateContentParams): Promise<Content | null> {
         try {
-            const content = await this.contents.save(new ContentEntity({
+            const c = await this.contents.save(new ContentEntity({
                 createdBy: params.userId,
                 thumbnail: params.thumbnail,
                 description: params.description,
@@ -238,12 +262,12 @@ LIMIT ${params.fetch} OFFSET ${params.offset}
 
             await this.insertContentCategories(
                 params.taxonomyId,
-                content.contentId,
+                c.contentId,
                 params.categoryIds
             );
 
             await this.fields.insert(params.fields.map(item => new FieldEntity({
-                contentId: content.contentId,
+                contentId: c.contentId,
                 name: item.name,
                 value: item.value,
                 schemeId: item.schemeId,
@@ -251,6 +275,47 @@ LIMIT ${params.fetch} OFFSET ${params.offset}
             })));
 
 
+            const categorySchemes = await this.categoryRepository.fetchAllAsync(params.taxonomyId);
+            const tree = new CategoryTree(categorySchemes);
+
+            const getCategories = async (contentId: string) => {
+                const contentCategoryIds = await this.contentCategories.findBy({ taxonomyId: params.taxonomyId, contentId });
+                const contentCategories = contentCategoryIds
+                    .map(c => tree.get(c.categoryId)!)
+                    .filter(x => !!x);
+                return contentCategories;
+            };
+
+            return new Content({
+                contentId: c.contentId,
+                createdAt: c.createdAt,
+                updatedAt: c.updatedAt,
+                description: c.description,
+                identifier: c.identifier,
+                metadata: c.metadata,
+                publishIn: c.publishIn,
+                status: c.status,
+                taxonomyId: c.taxonomyId,
+                thumbnail: c.thumbnail,
+                title: c.title,
+                fields: (await this.fields.find({
+                    where: {
+                        contentId: c.contentId,
+                    }
+                })).map(
+                    (f: any) => new Field({
+                        fieldId: f.fieldId,
+                        name: f.name,
+                        schemeId: f.schemeId,
+                        value: f.value
+                    })
+                ),
+                categories: await getCategories(c.contentId),
+                createdBy: { // TODO:
+                    name: "",
+                    thumbnail: "",
+                }
+            });
         }
         catch {
             throw new Error("Cannot to create content.");

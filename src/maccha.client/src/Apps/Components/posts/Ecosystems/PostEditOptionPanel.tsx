@@ -17,25 +17,30 @@ import { Add } from "@mui/icons-material";
 import { useOption } from "Apps/Hooks/useOption";
 import { PostCategorySetting } from "../Molecles/PostCategorySetting";
 import { useTranslation } from "react-i18next";
+import { useObserver } from "memento.react";
+import { PostTypeCollectionStore } from "Apps/Models/Stores/Posts/PostTypeCollectionStore";
+import { ContentEditContext } from "Apps/Models/Domain/Contents/Entities/ContentEditContext";
 
 interface PostEditOptionPanelProps {
-    contentEditContext: Content;
+    contentEditContext: ContentEditContext;
 }
 
 /**
  * Post settings edit panel.
  * @param props Props
  */
-export function PostEditOptionPanel(props: PostEditOptionPanelProps) {
+export const PostEditOptionPanel = (props: PostEditOptionPanelProps) => {
     const { contentEditContext } = props;
     const matches = useParams<{ taxonomy: string; }>();
     const history = useAppNavigate();
-    const [isReservationed, setIsReservation] = useState(!!props.contentEditContext.publishIn);
+    const [isReservationed, setIsReservation] = useState(() => !!props.contentEditContext.publishIn);
     const { t } = useTranslation();
     const option = useOption();
 
-    function setcontentEditContextParam(key: keyof Content, value: any) {
-        services.postEditService.setContent(contentEditContext.clone({ [key]: value }));
+    const postTypeState = useObserver(PostTypeCollectionStore);
+
+    function setcontentEditContextParam(key: keyof ContentEditContext, value: any) {
+        services.postEditService.setContent({ ...contentEditContext, [key]: value });
     }
 
     async function selectMedia() {
@@ -61,7 +66,7 @@ export function PostEditOptionPanel(props: PostEditOptionPanelProps) {
         history(option.pathPrefix + "/posts/" + matches.taxonomy);
     }
 
-    const selected = services.postManagementsService.selected;
+    const selected = postTypeState.selected;
     if (!selected) {
         return <Box>
             {t("投稿タイプが選択されていません")}
@@ -259,4 +264,4 @@ export function PostEditOptionPanel(props: PostEditOptionPanelProps) {
             </Box>
         </>
     );
-}
+};

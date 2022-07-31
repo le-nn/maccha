@@ -23,4 +23,11 @@ export interface ICategorySchemeRepository {
      * @param taxonomyId The taxonomy id to remove.
      */
     removeAsync(taxonomyId: string): Promise<void>;
+
+    /**
+     * Get ids from slugs.
+     * @param taxonomyId target taxonomyId
+     * @param slugs slug
+     */
+    slugsToIds(taxonomyId: string, slugs: string[]): Promise<number[]>;
 }

@@ -62,7 +62,7 @@ export class ContentsAppService {
         loginUser: LoginUser,
         taxonomyName: string,
         params: CreateContentParams
-    ): Promise<Content> {
+    ): Promise<Content | null> {
         const taxonomyId = await this.taxonomiesService.getIdByNameAsync(taxonomyName, loginUser.identifier);
         if (!taxonomyId) {
             throw new BadRequestException("Taxonomy is not found.");
@@ -70,7 +70,7 @@ export class ContentsAppService {
 
         const taxonomy = await this.taxonomiesService.getByIdAsync(taxonomyId);
         if (taxonomy) {
-            await this.contentsService.createAsync(
+            return await this.contentsService.createAsync(
                 loginUser.identifier,
                 {
                     fields: params.fields,

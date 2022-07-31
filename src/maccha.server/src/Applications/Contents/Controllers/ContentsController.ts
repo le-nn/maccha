@@ -91,8 +91,9 @@ export class ContentsController {
                 orders: params.orders ?? "",
                 search: params.search ?? "",
                 fields: params.fields ?? "",
-                categorySlags: params.categorySlags ?? []
+                categorySlugs: params.slugs.split(",") ?? []
             });
+
         return {
             collection,
             hitCount
@@ -115,7 +116,7 @@ export class ContentsController {
         @Param("taxonomy") taxonomy: string,
         @Body() params: CreateContentParams,
         @Claim() loginUser: LoginUser
-    ): Promise<ContentResponse> {
+    ): Promise<ContentResponse | null> {
         return await this.contentsService.createAsync(loginUser, taxonomy, params);
     }
 

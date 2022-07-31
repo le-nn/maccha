@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import { FadeAndSlideScrollTriggerAnimation } from "StaticPages/Components/FadeAndSlideScriollTriggerAnimation";
 
 export interface ScrollContainerContext {
     scrollStartPosition?: number;

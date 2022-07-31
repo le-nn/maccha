@@ -73,6 +73,7 @@ export class PublicContentsController {
         @Query() params: SearchContentParams,
         @Param("identifier") identifier: string,
     ): Promise<SearchResultResponse<PublicContentResponse>> {
+        console.log(params.slugs?.split(",") );
         const [collection, hitCount] = await this.contentsService.searchAsync(
             identifier,
             taxonomy,
@@ -83,7 +84,7 @@ export class PublicContentsController {
                 orders: params.orders ?? "",
                 search: params.search ?? "",
                 fields: params.fields ?? "",
-                categorySlags: params.categorySlags ?? [],
+                categorySlugs: params.slugs?.split(",") ?? [],
             });
 
         return {

@@ -3,13 +3,15 @@ import { PostsRepository } from "../Repositories/PostsRepository";
 import { Content } from "Apps/Models/Domain/Contents/Entities/Content";
 import { Taxonomy } from "Apps/Models/Domain/Contents/Entities/Taxonomy";
 import { Field } from "Apps/Models/Domain/Contents/Entities/Field";
+import { ContentEditContext } from "Apps/Models/Domain/Contents/Entities/ContentEditContext";
+import { StatusType } from "Apps/Models/Domain/Contents/Enumes/StatusType";
 
 /**
  * Users serive.
  */
 export class PostsEditServic {
     private readonly repository = new PostsRepository();
-    private _content: Content | null = null;
+    private _content: ContentEditContext | null = null;
     private isNew = false;
     private _taxonomy: string | null = null;
 
@@ -17,7 +19,7 @@ export class PostsEditServic {
         makeAutoObservable(this);
     }
 
-    public get content(): Content | null {
+    public get content(): ContentEditContext | null {
         return this._content;
     }
 
@@ -25,18 +27,29 @@ export class PostsEditServic {
         return this._taxonomy;
     }
 
-    public setContent(content: Content) {
+    public setContent(content: ContentEditContext) {
         this._content = content;
     }
 
     public initializeAsNewPost(taxonomy: Taxonomy) {
-        this.setContent(new Content({
+        this.setContent({
             fields: taxonomy.schemes.map(s => new Field({
                 name: s.name,
                 schemeId: s.schemeId,
                 value: ""
-            }))
-        }));
+            })),
+            categoryIds: [],
+            contentId: "",
+            createdAt: "",
+            description: "",
+            metadata: "",
+            publishIn: "",
+            status: StatusType.Public,
+            taxonomyId: "",
+            thumbnail: "",
+            title: "",
+            updatedAt: ""
+        });
         this._taxonomy = taxonomy.name;
         this.isNew = true;
     }
@@ -59,7 +72,6 @@ export class PostsEditServic {
     }
 
     public async saveAsync() {
-        console.log(this.content);
         const content = this.content;
         if (content === null) {
             throw new Error("post is not selected or initialized.");
@@ -72,7 +84,7 @@ export class PostsEditServic {
             if (this.isNew) {
                 await this.repository.createPostAsync(
                     this.taxonomy,
-                    new Content({
+                    {
                         taxonomyId: content.taxonomyId,
                         description: content.description,
                         updatedAt: content.updatedAt as any,
@@ -88,13 +100,14 @@ export class PostsEditServic {
                         title: content.title,
                         metadata: content.metadata,
                         categoryIds: content.categoryIds,
-                    })
+                        contentId:""
+                    }
                 );
             }
             else {
                 await this.repository.saveAsync(
                     this.taxonomy,
-                    new Content({
+                    {
                         contentId: content.contentId,
                         taxonomyId: content.taxonomyId,
                         description: content.description,
@@ -111,7 +124,7 @@ export class PostsEditServic {
                         title: content.title,
                         metadata: content.metadata,
                         categoryIds: content.categoryIds,
-                    })
+                    }
                 );
             }
         }

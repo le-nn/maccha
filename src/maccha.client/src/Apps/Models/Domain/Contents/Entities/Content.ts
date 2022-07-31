@@ -20,7 +20,11 @@ export class Content {
     readonly createdBy = { name: "", thumbnail: "" };
     readonly identifier: string = "";
     readonly fields: Field[] = [];
-    readonly categoryIds: number[] = [];
+    readonly categories: Category[] = [];
+
+    get categoryIds() {
+        return this.categories.map(c => c.id);
+    }
 
     /**
      * constructor
@@ -37,8 +41,21 @@ export class Content {
      * @param params new params.
      */
     public clone(params?: Partial<Content>): Content {
-        const c = new Content(this);
-        Object.assign(c, params);
-        return c;
+        return new Content({
+            categories: params?.categories ?? this.categories,
+            contentId: params?.contentId ?? this.contentId,
+            createdAt: params?.createdAt ?? this.createdAt,
+            createdBy: params?.createdBy ?? this.createdBy,
+            description: params?.description ?? this.description,
+            fields: params?.fields ?? this.fields,
+            metadata: params?.metadata ?? this.metadata,
+            identifier: params?.identifier ?? this.identifier,
+            publishIn: params?.publishIn ?? this.publishIn,
+            taxonomyId: params?.taxonomyId ?? this.taxonomyId,
+            status: params?.status ?? this.status,
+            thumbnail: params?.thumbnail ?? this.thumbnail,
+            title: params?.title ?? this.title,
+            updatedAt: params?.updatedAt ?? this.updatedAt,
+        });
     }
 }

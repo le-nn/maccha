@@ -33,31 +33,40 @@ import { useOption } from "Apps/Hooks/useOption";
 import { EmptyItemsPanel } from "Apps/Components/commons/EmptyItemsPanel";
 import { useTranslation } from "react-i18next";
 import { AuthStore } from "Apps/Models/Stores/Auth/AuthStore";
-import { useObserver } from "memento.react";
+import { useDispatch, useObserver, useStateRef } from "memento.react";
 import { DateTime } from "luxon";
+import { PostCollectionStore } from "Apps/Models/Stores/Posts/PostsService";
+import { PostTypeCollectionStore } from "Apps/Models/Stores/Posts/PostTypeCollectionStore";
 
-export default observer(() => {
+export default () => {
     const history = useAppNavigate();
     const location = useAppLocation();
     const query = new URLSearchParams(location.search);
     const option = useOption();
     const { t } = useTranslation();
 
+    const postStoreState = useObserver(PostCollectionStore);
+    const postStoreDispatch = useDispatch(PostCollectionStore);
+    const postTypeState = useObserver(PostTypeCollectionStore);
+    const postTypeRef = useStateRef(PostTypeCollectionStore);
+    const postStateRef = useStateRef(PostCollectionStore);
+
     useEffect(() => {
         const page = Number(query.get("page") ?? 1);
-        const postType = services.postManagementsService.selected;
-        services.postsService.setSearchOption({
-            ...services.postsService.searchOption,
-            offset: services.postsService.searchOption.fetch * (page - 1),
+        const postType = postTypeRef.state.selected;
+
+        postStoreDispatch(s => s.setSearchOption({
+            ...postStateRef.state.searchOption,
+            offset: postStateRef.state.searchOption.fetch * (page - 1),
             fetch: postType?.displayFormat === "card" ? 30 : 60
-        });
-        searchAsync();
-    }, [services.postManagementsService.selected]);
+        })).then(searchAsync);
+
+    }, []);
 
     async function searchAsync() {
-        const selected = services.postManagementsService.selected;
+        const selected = postTypeRef.state.selected;
         if (selected) {
-            await services.postsService.searchPostsAsync(selected.taxonomy.name);
+            await postStoreDispatch(s => s.searchPostsAsync(selected.taxonomy.name));
         }
     }
 
@@ -67,38 +76,39 @@ export default observer(() => {
             `${location.pathname}?page=${(e.offset / e.fetch) + 1}`);
 
         const page = Number(query.get("page") ?? 1);
-        const postType = services.postManagementsService.selected;
-        services.postsService.setSearchOption({
-            ...services.postsService.searchOption,
+        const postType = postTypeState.selected;
+
+        postStoreDispatch(s => s.setSearchOption({
+            ...postStoreState.searchOption,
             offset: e.offset,
             fetch: e.fetch
-        });
+        }));
         searchAsync();
     }
 
     async function onDeletePresed(post: Content) {
         if (await confirmAsync("削除しますか?")) {
-            const selected = services.postManagementsService.selected;
-            await services.postsService.deleteFromId(
-                services.postManagementsService.selected?.taxonomy.name ?? "",
+            const selected = postTypeState.selected;
+            await postStoreDispatch(s => s.deleteFromId(
+                postTypeState.selected?.taxonomy.name ?? "",
                 post.contentId
-            );
+            ));
 
             if (selected) {
-                services.postsService.searchPostsAsync(selected.taxonomy.name);
+                postStoreDispatch(s => s.searchPostsAsync(selected.taxonomy.name));
             }
         }
     }
 
     function onEditPressed(post: Content) {
-        const selected = services.postManagementsService.selected;
+        const selected = postTypeState.selected;
         if (selected) {
             history(`./${selected.taxonomy.name}/${post.contentId}/edit`);
         }
     }
 
     function onPreviewPressed(contentId: string) {
-        const selected = services.postManagementsService.selected;
+        const selected = postTypeState.selected;
         if (selected) {
             history(`./${selected.taxonomy.name}/${contentId}`);
         }
@@ -114,9 +124,9 @@ export default observer(() => {
                 >
                     <Box flex="1 1 auto" />
                     <PostSearchPagingBar
-                        offset={services.postsService.searchOption.offset}
-                        count={services.postsService.hitCount}
-                        fetch={services.postsService.searchOption.fetch}
+                        offset={postStoreState.searchOption.offset}
+                        count={postStoreState.hitCount}
+                        fetch={postStoreState.searchOption.fetch}
                         onChange={e => handleChangePage(e)}
                     />
                 </Box>
@@ -129,11 +139,11 @@ export default observer(() => {
                 width="100%"
             >
                 {
-                    !services.postManagementsService.selected && <EmptyItemsPanel message={t("投稿がありません")} />
+                    !postTypeState.selected && <EmptyItemsPanel message={t("投稿がありません")} />
                 }
                 {
-                    services.postManagementsService.selected?.displayFormat === "card" && (
-                        services.postsService.posts.length === 0 ?
+                    postTypeState.selected?.displayFormat === "card" && (
+                        postStoreState.posts.length === 0 ?
                             <EmptyItemsPanel message={t("投稿がありません")} />
                             :
                             <ItemsWrapGrid
@@ -142,8 +152,7 @@ export default observer(() => {
                                 segmentLength={240}
                                 space={12}
                                 items={
-                                    services
-                                        .postsService
+                                    postStoreState
                                         .posts
                                         .map(item => ({ id: item.contentId, content: item }))
                                 }
@@ -158,23 +167,23 @@ export default observer(() => {
                     )
                 }
                 {
-                    services.postManagementsService.selected?.displayFormat === "table" && (
-                        services.postsService.posts.length === 0 ?
+                    postTypeState.selected?.displayFormat === "table" && (
+                        postStoreState.posts.length === 0 ?
                             <EmptyItemsPanel message={t("投稿がありません")} />
                             :
                             <PostSearchView
                                 previewPressed={c => onPreviewPressed(c.contentId)}
                                 deletePresed={c => onDeletePresed(c)}
                                 editPressed={c => onEditPressed(c)}
-                                contents={services.postsService.posts}
-                                schemes={services.postManagementsService.selected?.taxonomy.schemes ?? []}
+                                contents={postStoreState.posts}
+                                schemes={postTypeState.selected?.taxonomy.schemes ?? []}
                             />
                     )
                 }
             </Box>
         </Box >
     );
-});
+};
 
 interface PostSearchViewProps {
     previewPressed: (c: Content) => void;

@@ -9,7 +9,26 @@ import { ISavePostParams } from "../Models/Domain/posts/params/ISavePostParams";
 import { Content } from "../Models/Domain/Contents/Entities/Content";
 import { Field } from "../Models/Domain/Contents/Entities/Field";
 import { ISearchContentParams } from "../Models/Domain/Contents/Params";
+import { Category } from "Apps/Models/Domain/Contents/Entities/Category";
+import { StatusType } from "Apps/Models/Domain/Contents/Enumes/StatusType";
+import { ContentEditContext } from "Apps/Models/Domain/Contents/Entities/ContentEditContext";
 
+interface ContentResponse {
+    categories: Category[]
+    contentId: string;
+    createdAt: string;
+    createdBy: { name: string, thumbnail: string }
+    description: string;
+    fields: Field[];
+    identifier: string;
+    metadata: string;
+    publishIn: null | string;
+    status: StatusType;
+    taxonomyId: string;
+    thumbnail: string;
+    title: string;
+    updatedAt: string;
+}
 
 export class PostsRepository {
     public async fetchPostAsync(taxonomy: string, contentId: string) {
@@ -31,7 +50,7 @@ export class PostsRepository {
         serchOption: ISearchContentParams
     ): Promise<ISearchResultResponse<Content>> {
         try {
-            const response = await axios.get<ISearchResultResponse<Content>>(`/api/contents/${postTypeName}`, {
+            const response = await axios.get<ISearchResultResponse<ContentResponse>>(`/api/contents/${postTypeName}`, {
                 params: serchOption,
             });
             return {
@@ -49,9 +68,9 @@ export class PostsRepository {
      * save user.
      * @param user user
      */
-    public async saveAsync(webSiteId: string, post: Content): Promise<Content> {
+    public async saveAsync(webSiteId: string, post: ContentEditContext): Promise<ContentResponse> {
         try {
-            const response = await axios.put<Content>("/api/contents/" + webSiteId, post);
+            const response = await axios.put<ContentResponse>("/api/contents/" + webSiteId, post);
             return this.toDomain(response.data);
         }
         catch (ex) {
@@ -64,9 +83,9 @@ export class PostsRepository {
      * save user.
      * @param user user
      */
-    public async createPostAsync(taxonomy: string, content: Content): Promise<Content> {
+    public async createPostAsync(taxonomy: string, content: ContentEditContext): Promise<Content> {
         try {
-            const response = await axios.post<Content>("/api/contents/" + taxonomy, content);
+            const response = await axios.post<ContentResponse>("/api/contents/" + taxonomy, content);
             return this.toDomain(response.data);
         }
         catch (ex) {
@@ -92,7 +111,7 @@ export class PostsRepository {
      * convert IUser to User instance.
      * @param user user interface
      */
-    private toDomain(post: Content) {
+    private toDomain(post: ContentResponse) {
         return new Content({
             contentId: post.contentId,
             status: post.status,
@@ -103,8 +122,8 @@ export class PostsRepository {
             identifier: post.identifier,
             taxonomyId: post.taxonomyId,
             createdAt: post.createdAt,
-            updatedAt:post.updatedAt,
-            publishIn: post.publishIn ?post.publishIn : null,
+            updatedAt: post.updatedAt,
+            publishIn: post.publishIn ? post.publishIn : null,
             metadata: post.metadata,
             fields: post.fields.map(f => new Field({
                 fieldId: f.fieldId,
@@ -112,7 +131,7 @@ export class PostsRepository {
                 schemeId: f.schemeId,
                 value: f.value,
             })),
-            categoryIds: post.categoryIds,
+            categories: post.categories,
         });
     }
 }

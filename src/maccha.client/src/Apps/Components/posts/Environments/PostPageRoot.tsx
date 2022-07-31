@@ -3,14 +3,14 @@ import { ChildRouter, useAppLocation, useAppNavigate } from "Libs/Routing/Router
 import React, { useEffect, useRef, useState } from "react";
 import { useParams, useMatch } from "@reach/router";
 import { css } from "@emotion/react";
+import { useDispatch } from "memento.react";
+import { PostTypeCollectionStore } from "Apps/Models/Stores/Posts/PostTypeCollectionStore";
 
 export default () => {
     const [isInitialized, setIsInitialized] = useState(false);
-
+    const postTypeDispatch = useDispatch(PostTypeCollectionStore);
     useEffect(() => {
-        services
-            .postManagementsService
-            .fetchPostTypes()
+        postTypeDispatch(s => s.fetchPostTypes())
             .then(() => setIsInitialized(true));
     }, []);
 

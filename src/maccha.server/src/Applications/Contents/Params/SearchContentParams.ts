@@ -8,7 +8,7 @@ import { SaveSchemeParams } from "./SaveSchemeParams";
 /**
  * Params to search contents.
  */
-export class SearchContentParams implements ISearchContentParams {
+export class SearchContentParams {
     @ApiProperty({
         name: i18n({
             en: "filter query of field.",
@@ -75,10 +75,9 @@ export class SearchContentParams implements ISearchContentParams {
 
     @ApiProperty({
         name: i18n({
-            en: "Category slags.",
-            ja: "カテゴリのスラッグ."
+            en: "Category slugs. ex: `slug1,slug2,slug3`",
+            ja: "カテゴリのスラッグ.  例: `slug1,slug2,slug3`"
         }),
-        type: () => [String]
     })
-    categorySlags!: string[];
+    slugs!: string;
 }

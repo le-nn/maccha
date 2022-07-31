@@ -40,11 +40,10 @@ function DialogBase<T, U>(props: DialogProp<T, U>) {
     };
 
     return (
-        <DialogContext.Provider value={props}>
+        <DialogContext.Provider value={props as any}>
             <Dialog
                 TransitionComponent={Grow}
                 open={isOpen}
-                disableBackdropClick
                 disableEscapeKeyDown
                 maxWidth={props.maxWidth}
                 fullWidth

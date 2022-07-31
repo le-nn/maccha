@@ -30,9 +30,10 @@ import { RoleType } from "Apps/Models";
 import { EmptyItemsPanel } from "Apps/Components/commons/EmptyItemsPanel";
 import { useTranslation } from "react-i18next";
 import { RoundedListItem } from "Apps/Components/commons/RoundedListItem";
-import { useObserver } from "memento.react";
+import { useDispatch, useObserver, useStateRef } from "memento.react";
 import { AuthStore } from "Apps/Models/Stores/Auth/AuthStore";
 import { roles } from "Apps/roles";
+import { PostTypeCollectionStore } from "Apps/Models/Stores/Posts/PostTypeCollectionStore";
 
 const normalize = (path: string) => "/" + path.split("/").filter(x => x !== "").join("/");
 
@@ -54,27 +55,32 @@ export default () => {
         ...roles.postTypes.edit,
         ...roles.postTypes.remove
     ].includes(s.loginInfo?.role ?? RoleType.None));
-    console.log(postTypeEdit);
+
     const postCreate = useObserver(AuthStore, s => [
         ...roles.posts.create,
     ].includes(s.loginInfo?.role ?? RoleType.None));
 
     const identifier = useObserver(AuthStore, s => s.loginInfo?.identifier);
     const postTypesDisble = useObserver(AuthStore, s => !(roles.postTypes.create.includes(s.loginInfo?.role ?? RoleType.None)));
+
+    const postTypeState = useObserver(PostTypeCollectionStore);
+    const postTypeDispatch = useDispatch(PostTypeCollectionStore);
+    const postTypeRef= useStateRef(PostTypeCollectionStore);
+
     useEffect(() => {
-        const selected = services.postManagementsService.selected;
+        const selected = postTypeRef.state.selected;
         if (selected) {
             if (!routeMatch.taxonomy) {
                 window.history.pushState("", "", `${normalize(location.pathname)}/${selected.taxonomy.name}`);
             }
             else {
-                services.postManagementsService.selectFromName(routeMatch.taxonomy);
+                postTypeDispatch(s => s.selectFromName(routeMatch.taxonomy));
             }
         }
     }, []);
 
     const handleNewPost = () => {
-        const selected = services.postManagementsService.selected;
+        const selected = postTypeRef.state.selected;
         if (selected) {
             history(`./${selected.taxonomy.name}/new/edit`);
         }
@@ -82,7 +88,6 @@ export default () => {
 
     const onAddPostTypeClicked = async () => {
         const paths = route.pathname.split("/");
-        console.log(paths);
         if (paths[paths.length - 1] === "posts") {
             history("./posts/new/edit");
         }
@@ -99,8 +104,8 @@ export default () => {
     };
 
     const onPostTypeListClicked = (index: number) => {
-        services.postManagementsService.selectFromIndex(index);
-        const selected = services.postManagementsService.selected;
+        postTypeDispatch(s => s.selectFromIndex(index));
+        const selected = postTypeRef.state.selected;
         if (selected) {
             setTimeout(() => history(`${selected.taxonomy.name}`), 10);
         }
@@ -120,7 +125,7 @@ export default () => {
         }
 
         if (await confirmDeletePostTypeAsync(`${postTypeContext.taxonomy.displayName}を本当に削除しますか？`)) {
-            await services.postManagementsService.removeAsync(postTypeContext.postTypeId);
+            await postTypeDispatch(s => s.removeAsync(postTypeContext.postTypeId));
         }
     };
 
@@ -128,135 +133,129 @@ export default () => {
         setAnchorEl(null);
     };
 
-    return <Observer>
-        {
-            (() => {
-                const { postManagementsService } = services;
-                if (!identifier) {
-                    return (
-                        <Box width="100%" height="100%" display="flex" justifyContent="center" alignItems="center">
-                            <Typography variant="h5" style={{ color: theme.palette.error.main }}>
-                                WEBサイトを選択してください
-                            </Typography>
-                        </Box>
-                    );
-                }
 
-                return (
-                    <Box
-                        height="100%"
-                        display="flex"
-                        bgcolor={theme.palette.background.default}
-                    >
-                        <Box p={3} height="100%">
-                            <Card sx={{
-                                p: 0,
-                                width: "240px",
-                                minWidth: "240px",
-                                maxWidth: "240px",
-                                height: "100%",
-                                overflow: "auto",
-                                display: "flex",
-                                flexDirection: "column"
+    if (!identifier) {
+        return (
+            <Box width="100%" height="100%" display="flex" justifyContent="center" alignItems="center">
+                <Typography variant="h5" style={{ color: theme.palette.error.main }}>
+                    WEBサイトを選択してください
+                </Typography>
+            </Box>
+        );
+    }
+
+    return (
+        <Box
+            height="100%"
+            display="flex"
+            bgcolor={theme.palette.background.default}
+        >
+            <Box p={3} height="100%">
+                <Card sx={{
+                    p: 0,
+                    width: "240px",
+                    minWidth: "240px",
+                    maxWidth: "240px",
+                    height: "100%",
+                    overflow: "auto",
+                    display: "flex",
+                    flexDirection: "column"
+                }}
+                >
+                    <Box mx="auto">
+                        <Button
+                            disabled={postTypesDisble}
+                            onClick={onAddPostTypeClicked}
+                            color="primary"
+                            variant="contained"
+                            style={{
+                                borderRadius: "18px",
+                                margin: "8px", marginTop: "16px"
                             }}
-                            >
-                                <Box mx="auto">
-                                    <Button
-                                        disabled={postTypesDisble}
-                                        onClick={onAddPostTypeClicked}
-                                        color="primary"
-                                        variant="contained"
-                                        style={{
-                                            borderRadius: "18px",
-                                            margin: "8px", marginTop: "16px"
-                                        }}
-                                    >
-                                        <Add />
-                                        {t("投稿タイプを追加")}
-                                    </Button>
-                                </Box>
-                                <List
-                                    css={postTypeBar}
-                                >
-                                    {
-                                        postManagementsService.postTypes.length === 0 ?
-                                            (<EmptyItemsPanel message={t("投稿タイプが\nありません")} />)
-                                            : postManagementsService.postTypes.map(
-                                                (t, i) => (
-                                                    <RoundedListItem
-                                                        key={t.taxonomy.name}
-                                                        selected={postManagementsService.selected?.taxonomy.name === t.taxonomy.name}
-                                                        onClick={() => onPostTypeListClicked(i)}
-                                                        onOptionClicked={e => onPostTypeMenu(e, t)}
-                                                        optionEnabled={postTypeEdit}
-                                                        text={t.taxonomy.displayName}
-                                                    />
-                                                )
-                                            )
-                                    }
-                                </List>
-
-                                <Menu
-                                    id="long-menu"
-                                    anchorEl={anchorEl}
-                                    keepMounted
-                                    open={!!anchorEl}
-                                    onClose={handleCloseMenu}
-                                    PaperProps={{
-                                        style: {
-                                            maxHeight: 48 * 4.5,
-                                            width: "20ch",
-                                        },
-                                    }}
-                                >
-                                    <MenuItem onClick={() => onEditClicked()}>
-                                        編集
-                                    </MenuItem>
-                                    <Divider />
-                                    <MenuItem onClick={onRemovePostTypeClicked}>
-                                        削除
-                                    </MenuItem>
-                                </Menu>
-                            </Card >
-
-                        </Box>
-
-                        <Box
-                            flex="1 1 auto"
-                            position="relative"
-                            overflow="hidden"
-                            height="100%"
                         >
-                            <PostListPanel />
-                            <Fab
-                                disabled={!services.postManagementsService.selected || !postCreate}
-                                style={{
-                                    position: "absolute",
-                                    zIndex: 9999,
-                                    right: "24px",
-                                    bottom: "24px"
-                                }}
-                                onClick={() => handleNewPost()}
-                                color="primary">
-                                <Add />
-                            </Fab>
-                        </Box>
+                            <Add />
+                            {t("投稿タイプを追加")}
+                        </Button>
+                    </Box>
+                    <List
+                        css={postTypeBar}
+                    >
+                        {
+                            postTypeState.postTypes.length === 0 ?
+                                (<EmptyItemsPanel message={t("投稿タイプが\nありません")} />)
+                                : postTypeState.postTypes.map(
+                                    (t, i) => (
+                                        <RoundedListItem
+                                            key={t.taxonomy.name}
+                                            selected={postTypeState.selected?.taxonomy.name === t.taxonomy.name}
+                                            onClick={() => onPostTypeListClicked(i)}
+                                            onOptionClicked={e => onPostTypeMenu(e, t)}
+                                            optionEnabled={postTypeEdit}
+                                            text={t.taxonomy.displayName}
+                                        />
+                                    )
+                                )
+                        }
+                    </List>
 
-                        <Box minWidth="220px" maxWidth="220px" height="100%" overflow="auto"
-                            bgcolor={theme.palette.background.paper}
-                            sx={{ boxShadow: theme.shadows[6] }}
-                        >
-                            {services.postManagementsService.selected &&
-                                <PostTypeSettingPanel
-                                    postType={services.postManagementsService.selected}
-                                />
-                            }
-                        </Box>
-                    </Box >
-                );
-            })
-        }
-    </Observer>;
+                    <Menu
+                        id="long-menu"
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={!!anchorEl}
+                        onClose={handleCloseMenu}
+                        PaperProps={{
+                            style: {
+                                maxHeight: 48 * 4.5,
+                                width: "20ch",
+                            },
+                        }}
+                    >
+                        <MenuItem onClick={() => onEditClicked()}>
+                            編集
+                        </MenuItem>
+                        <Divider />
+                        <MenuItem onClick={onRemovePostTypeClicked}>
+                            削除
+                        </MenuItem>
+                    </Menu>
+                </Card >
+
+            </Box>
+
+            <Box
+                flex="1 1 auto"
+                position="relative"
+                overflow="hidden"
+                height="100%"
+            >
+                <PostListPanel />
+                <Fab
+                    disabled={!postTypeState.selected || !postCreate}
+                    style={{
+                        position: "absolute",
+                        zIndex: 9999,
+                        right: "24px",
+                        bottom: "24px"
+                    }}
+                    onClick={() => handleNewPost()}
+                    color="primary">
+                    <Add />
+                </Fab>
+            </Box>
+
+            <Box minWidth="220px" maxWidth="220px" height="100%" overflow="auto"
+                bgcolor={theme.palette.background.paper}
+                sx={{ boxShadow: theme.shadows[6] }}
+            >
+                {postTypeState.selected &&
+                    <PostTypeSettingPanel
+                        postType={postTypeState.selected}
+                    />
+                }
+            </Box>
+        </Box >
+    );
 };
 
 const postTypeBar = css({

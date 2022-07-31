@@ -5,5 +5,5 @@ export interface ISearchContentParams {
     fields: string;
     offset: number;
     fetch: number;
-    categorySlags: string[];
+    categorySlugs: string[];
 }

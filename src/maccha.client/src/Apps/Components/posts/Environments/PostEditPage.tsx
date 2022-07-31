@@ -12,18 +12,23 @@ import { Field } from "../../../Models/Domain/Contents/Entities/Field";
 import { useParams } from "@reach/router";
 import { EmptyItemsPanel } from "Apps/Components/commons/EmptyItemsPanel";
 import { useTranslation } from "react-i18next";
+import { useDispatch, useObserver, useStateRef } from "memento.react";
+import { PostTypeCollectionStore } from "Apps/Models/Stores/Posts/PostTypeCollectionStore";
 
 export default function PostEditPage() {
     const { postEditService } = services;
     const match = useParams<any>();
     const theme = useTheme();
     const { t } = useTranslation();
+    const postTypeDispatch = useDispatch(PostTypeCollectionStore);
+    const postTypeState = useObserver(PostTypeCollectionStore);
+    const postTypeStateRef = useStateRef(PostTypeCollectionStore);
 
     useEffect(() => {
         setTimeout(async () => {
             postEditService.clear();
-            await services.postManagementsService.fetchPostTypes(match.taxonomy);
-            const postType = services.postManagementsService.selected;
+            await postTypeDispatch(s => s.fetchPostTypes(match.taxonomy));
+            const postType = postTypeStateRef.state.selected;
             if (!postType) {
                 return;
             }
@@ -49,11 +54,10 @@ export default function PostEditPage() {
                         const i = content.fields.indexOf(_f);
                         const fields = content.fields;
                         fields[i] = f;
-                        postEditService.setContent(
-                            content.clone({
-                                fields,
-                            })
-                        );
+                        postEditService.setContent({
+                            ...content,
+                            fields,
+                        });
                     }
                 }
 
@@ -74,11 +78,11 @@ export default function PostEditPage() {
                             flexDirection="column"
                         >
                             {
-                                services.postManagementsService.selected?.taxonomy.schemes.length === 0
+                                postTypeState.selected?.taxonomy.schemes.length === 0
                                     ? <EmptyItemsPanel
                                         message={t("スキームが存在しません")}
                                     />
-                                    : services.postManagementsService.selected?.taxonomy.schemes.map(
+                                    : postTypeState.selected?.taxonomy.schemes.map(
                                         scheme => {
                                             const f = postEditService.content?.fields.find(s => s.schemeId === scheme.schemeId);
                                             if (!f) {

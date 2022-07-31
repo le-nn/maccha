@@ -152,7 +152,7 @@ export function SchemeSettingPanel(props: SchemeSettingPanelProps) {
                     />
                 </div>
             </Flipped>
-    );
+    ) as any;
 
     const SortableList = SortableContainer(
         (props: {
@@ -173,16 +173,16 @@ export function SchemeSettingPanel(props: SchemeSettingPanelProps) {
                                 key={`item-${s.schemeId}`} index={i}
                                 sortIndex={i}
                                 value={s}
-                                deleteHandler={(s, i) => props.deleteHandler(s, i)}
-                                changeFieldTypeHandler={s => props.changeFieldTypeHandler(s)}
-                                changeSchemeHandler={s => props.changeSchemeHandler(s)}
+                                deleteHandler={(s: any, i: any) => props.deleteHandler(s, i)}
+                                changeFieldTypeHandler={(s: any) => props.changeFieldTypeHandler(s)}
+                                changeSchemeHandler={(s: any) => props.changeSchemeHandler(s)}
                             />
                         )
                     )
                 }
             </Flipper>
         )
-    );
+    ) as any;
 
     return (
         <>
@@ -202,10 +202,10 @@ export function SchemeSettingPanel(props: SchemeSettingPanelProps) {
                     trigger={trigger}
                     useDragHandle
                     items={postType.taxonomy.schemes}
-                    onSortEnd={({ oldIndex, newIndex }) => handleSortScheme(oldIndex, newIndex)}
-                    deleteHandler={(s, i) => handleDelete(s, i)}
-                    changeFieldTypeHandler={s => handleChangeFieldType(s)}
-                    changeSchemeHandler={s => handleChangeScheme(s)}
+                    onSortEnd={({ oldIndex, newIndex }: any) => handleSortScheme(oldIndex, newIndex)}
+                    deleteHandler={(s: any, i: any) => handleDelete(s, i)}
+                    changeFieldTypeHandler={(s: any) => handleChangeFieldType(s)}
+                    changeSchemeHandler={(s: any) => handleChangeScheme(s)}
                 />
                 <Box mt={2} />
                 <Button onClick={addScheme} variant="contained" sx={{ borderRadius: "32px", mx: "auto" }} >

@@ -11,11 +11,14 @@ import { useParams } from "@reach/router";
 import "./style.scss";
 import { useAppNavigate } from "Libs/Routing/RouterConfig";
 import { Edit } from "@mui/icons-material";
+import { useDispatch } from "memento.react";
+import { PostTypeCollectionStore } from "Apps/Models/Stores/Posts/PostTypeCollectionStore";
 
 export default () => {
-    const { postEditService, postManagementsService } = services;
+    const { postEditService } = services;
     const match = useParams<any>();
     const hisptory = useAppNavigate();
+    const postTypeDispatch = useDispatch(PostTypeCollectionStore);
 
     function handleEdit() {
         const content = postEditService.content;
@@ -27,8 +30,8 @@ export default () => {
     useEffect(() => {
         postEditService.clear();
         postEditService.fetchAsync(match.taxonomy, match.contentId);
-        postManagementsService.fetchPostTypes(match.taxonomy);
-    }, []);
+        postTypeDispatch(s => s.fetchPostTypes(match.taxonomy));
+    }, [match]);
 
     return (
         <Observer>

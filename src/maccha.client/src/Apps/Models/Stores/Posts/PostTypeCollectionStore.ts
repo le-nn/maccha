@@ -1,33 +1,49 @@
 import { observable, computed, action, makeAutoObservable } from "mobx";
-import { PostsRepository } from "../Repositories/PostsRepository";
-import { Post } from "../Models/Domain/posts/entities/Post";
-import { PostManagementsRepository } from "../Repositories/PostManagementsRepository";
 import { PostType } from "Apps/Models/Domain/posts/entities/PostType";
 import { ICreatePostTypeParams } from "Apps/Models/Domain/posts/params/ICreatePostTypeParams";
 import { ISavePostTypeParams } from "Apps/Models/Domain/posts/params/ISavePostTypeParams";
+import { PostManagementsRepository } from "Apps/Repositories/PostManagementsRepository";
+import { FluxStore, Message, meta, State } from "memento.core";
+
+class PostTypeState extends State<PostTypeState>{
+    postTypes: PostType[] = [];
+    selectedIndex = 0;
+
+    get selected(): PostType | null {
+        return this.postTypes[this.selectedIndex] ?? null;
+    }
+
+}
+
+class SetFetchResult extends Message<{ postTyes: PostType[] }>{ }
+class SetSelectedIndex extends Message<{ selectedIndex: number }>{ }
 
 /**
  * Users serive.
  */
-export class PostManagementsService {
-    private readonly repository = new PostManagementsRepository();
-    private _postTypes: PostType[] = [];
-    private _selectedIndex = 0;
+@meta({ name: "PostTypeCollectionStore" })
+export class PostTypeCollectionStore extends FluxStore<PostTypeState> {
 
-    public get postTypes() {
-        return this._postTypes;
+    constructor(private readonly repository: PostManagementsRepository) {
+        super(new PostTypeState(), PostTypeCollectionStore.mutation);
     }
 
-    public get selectedIndex() {
-        return this._selectedIndex;
-    }
-
-    public get selected(): PostType | null {
-        return this.postTypes[this.selectedIndex] ?? null;
-    }
-
-    constructor() {
-        makeAutoObservable(this);
+    static mutation(state: PostTypeState, message: Message) {
+        switch (message.comparer) {
+            case SetFetchResult: {
+                const { payload } = message as SetFetchResult;
+                return state.clone({
+                    postTypes: payload.postTyes,
+                });
+            }
+            case SetSelectedIndex: {
+                const { payload } = message as SetSelectedIndex;
+                return state.clone({
+                    selectedIndex: payload.selectedIndex,
+                });
+            }
+            default: new Error("The state is not handled");
+        }
     }
 
     /**
@@ -36,7 +52,8 @@ export class PostManagementsService {
      */
     public async fetchPostTypes(selectTaxonomy?: string) {
         try {
-            this._postTypes = await this.repository.fetchPostTypesAsync();
+            const items = await this.repository.fetchPostTypesAsync();
+            this.mutate(new SetFetchResult({ postTyes: items }));
             if (selectTaxonomy) {
                 this.selectFromName(selectTaxonomy);
             }
@@ -67,14 +84,15 @@ export class PostManagementsService {
      * @param index post types index
      */
     public selectFromIndex(index: number) {
-        this._selectedIndex = Math.min(
-            this.postTypes.length, Math.max(0, index)
+        const selectedIndex = Math.min(
+            this.state.postTypes.length, Math.max(0, index)
         );
+        this.mutate(new SetSelectedIndex({ selectedIndex }));
     }
 
     public async removeAsync(postTypeId: string) {
         try {
-            const selected = this.selected;
+            const selected = this.state.selected;
 
             await this.repository.removeAsync(postTypeId);
             await this.fetchPostTypes();
@@ -83,7 +101,7 @@ export class PostManagementsService {
                 this.selectFromName(selected.taxonomy.name);
             }
 
-            if (!this.selected) {
+            if (!this.state.selected) {
                 this.selectFromIndex(0);
             }
         }
@@ -107,9 +125,11 @@ export class PostManagementsService {
      * @param index post types index
      */
     public selectFromName(name: string) {
-        const type = this.postTypes.find(t => t.taxonomy.name === name);
+        const type = this.state.postTypes.find(t => t.taxonomy.name === name);
         if (type) {
-            this._selectedIndex = this.postTypes.indexOf(type);
+            this.mutate(new SetSelectedIndex({
+                selectedIndex: this.state.postTypes.indexOf(type)
+            }));
         }
     }
 }

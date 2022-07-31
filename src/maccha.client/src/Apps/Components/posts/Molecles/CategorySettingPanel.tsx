@@ -22,7 +22,7 @@ export const CategorySettingPanel = ({ categoryTree, onChange }: CategorySetting
             setCategories([...categoryTree.all]);
             onChange();
         });
-       setCategories([...categoryTree.all]);
+        setCategories([...categoryTree.all]);
 
         return () => {
             subscription.dispose();
@@ -93,8 +93,13 @@ export const CategorySettingPanel = ({ categoryTree, onChange }: CategorySetting
                                 <Box>
                                     <Typography>{category.id}</Typography>
                                 </Box>
+
                                 <Box ml={1}>
                                     <Typography>{category.name}</Typography>
+                                </Box>
+
+                                <Box ml={1}>
+                                    <Typography>{category.slug}</Typography>
                                 </Box>
 
                                 <Spacer />

@@ -8,7 +8,7 @@ import {
 import { Post } from "../../../Models/Domain/posts/entities/Post";
 import SwipeableViews from "react-swipeable-views";
 import { services } from "../../../Services";
-import { Observer, useObserver } from "mobx-react";
+import { Observer } from "mobx-react";
 import { PhotoGridView } from "../../commons";
 import { Flipped, Flipper } from "react-flip-toolkit";
 import "../Environments/style.scss";
@@ -18,16 +18,20 @@ import { SchemeEditorProps } from "../FieldEditors/SchemeEditorProps";
 import { axios } from "../../../Repositories/config";
 import { makeStyles } from "@mui/styles";
 import { DateTime } from "luxon";
+import { useDispatch, useObserver } from "memento.react";
+import { PostTypeCollectionStore } from "Apps/Models/Stores/Posts/PostTypeCollectionStore";
 
 export function PostPreviewPanel() {
-    const { postEditService, postManagementsService } = services;
+    const { postEditService } = services;
     const theme = useTheme();
-
+    const postTypeDispatch = useDispatch(PostTypeCollectionStore);
+    const postTypeState = useObserver(PostTypeCollectionStore);
+    
     return <Observer>
         {
             () => {
                 const content = postEditService.content;
-                const schemes = postManagementsService.selected?.taxonomy?.schemes
+                const schemes = postTypeState.selected?.taxonomy?.schemes
                     .reduce(
                         (x, y) => ({ ...x, [y.schemeId]: y }),
                         {} as { [key: string]: Scheme }

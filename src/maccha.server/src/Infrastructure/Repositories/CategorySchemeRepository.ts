@@ -1,6 +1,7 @@
 import { CategoryMeta } from "@/Models/Contents/Entities/CategoryMeta";
 import { ICategorySchemeRepository } from "@/Models/Contents/Repositories/ICategorySchemeRepository";
 import { InjectRepository } from "@nestjs/typeorm";
+import { In } from "typeorm";
 import { Repository } from "typeorm/repository/Repository";
 import { CategorySchemeEntity } from "../Database/Entities/CategorySchemeEntity";
 
@@ -60,5 +61,17 @@ export class CategorySchemeRepository implements ICategorySchemeRepository {
         catch (expect) {
             throw expect;
         }
+    }
+
+    async slugsToIds(taxonomyId: string, slugs: string[]): Promise<number[]> {
+        const categorySchemes = await this.categrySchemes.find({
+            where: {
+                taxonomyId,
+                slug: In(slugs),
+            },
+            select: ["id"]
+        });
+
+        return categorySchemes.map(e => e.id);
     }
 }

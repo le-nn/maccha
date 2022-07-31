@@ -15,8 +15,10 @@ import { Taxonomy } from "../../../Models/Domain/Contents/Entities/Taxonomy";
 import { useAppNavigate } from "Libs/Routing/RouterConfig";
 import { useParams } from "@reach/router";
 import { CategorySettingArea } from "../Ecosystems/CategorySettingArea";
+import { useDispatch, useObserver } from "memento.react";
+import { PostTypeCollectionStore } from "Apps/Models/Stores/Posts/PostTypeCollectionStore";
 
-export default observer(() => {
+export default (() => {
     const [postType, setPostType] = useState(new PostType({
         taxonomy: new Taxonomy({
             description: "",
@@ -33,18 +35,22 @@ export default observer(() => {
     const taxonomyName = useParams<{ taxonomy: string }>();
     const history = useAppNavigate();
 
+    const postTypeState = useObserver(PostTypeCollectionStore);
+    const postTypeDispatch = useDispatch(PostTypeCollectionStore);
+
     async function init() {
-        await services.postManagementsService.fetchPostTypes();
+        await postTypeDispatch(s => s.fetchPostTypes());
+
         if (taxonomyName.taxonomy === "new") {
             setIsNew(true);
         }
         else {
             if (taxonomyName.taxonomy) {
-                services.postManagementsService.selectFromName(taxonomyName.taxonomy);
+                postTypeDispatch(s => s.selectFromName(taxonomyName.taxonomy));
             }
 
-            if (services.postManagementsService.selected) {
-                setPostType(services.postManagementsService.selected);
+            if (postTypeState.selected) {
+                setPostType(postTypeState.selected);
             }
         }
     }
@@ -55,32 +61,36 @@ export default observer(() => {
 
     function handleCreate() {
         if (isNew) {
-            services.postManagementsService.createPostTypeAsync({
-                taxonomy:{
-                    categorySchemes: postType.taxonomy.categoryTree.all,
-                    description: postType.taxonomy.description,
-                    displayName: postType.taxonomy.displayName,
-                    name: postType.taxonomy.name,
-                    schemes: postType.taxonomy.schemes,
-                },
-                displayFormat: postType.displayFormat
-            });
+            postTypeDispatch(
+                s => s.createPostTypeAsync({
+                    taxonomy: {
+                        categorySchemes: postType.taxonomy.categoryTree.all,
+                        description: postType.taxonomy.description,
+                        displayName: postType.taxonomy.displayName,
+                        name: postType.taxonomy.name,
+                        schemes: postType.taxonomy.schemes,
+                    },
+                    displayFormat: postType.displayFormat
+                })
+            );
         }
         else {
-            services.postManagementsService.savePostTypeAsync({
-                postTypeId: postType.postTypeId,
-                taxonomy: {
-                    categorySchemes: postType.taxonomy.categoryTree.all,
-                    description: postType.taxonomy.description,
-                    displayName: postType.taxonomy.displayName,
-                    name: postType.taxonomy.name,
-                    taxonomyId: postType.taxonomy.taxonomyId,
-                    schemes: postType.taxonomy.schemes,
-                },
-                displayFormat: postType.displayFormat
-            });
+            postTypeDispatch(
+                s => s.savePostTypeAsync({
+                    postTypeId: postType.postTypeId,
+                    taxonomy: {
+                        categorySchemes: postType.taxonomy.categoryTree.all,
+                        description: postType.taxonomy.description,
+                        displayName: postType.taxonomy.displayName,
+                        name: postType.taxonomy.name,
+                        taxonomyId: postType.taxonomy.taxonomyId,
+                        schemes: postType.taxonomy.schemes,
+                    },
+                    displayFormat: postType.displayFormat
+                })
+            );
         }
-        history(`../${services.postManagementsService.selected?.taxonomy.name}`);
+        history(`../${postTypeState.selected?.taxonomy.name}`);
     }
 
     return <Box

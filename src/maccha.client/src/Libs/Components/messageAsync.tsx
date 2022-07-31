@@ -1,8 +1,6 @@
 import React from "react";
 import { showDialogAsync, DialogContentProp } from "./showDialog";
 import { Box, Typography, Button, useTheme } from "@mui/material";
-import { lightTheme } from "../../Portal/theme";
-
 /**
  * Dialog that can confirm Ok or Cancel.
  * @param props dialog props
@@ -51,5 +49,5 @@ export async function messageAsync(message: string, option?: Partial<MessageOpti
         ...option
     }) as MessageOption & { message: string; };
 
-    return await showDialogAsync(MessageDialog, merged,{ theme: lightTheme });
+    return await showDialogAsync(MessageDialog, merged,{  });
 }
