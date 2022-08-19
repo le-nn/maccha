@@ -3,8 +3,6 @@
     "version": "0.0.1",
     "description": "Maccha CMS",
     "main": "index.js",
-    "repository": "https://github.com/rempei-okada/maccha.git",
-    "author": "rempei-okada <58958532+rempei-okada@users.noreply.github.com>",
     "license": "MIT",
     "private": false,
     "dependencies": {
