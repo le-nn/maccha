@@ -17,7 +17,7 @@ const toolbarOptions = [
     [{ indent: "-1" }, { indent: "+1" }],          // outdent/indent
     [{ header: [1, 2, 3, 4, 5, 6, false] }],
     [{ color: [] }],          // dropdown with defaults from theme
-    ["image"],
+    ["link", "image"],
     [{ align: [] }],
     ["clean"]                                         // remove formatting button
 ];
